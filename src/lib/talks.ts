@@ -25,6 +25,17 @@ export const talks: Talk[] = [
   //   abstractEn: "Abstract in English.",
   //   abstractJa: "概要（日本語）。",
   // },
+    {
+      id: "1",
+      slug: "first-talk",
+      date: "2026-05-30",
+      titleEn: "TBD",
+      titleJa: "（タイトル未定）",
+      speakerEn: "TBD",
+      speakerJa: "（スピーカー未定）",
+      abstractEn: "Details to be announced.",
+      abstractJa: "詳細は後日公開予定です。",
+    },
 ];
 
 export function getUpcomingTalks(): Talk[] {

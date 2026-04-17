@@ -1,7 +1,7 @@
 export const locales = ["en", "ja"] as const;
 export type Locale = (typeof locales)[number];
 
-export const defaultLocale: Locale = "en";
+export const defaultLocale: Locale = "ja";
 
 export const translations = {
   en: {
@@ -14,7 +14,7 @@ export const translations = {
       title: "CAMOS TAP TALKS",
       subtitle: "An informal talk series at CAMOS CLASSIC",
       description:
-        "CAMOS TAP TALKS is a series of casual talks held at CAMOS CLASSIC, a brewery & tap room in Hong Kong. Speakers share their research, ideas, and stories over a pint.",
+        "CAMOS TAP TALKS is a series of casual talks held at CAMOS CLASSIC, a brewery & tap room in Hongo, Tokyo. Speakers share their research, ideas, and stories over a pint.",
       upcomingTitle: "Upcoming",
       noUpcoming: "No upcoming talks scheduled.",
       recentTitle: "Recent Talks",
@@ -33,7 +33,7 @@ export const translations = {
       venue: "Venue",
     },
     footer: {
-      venue: "Held at CAMOS CLASSIC, Hong Kong",
+      venue: "Held at CAMOS CLASSIC, Hongo, Tokyo",
       instagram: "Instagram",
     },
     langSwitch: "日本語",
@@ -49,7 +49,7 @@ export const translations = {
       title: "CAMOS TAP TALKS",
       subtitle: "CAMOS CLASSIC で開かれるトークシリーズ",
       description:
-        "CAMOS TAP TALKS は、香港のブルワリー & タップルーム「CAMOS CLASSIC」で開催されるカジュアルなトークシリーズです。研究者や実践者がビール片手に自らのアイデアや研究を語ります。",
+        "CAMOS TAP TALKS は、東京・本郷のブルワリー & タップルーム「CAMOS CLASSIC」で開催されるカジュアルなトークシリーズです。研究者や実践者がビール片手に自らのアイデアや研究を語ります。",
       upcomingTitle: "次回のトーク",
       noUpcoming: "予定されているトークはありません。",
       recentTitle: "最近のトーク",
@@ -68,7 +68,7 @@ export const translations = {
       venue: "会場",
     },
     footer: {
-      venue: "香港 CAMOS CLASSIC にて開催",
+      venue: "東京・本郷 CAMOS CLASSIC にて開催",
       instagram: "Instagram",
     },
     langSwitch: "English",

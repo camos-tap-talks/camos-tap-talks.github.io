@@ -9,7 +9,7 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: "CAMOS TAP TALKS",
-  description: "An informal talk series at CAMOS CLASSIC, Hong Kong",
+  description: "An informal talk series at CAMOS CLASSIC, Hongo, Tokyo",
 };
 
 export default function RootLayout({

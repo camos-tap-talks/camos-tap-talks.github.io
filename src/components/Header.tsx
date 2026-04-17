@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import type { Locale } from "@/lib/i18n";
 import { getTranslations } from "@/lib/i18n";
 
@@ -28,7 +29,13 @@ export default function Header({ locale }: Props) {
           href={`/${locale}`}
           className="font-semibold tracking-wide text-stone-800 hover:text-stone-600 transition-colors"
         >
-          {t.siteName}
+            <Image
+              src="/logo.svg"
+              alt={t.siteName}
+              width={56}
+              height={56}
+              priority
+            />
         </Link>
 
         <nav className="flex items-center gap-6 text-sm">

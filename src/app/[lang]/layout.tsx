@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       template: "%s | CAMOS TAP TALKS",
     },
     description: isJa
-      ? "香港 CAMOS CLASSIC で開催されるカジュアルなトークシリーズ"
-      : "An informal talk series at CAMOS CLASSIC, Hong Kong",
+      ? "東京・本郷 CAMOS CLASSIC で開催されるカジュアルなトークシリーズ"
+      : "An informal talk series at CAMOS CLASSIC, Hongo, Tokyo",
   };
 }
 
