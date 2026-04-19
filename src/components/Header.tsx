@@ -26,7 +26,7 @@ export default function Header({ locale }: Props) {
 
   return (
     <header
-      className="py-3 px-6 text-white"
+      className="fixed top-0 left-0 right-0 z-50 py-3 px-6 text-white shadow-sm"
       style={{
         backgroundColor: "#d1773b",
       }}
