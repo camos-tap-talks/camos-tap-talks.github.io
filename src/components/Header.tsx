@@ -10,6 +10,8 @@ type Props = {
   locale: Locale;
 };
 
+const siteBasePath = process.env.NODE_ENV === "production" ? "/camos-tap-talks" : "";
+
 export default function Header({ locale }: Props) {
   const t = getTranslations(locale);
   const pathname = usePathname();
@@ -35,7 +37,7 @@ export default function Header({ locale }: Props) {
           className="shrink-0 translate-y-[2px] transition-transform hover:scale-[1.03]"
         >
           <Image
-            src="/logo-long-3.png"
+            src={`${siteBasePath}/logo-long-3.png`}
             alt={t.siteName}
             width={150}
             height={31}
