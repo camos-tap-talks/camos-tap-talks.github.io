@@ -18,12 +18,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isJa = lang === "ja";
   return {
     title: {
-      default: "CAMOS TAP TALKS",
-      template: "%s | CAMOS TAP TALKS",
+      default: "Camos Tap Talks",
+      template: "%s | Camos Tap Talks",
     },
     description: isJa
-      ? "東京・本郷 CAMOS CLASSIC で開催されるカジュアルなトークシリーズ"
-      : "An informal talk series at CAMOS CLASSIC, Hongo, Tokyo",
+      ? "東京都文京区のタップルーム「本郷菊坂町かもす」で開催される、研究者がビール片手に一般向けに研究をわかりやすく紹介するトークシリーズ"
+      : "A talk series held at Hongo Kikusaka-cho Camos, a taproom in Bunkyo, Tokyo, where researchers introduce their work to the public in a casual, engaging way—over beers",
   };
 }
 
@@ -36,7 +36,7 @@ export default async function LangLayout({ children, params }: Props) {
   return (
     <div className="min-h-screen flex flex-col">
       <Header locale={lang as Locale} />
-      <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-10">{children}</main>
+      <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-10">{children}</main>
       <Footer locale={lang as Locale} />
     </div>
   );

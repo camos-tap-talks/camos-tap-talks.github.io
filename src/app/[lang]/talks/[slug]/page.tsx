@@ -39,33 +39,33 @@ export default async function TalkPage({ params }: Props) {
   const bio = locale === "ja" ? talk.speakerBioJa : talk.speakerBioEn;
 
   return (
-    <div>
+    <div className="rounded-[1.5rem] border border-[var(--line)] bg-[var(--surface)] px-6 py-6 shadow-[0_10px_30px_rgba(44,32,24,0.04)]">
       <Link
         href={`/${locale}/talks`}
-        className="text-sm text-stone-400 hover:text-stone-700 transition-colors mb-8 inline-block"
+        className="mb-8 inline-block text-sm text-[var(--muted)] transition-colors hover:text-[var(--accent-deep)]"
       >
         ← {t.nav.talks}
       </Link>
 
-      <p className="text-xs text-stone-400 mb-2">{formatDate(talk.date, locale)}</p>
-      <h1 className="text-2xl font-bold text-stone-800 mb-2">{title}</h1>
-      <p className="text-stone-500 mb-8">
+      <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[var(--accent-deep)]">{formatDate(talk.date, locale)}</p>
+      <h1 className="mb-2 text-2xl font-bold text-[var(--foreground)]">{title}</h1>
+      <p className="mb-8 text-[var(--muted)]">
         {t.talkCard.speaker}: {speaker}
       </p>
 
       <section className="mb-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-3">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--accent-deep)]">
           Abstract
         </h2>
-        <p className="text-stone-600 leading-relaxed">{abstract}</p>
+        <p className="leading-relaxed text-[var(--muted)]">{abstract}</p>
       </section>
 
       {bio && (
         <section>
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-400 mb-3">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--accent-deep)]">
             Speaker Bio
           </h2>
-          <p className="text-stone-600 leading-relaxed">{bio}</p>
+          <p className="leading-relaxed text-[var(--muted)]">{bio}</p>
         </section>
       )}
     </div>

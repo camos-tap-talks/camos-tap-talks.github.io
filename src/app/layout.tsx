@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Zen_Maru_Gothic } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const zenMaruGothic = Zen_Maru_Gothic({
+  variable: "--font-zen-maru-gothic",
+  weight: ["400", "500", "700"],
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "CAMOS TAP TALKS",
-  description: "An informal talk series at CAMOS CLASSIC, Hongo, Tokyo",
+  title: "Camos Tap Talks",
+  description: "An informal talk series at Hongo Kikusaka-cho Camos, Hongo, Tokyo",
 };
 
 export default function RootLayout({
@@ -18,8 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} antialiased`}>
-      <body className="bg-white text-stone-800">{children}</body>
+    <html lang="ja" className={`${zenMaruGothic.variable} antialiased`} suppressHydrationWarning>
+      <body
+        className={`${zenMaruGothic.className} bg-background text-foreground font-medium`}
+        suppressHydrationWarning
+      >
+        {children}
+      </body>
     </html>
   );
 }

@@ -23,42 +23,52 @@ export default function Header({ locale }: Props) {
   ];
 
   return (
-    <header className="border-b border-stone-200 py-4 px-6">
-      <div className="max-w-2xl mx-auto flex items-center justify-between">
+    <header
+      className="py-3 px-6 text-white"
+      style={{
+        backgroundColor: "#d1773b",
+      }}
+    >
+      <div className="max-w-3xl mx-auto flex items-center gap-5">
         <Link
           href={`/${locale}`}
-          className="font-semibold tracking-wide text-stone-800 hover:text-stone-600 transition-colors"
+          className="shrink-0 translate-y-[2px] transition-transform hover:scale-[1.03]"
         >
-            <Image
-              src="/logo.svg"
-              alt={t.siteName}
-              width={56}
-              height={56}
-              priority
-            />
+          <Image
+            src="/logo-long-3.png"
+            alt={t.siteName}
+            width={150}
+            height={31}
+            priority
+          />
         </Link>
 
-        <nav className="flex items-center gap-6 text-sm">
-          {navLinks.map(({ href, label }) => (
+        <div className="ml-auto flex items-center gap-5">
+          <nav className="flex items-center gap-5 text-sm">
+            {navLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={
+                  isActive(href)
+                    ? "font-bold text-white underline decoration-white underline-offset-4"
+                    : "font-bold text-white/78 hover:text-white transition-colors"
+                }
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center min-w-[5.5rem] justify-start">
             <Link
-              key={href}
-              href={href}
-              className={
-                isActive(href)
-                  ? "text-stone-800 font-medium underline underline-offset-4"
-                  : "text-stone-500 hover:text-stone-800 transition-colors"
-              }
+              href={t.langSwitchPath}
+              className="border-l border-white/30 pl-3 font-bold text-white/78 hover:text-white transition-colors text-sm"
             >
-              {label}
+              {t.langSwitch}
             </Link>
-          ))}
-          <Link
-            href={t.langSwitchPath}
-            className="text-stone-400 hover:text-stone-700 transition-colors ml-2 border-l border-stone-200 pl-4"
-          >
-            {t.langSwitch}
-          </Link>
-        </nav>
+          </div>
+        </div>
       </div>
     </header>
   );

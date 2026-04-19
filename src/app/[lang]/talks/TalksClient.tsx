@@ -28,19 +28,18 @@ export default function TalksClient({ locale }: Props) {
   ];
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-stone-800 mb-8">{t.talks.title}</h1>
+    <div className="rounded-[1.5rem] border border-[var(--line)] bg-[var(--surface)] px-6 py-6 shadow-[0_10px_30px_rgba(44,32,24,0.04)]">
+      <h1 className="mb-8 text-3xl font-bold text-[var(--foreground)]">{t.talks.title}</h1>
 
-      {/* Tabs */}
-      <div className="flex gap-1 mb-8 border-b border-stone-100">
+      <div className="mb-8 flex gap-1 border-b border-[var(--line)]">
         {tabs.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setTab(key)}
             className={`px-4 py-2 text-sm transition-colors ${
               tab === key
-                ? "text-stone-800 font-medium border-b-2 border-stone-700 -mb-px"
-                : "text-stone-400 hover:text-stone-700"
+                ? "-mb-px border-b-2 border-[var(--accent)] font-medium text-[var(--accent-deep)]"
+                : "text-[var(--muted)] hover:text-[var(--foreground)]"
             }`}
           >
             {label}
@@ -49,7 +48,7 @@ export default function TalksClient({ locale }: Props) {
       </div>
 
       {displayed.length === 0 ? (
-        <p className="text-stone-400 text-sm">{t.talks.noTalks}</p>
+        <p className="text-sm text-[var(--muted)]">{t.talks.noTalks}</p>
       ) : (
         displayed.map((talk) => (
           <TalkCard key={talk.id} talk={talk} locale={locale} />

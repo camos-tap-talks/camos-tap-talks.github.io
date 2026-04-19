@@ -9,19 +9,19 @@ export default function Footer({ locale }: Props) {
   const t = getTranslations(locale);
 
   return (
-    <footer className="border-t border-stone-200 mt-auto py-6 px-6 text-sm text-stone-400">
-      <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+    <footer className="mt-auto border-t border-[var(--line)] bg-[var(--surface)] py-6 px-6 text-sm text-[var(--muted)]">
+      <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
         <span>{t.footer.venue}</span>
         <div className="flex gap-4">
           <a
             href="https://www.instagram.com/hk.camos"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-stone-700 transition-colors"
+            className="transition-colors hover:text-[var(--accent-deep)]"
           >
             {t.footer.instagram}
           </a>
-          <span>© CAMOS TAP TALKS</span>
+          <span>© Camos Tap Talks</span>
         </div>
       </div>
     </footer>

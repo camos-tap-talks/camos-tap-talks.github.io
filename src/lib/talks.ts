@@ -21,7 +21,7 @@ export const talks: Talk[] = [
   //   titleEn: "Example Talk Title",
   //   titleJa: "トーク例",
   //   speakerEn: "Yuto Uesugi",
-  //   speakerJa: "上杉勇人",
+  //   speakerJa: "上杉佑人",
   //   abstractEn: "Abstract in English.",
   //   abstractJa: "概要（日本語）。",
   // },
