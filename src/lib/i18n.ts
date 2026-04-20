@@ -14,7 +14,7 @@ export const translations = {
       title: "Camos Tap Talks",
       description:
         "Camos Tap Talks is a talk series held at Hongo Kikusaka-cho Camos, a taproom in Hongo, Bunkyo-ku, Tokyo. Researchers introduce their fields in an accessible way over a pint.",
-      formatTitle: "What happens?",
+      formatTitle: "What do we do?",
       formatItems: [
         "First, an invited researcher gives a short research introduction talk (about 15 minutes).",
         "Then we open the floor for free questions. Any question is welcome, such as: \"What inspired you to start this research?\" \"What is the future of this field?\" or \"What is your daily life like?\"",
