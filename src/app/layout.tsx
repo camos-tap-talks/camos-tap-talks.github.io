@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Zen_Maru_Gothic } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 
 const zenMaruGothic = Zen_Maru_Gothic({
   variable: "--font-zen-maru-gothic",
@@ -10,8 +11,13 @@ const zenMaruGothic = Zen_Maru_Gothic({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Camos Tap Talks",
   description: "An informal talk series at Hongo Kikusaka-cho Camos, Hongo, Tokyo",
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

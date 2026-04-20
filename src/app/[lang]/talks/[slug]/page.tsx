@@ -4,6 +4,7 @@ import { locales, type Locale, getTranslations } from "@/lib/i18n";
 import { talks, formatDate } from "@/lib/talks";
 import IconInitialHeading from "@/components/IconInitialHeading";
 import Link from "next/link";
+import { SITE_URL } from "@/lib/site";
 
 type Props = {
   params: Promise<{ lang: string; slug: string }>;
@@ -20,8 +21,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, slug } = await params;
   const talk = talks.find((t) => t.slug === slug);
   if (!talk) return {};
+
+  const jaPath = `/ja/talks/${slug}`;
+  const enPath = `/en/talks/${slug}`;
+
   return {
     title: lang === "ja" ? talk.titleJa : talk.titleEn,
+    alternates: {
+      canonical: lang === "ja" ? jaPath : enPath,
+      languages: {
+        ja: `${SITE_URL}${jaPath}`,
+        en: `${SITE_URL}${enPath}`,
+      },
+    },
   };
 }
 

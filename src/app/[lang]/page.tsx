@@ -1,14 +1,32 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { locales, type Locale, getTranslations } from "@/lib/i18n";
 import { getUpcomingTalks, getPastTalks } from "@/lib/talks";
 import TalkCard from "@/components/TalkCard";
 import IconInitialHeading from "@/components/IconInitialHeading";
 import Link from "next/link";
 import Image from "next/image";
+import { SITE_URL } from "@/lib/site";
 
 type Props = {
   params: Promise<{ lang: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { lang } = await params;
+  const isJa = lang === "ja";
+
+  return {
+    title: "Camos Tap Talks",
+    alternates: {
+      canonical: isJa ? "/ja" : "/en",
+      languages: {
+        ja: `${SITE_URL}/ja`,
+        en: `${SITE_URL}/en`,
+      },
+    },
+  };
+}
 
 export default async function HomePage({ params }: Props) {
   const { lang } = await params;
