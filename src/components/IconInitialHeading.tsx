@@ -4,8 +4,6 @@ type Props = {
   className?: string;
 };
 
-const siteBasePath = process.env.NODE_ENV === "production" ? "/camos-tap-talks" : "";
-
 export default function IconInitialHeading({
   text,
   className,
@@ -23,8 +21,7 @@ export default function IconInitialHeading({
         <span
           className="pointer-events-none absolute inset-0 bg-no-repeat"
           style={{
-            backgroundImage: `url(${siteBasePath}/icon.png)`,
-            backgroundSize: "100%",
+            backgroundImage: "url(/icon.png)",
             // backgroundPosition: "50% 50%",
             transform: "translate(0.22em, -0.18em) scale(1.5)",
             transformOrigin: "center",

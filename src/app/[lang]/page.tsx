@@ -10,8 +10,6 @@ type Props = {
   params: Promise<{ lang: string }>;
 };
 
-const siteBasePath = process.env.NODE_ENV === "production" ? "/camos-tap-talks" : "";
-
 export default async function HomePage({ params }: Props) {
   const { lang } = await params;
   if (!locales.includes(lang as Locale)) notFound();
@@ -38,7 +36,7 @@ export default async function HomePage({ params }: Props) {
 
           <div className="order-1 flex justify-center sm:order-2 sm:justify-end">
             <Image
-              src={`${siteBasePath}/logo.svg`}
+              src="/logo.svg"
               alt={t.home.title}
               width={190}
               height={190}
