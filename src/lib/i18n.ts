@@ -12,44 +12,37 @@ export const translations = {
     },
     home: {
       title: "Camos Tap Talks",
-      // subtitle: "An informal talk series at Hongo Kikusaka-cho Camos",
       description:
-        "Camos Tap Talks is a series of casual talks held at Hongo Kikusaka-cho Camos, the tap room of CAMOS CLASSIC brewery in Hongo, Tokyo. Speakers share their research, ideas, and stories over a pint.",
-      formatTitle: "Format",
+        "Camos Tap Talks is a talk series held at Hongo Kikusaka-cho Camos, a taproom in Hongo, Bunkyo-ku, Tokyo. Researchers introduce their fields in an accessible way over a pint.",
+      formatTitle: "What happens?",
       formatItems: [
-        "A 10-minute research introduction by a guest researcher",
-        "Open Q&A and discussion with people in the room (no registration required)",
-        "Presentations are flexible: slides, poster, talk-only, live demo, and more",
-        "Main language is Japanese",
+        "First, an invited researcher gives a short research introduction talk (about 15 minutes).",
+        "Then we open the floor for free questions. Any question is welcome, such as: \"What inspired you to start this research?\" \"What is the future of this field?\" or \"What is your daily life like?\"",
       ],
       participationTitle: "How to Join",
       participationItems: [
-        "No registration needed. Just come to the taproom on the day.",
-        "Order a drink at the counter and feel free to join the talk and Q&A.",
+        "No advance registration is needed. Just come by on the day.",
+        "Participation is free. Please order a drink at the counter, then feel free to join the talk and Q&A.",
+        "You can arrive late or leave early. We also briefly recap the talk during the session so late arrivals can follow along.",
       ],
       faqTitle: "FAQ",
       faqItems: [
         {
-          question: "Do I need to register in advance?",
-          answer: "No registration is required. Please feel free to join on the day.",
+          question: "Can I join even if this is outside my field?",
+          answer: "Yes. We aim to make the talks easy to follow for general visitors.",
         },
         {
-          question: "Can non-specialists join?",
-          answer: "Yes. Talks are designed for a broad audience, and questions are welcome.",
+          question: "Do I need to order a drink?",
+          answer: "We ask everyone to order at least one drink.",
         },
         {
-          question: "What language are talks given in?",
-          answer: "Most talks are in Japanese.",
+          question: "Are non-alcoholic drinks available?",
+          answer: "Yes. Soft drinks are available, so people who do not drink alcohol are also welcome.",
         },
-      ],
-      speakersTitle: "Who Speaks",
-      speakersDescription:
-        "Graduate students, postdocs, and faculty from any field are welcome. We currently run this as a pilot and may expand to several sessions per year based on audience response.",
-      valueTitle: "Why It Matters",
-      valueItems: [
-        "For guests: easy access to research stories you would not usually hear",
-        "For researchers: outreach practice for interdisciplinary and non-specialist audiences",
-        "For the venue: new communities, new conversations, and local visibility",
+        {
+          question: "What is a taproom?",
+          answer: "A taproom is a bar attached to a brewery. It is called a taproom because beer taps are lined up at the counter.",
+        }
       ],
       upcomingTitle: "Upcoming",
       noUpcoming: "No upcoming talks scheduled.",
@@ -70,10 +63,10 @@ export const translations = {
     },
     camos: {
       label: "Taproom",
-      title: "Camos",
+      title: "Hongo Kikusaka-cho Camos",
       address: "1F, 5-1-2 Hongo, Bunkyo-ku, Tokyo",
       hours: "Tue–Thu 18:00–22:00 / Fri 18:00–23:00 / Sat 14:00–19:30 / Sun 14:00–18:30",
-      hoursNote: "Last order 30 min before closing",
+      hoursNote: "Last order 30 min before closing. Check Instagram for the latest hours.",
       instagram: "Instagram",
     },
     langSwitch: "日本語",
@@ -87,7 +80,6 @@ export const translations = {
     },
     home: {
       title: "Camos Tap Talks",
-      // subtitle: "本郷菊坂町かもすで開かれるトークシリーズ",
       description:
         "Camos Tap Talks は、東京都文京区本郷のタップルーム「本郷菊坂町かもす」で開催されるトークシリーズです。研究者がビール片手に研究の世界をわかりやすく紹介します。",
       formatTitle: "何をするの？",

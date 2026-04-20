@@ -128,21 +128,26 @@ export default async function HomePage({ params }: Props) {
 
       <section className="mb-8  bg-[#d1773b] px-6 py-7 text-white">
         <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-white/85">{t.camos.label}</p>
-        <h2 className="mb-4 text-lg font-bold">{t.camos.title}</h2>
+        <div className="mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-bold">{t.camos.title}</h2>
+          <a
+            href="https://www.instagram.com/hk.camos"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${t.camos.instagram} @hk.camos`}
+            className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-sm text-white/90 transition-colors hover:text-white"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 fill-current">
+              <path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 1.7A4.06 4.06 0 0 0 3.7 7.75v8.5A4.06 4.06 0 0 0 7.75 20.3h8.5a4.06 4.06 0 0 0 4.05-4.05v-8.5a4.06 4.06 0 0 0-4.05-4.05h-8.5Zm8.95 1.27a1.12 1.12 0 1 1 0 2.24 1.12 1.12 0 0 1 0-2.24ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.7A3.3 3.3 0 1 0 12 15.3a3.3 3.3 0 0 0 0-6.6Z" />
+            </svg>
+          </a>
+        </div>
         <div className="space-y-3 text-sm">
           <p>{t.camos.address}</p>
           <div>
             <p>{t.camos.hours}</p>
             <p className="mt-0.5 text-xs opacity-80">{t.camos.hoursNote}</p>
           </div>
-          <a
-            href="https://www.instagram.com/hk.camos"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block font-medium underline underline-offset-2 transition-opacity hover:opacity-80"
-          >
-            {t.camos.instagram} @hk.camos
-          </a>
         </div>
       </section>
     </div>

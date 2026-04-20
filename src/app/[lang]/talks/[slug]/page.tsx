@@ -48,7 +48,7 @@ export default async function TalkPage({ params }: Props) {
         ← {t.nav.talks}
       </Link>
 
-      <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[var(--accent-deep)]">{formatDate(talk.date, locale)}</p>
+      <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[var(--accent-deep)]">{formatDate(talk.date, locale, talk.dateTbd)}</p>
       <h1 className="mb-2 text-2xl font-bold text-[var(--foreground)]">{title}</h1>
       <p className="mb-8 text-[var(--muted)]">
         {t.talkCard.speaker}: {speaker}

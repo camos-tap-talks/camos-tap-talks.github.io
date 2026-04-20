@@ -1,7 +1,8 @@
 export type Talk = {
   id: string;
   slug: string;
-  date: string; // ISO date string YYYY-MM-DD
+  date: string; // ISO date string YYYY-MM-DD (ignored when dateTbd is true)
+  dateTbd?: boolean;
   titleEn: string;
   titleJa: string;
   speakerEn: string;
@@ -29,6 +30,7 @@ export const talks: Talk[] = [
       id: "1",
       slug: "first-talk",
       date: "2026-05-30",
+      dateTbd: true,
       titleEn: "TBD",
       titleJa: "（タイトル未定）",
       speakerEn: "TBD",
@@ -40,15 +42,25 @@ export const talks: Talk[] = [
 
 export function getUpcomingTalks(): Talk[] {
   const today = new Date().toISOString().split("T")[0];
-  return talks.filter((t) => t.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  return talks
+    .filter((t) => t.dateTbd || t.date >= today)
+    .sort((a, b) => {
+      if (a.dateTbd && b.dateTbd) return 0;
+      if (a.dateTbd) return 1;
+      if (b.dateTbd) return -1;
+      return a.date.localeCompare(b.date);
+    });
 }
 
 export function getPastTalks(): Talk[] {
   const today = new Date().toISOString().split("T")[0];
-  return talks.filter((t) => t.date < today).sort((a, b) => b.date.localeCompare(a.date));
+  return talks.filter((t) => !t.dateTbd && t.date < today).sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export function formatDate(dateStr: string, locale: "en" | "ja"): string {
+export function formatDate(dateStr: string, locale: "en" | "ja", dateTbd?: boolean): string {
+  if (dateTbd) {
+    return locale === "ja" ? "x年x月x日" : "TBD";
+  }
   const date = new Date(dateStr + "T00:00:00");
   if (locale === "ja") {
     return date.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });

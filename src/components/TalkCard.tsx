@@ -18,7 +18,7 @@ export default function TalkCard({ talk, locale }: Props) {
   return (
     <article className="rounded-lg bg-white/90 px-5 py-5 mb-4 shadow-[0_2px_12px_rgba(44,32,24,0.06)] transition hover:shadow-[0_4px_18px_rgba(44,32,24,0.10)]">
       <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[var(--accent-deep)]">
-        {formatDate(talk.date, locale)}
+        {formatDate(talk.date, locale, talk.dateTbd)}
       </p>
       <Link href={`/${locale}/talks/${talk.slug}`} className="group block">
         <h3 className="mb-1 text-lg font-medium text-[var(--foreground)] transition-colors group-hover:text-[var(--accent-deep)]">
