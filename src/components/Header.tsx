@@ -62,7 +62,7 @@ export default function Header({ locale }: Props) {
             ))}
           </nav>
 
-          <div className="flex items-center min-w-[5.5rem] justify-start">
+          <div className="flex items-center min-w-[3.6rem] justify-start">
             <Link
               href={t.langSwitchPath}
               className="border-l border-white/30 pl-3 font-bold text-white/78 hover:text-white transition-colors text-sm"

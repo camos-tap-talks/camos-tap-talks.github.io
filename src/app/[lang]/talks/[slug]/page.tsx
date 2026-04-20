@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { locales, type Locale, getTranslations } from "@/lib/i18n";
 import { talks, formatDate } from "@/lib/talks";
+import IconInitialHeading from "@/components/IconInitialHeading";
 import Link from "next/link";
 
 type Props = {
@@ -54,17 +55,19 @@ export default async function TalkPage({ params }: Props) {
       </p>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--accent-deep)]">
-          Abstract
-        </h2>
+        <IconInitialHeading
+          text="Abstract"
+          className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--accent-deep)]"
+        />
         <p className="leading-relaxed text-[var(--muted)]">{abstract}</p>
       </section>
 
       {bio && (
         <section>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--accent-deep)]">
-            Speaker Bio
-          </h2>
+          <IconInitialHeading
+            text="Speaker Bio"
+            className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--accent-deep)]"
+          />
           <p className="leading-relaxed text-[var(--muted)]">{bio}</p>
         </section>
       )}

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { locales, type Locale, getTranslations } from "@/lib/i18n";
 import { getUpcomingTalks, getPastTalks } from "@/lib/talks";
 import TalkCard from "@/components/TalkCard";
+import IconInitialHeading from "@/components/IconInitialHeading";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -49,13 +50,14 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
-        <h2 className="mb-3 text-lg font-semibold text-[var(--foreground)] tracking-tight">
-          {t.home.formatTitle}
-        </h2>
+        <IconInitialHeading
+          text={t.home.formatTitle}
+          className="mb-3 text-lg font-semibold text-[var(--foreground)] tracking-tight"
+        />
         <ul className="space-y-2 text-sm text-[var(--muted)]">
           {t.home.formatItems.map((item) => (
             <li key={item} className="flex items-start gap-2 leading-relaxed">
-              <span className="mt-2 inline-block h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+              <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
               <span>{item}</span>
             </li>
           ))}
@@ -63,9 +65,25 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight">
-          {t.home.faqTitle}
-        </h2>
+        <IconInitialHeading
+          text={t.home.participationTitle}
+          className="mb-3 text-lg font-semibold text-[var(--foreground)] tracking-tight"
+        />
+        <ul className="space-y-2 text-sm text-[var(--muted)]">
+          {t.home.participationItems.map((item) => (
+            <li key={item} className="flex items-start gap-2 leading-relaxed">
+              <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
+        <IconInitialHeading
+          text={t.home.faqTitle}
+          className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight"
+        />
         <dl className="space-y-4">
           {t.home.faqItems.map((item) => (
             <div key={item.question}>
@@ -77,9 +95,10 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight">
-          {t.home.upcomingTitle}
-        </h2>
+        <IconInitialHeading
+          text={t.home.upcomingTitle}
+          className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight"
+        />
         {upcoming.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">{t.home.noUpcoming}</p>
         ) : (
@@ -91,9 +110,10 @@ export default async function HomePage({ params }: Props) {
 
       {past.length > 0 && (
         <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight">
-            {t.home.recentTitle}
-          </h2>
+          <IconInitialHeading
+            text={t.home.recentTitle}
+            className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight"
+          />
           {past.map((talk) => (
             <TalkCard key={talk.id} talk={talk} locale={locale} />
           ))}
@@ -105,6 +125,26 @@ export default async function HomePage({ params }: Props) {
           </Link>
         </section>
       )}
+
+      <section className="mb-8  bg-[#d1773b] px-6 py-7 text-white">
+        <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-white/85">{t.camos.label}</p>
+        <h2 className="mb-4 text-lg font-bold">{t.camos.title}</h2>
+        <div className="space-y-3 text-sm">
+          <p>{t.camos.address}</p>
+          <div>
+            <p>{t.camos.hours}</p>
+            <p className="mt-0.5 text-xs opacity-80">{t.camos.hoursNote}</p>
+          </div>
+          <a
+            href="https://www.instagram.com/hk.camos"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block font-medium underline underline-offset-2 transition-opacity hover:opacity-80"
+          >
+            {t.camos.instagram} @hk.camos
+          </a>
+        </div>
+      </section>
     </div>
   );
 }

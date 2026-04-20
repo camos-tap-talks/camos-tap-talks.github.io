@@ -22,6 +22,11 @@ export const translations = {
         "Presentations are flexible: slides, poster, talk-only, live demo, and more",
         "Main language is Japanese",
       ],
+      participationTitle: "How to Join",
+      participationItems: [
+        "No registration needed. Just come to the taproom on the day.",
+        "Order a drink at the counter and feel free to join the talk and Q&A.",
+      ],
       faqTitle: "FAQ",
       faqItems: [
         {
@@ -63,8 +68,12 @@ export const translations = {
       date: "Date",
       venue: "Venue",
     },
-    footer: {
-      venue: "Held at Hongo Kikusaka-cho Camos, Hongo, Tokyo",
+    camos: {
+      label: "Taproom",
+      title: "Camos",
+      address: "1F, 5-1-2 Hongo, Bunkyo-ku, Tokyo",
+      hours: "Tue–Thu 18:00–22:00 / Fri 18:00–23:00 / Sat 14:00–19:30 / Sun 14:00–18:30",
+      hoursNote: "Last order 30 min before closing",
       instagram: "Instagram",
     },
     langSwitch: "日本語",
@@ -81,36 +90,35 @@ export const translations = {
       // subtitle: "本郷菊坂町かもすで開かれるトークシリーズ",
       description:
         "Camos Tap Talks は、東京都文京区本郷のタップルーム「本郷菊坂町かもす」で開催されるトークシリーズです。研究者がビール片手に研究の世界をわかりやすく紹介します。",
-      formatTitle: "企画内容",
+      formatTitle: "何をするの？",
       formatItems: [
-        "招聘研究者による 10 分の研究紹介トーク",
-        "その後は自由な Q&A・Discussion（事前登録不要）",
-        "発表形式は自由（スライド、ポスター、口頭のみ、実演など）",
-        "言語は日本語を基本とします",
+        "はじめに、お呼びした研究者に研究紹介トーク（15分程度）をしていただきます。",
+        "その後、皆さまがお聞きしたいことを自由にお聞きください。「研究を始めたきっかけは？」「この分野の将来は？」「ふだんどんな生活をしているの？」など、どんな質問でも歓迎です！"
+      ],
+      participationTitle: "参加方法",
+      participationItems: [
+        "事前申し込みは不要です。当日そのままご来店ください！",
+        "参加費無料です。カウンターでドリンクをご注文のうえ、トークや Q&A にお気軽にご参加ください。",
+        "途中参加・途中退出も自由です。途中参加の方にもわかるように、何度か研究紹介トークの内容を振り返る時間を設けます。",
       ],
       faqTitle: "よくある質問",
       faqItems: [
-        {
-          question: "事前申し込みは必要ですか？",
-          answer: "不要です。当日そのままご参加いただけます。",
-        },
         {
           question: "専門外でも参加できますか？",
           answer: "参加できます。一般のお客さんにもわかりやすい内容を目指しています。",
         },
         {
-          question: "トークは何語で行われますか？",
-          answer: "基本的に日本語で実施します。",
+          question: "ドリンクの注文は必要ですか？",
+          answer: "ワンドリンク以上のご注文をお願いしています。",
         },
-      ],
-      speakersTitle: "招聘者・運営",
-      speakersDescription:
-        "大学院生・ポスドク・大学教員など、分野を問わず研究者を招聘します。まずは試験的に実施し、反応を見ながら年数回の定期開催を検討します。",
-      valueTitle: "想定される価値",
-      valueItems: [
-        "一般のお客さん: 普段聞けない研究の話を気軽に楽しめる",
-        "研究者: 異分野・非専門家へのアウトリーチ機会になる",
-        "店舗: 新しい客層との接点や話題づくりにつながる",
+        {
+          question: "ビール以外もありますか？",
+          answer: "ソフトドリンクもありますので、アルコールが苦手な方も安心してご参加いただけます。",
+        },
+        {
+          question: "タップルームとは何ですか？",
+          answer: "ビール醸造所に併設されたバーのことです。ビールを注ぐタップが並んでいることからタップルーム（Taproom）と呼ばれています。",
+        }
       ],
       upcomingTitle: "次回のトーク",
       noUpcoming: "予定されているトークはありません。",
@@ -129,8 +137,12 @@ export const translations = {
       date: "日時",
       venue: "会場",
     },
-    footer: {
-      venue: "東京・本郷 本郷菊坂町かもす にて開催",
+    camos: {
+      label: "タップルーム",
+      title: "本郷菊坂町かもす",
+      address: "東京都文京区本郷5-1-2 1F",
+      hours: "火水木 18:00–22:00 ／ 金 18:00–23:00 ／ 土 14:00–19:30 ／ 日 14:00–18:30",
+      hoursNote: "※ラストオーダー閉店30分前　※最新の営業時間は Instagram をご確認ください",
       instagram: "Instagram",
     },
     langSwitch: "English",
