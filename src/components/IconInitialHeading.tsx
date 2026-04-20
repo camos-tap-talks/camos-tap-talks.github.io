@@ -22,7 +22,8 @@ export default function IconInitialHeading({
           className="pointer-events-none absolute inset-0 bg-no-repeat"
           style={{
             backgroundImage: "url(/icon.png)",
-            // backgroundPosition: "50% 50%",
+            backgroundPosition: "50% 50%",
+            backgroundSize: "100% 100%",
             transform: "translate(0.22em, -0.18em) scale(1.5)",
             transformOrigin: "center",
           }}
