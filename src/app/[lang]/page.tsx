@@ -70,7 +70,7 @@ export default async function HomePage({ params }: Props) {
           — NEXT TALK —
         </p>
         {upcoming.length === 0 ? (
-          <p className="text-sm text-[var(--muted)]">{t.home.noUpcoming}</p>
+          <p className="text-center text-sm text-[var(--muted)]">{t.home.noUpcoming}</p>
         ) : (
           upcoming.map((talk) => (
             <TalkCard

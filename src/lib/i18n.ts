@@ -45,7 +45,7 @@ export const translations = {
         }
       ],
       upcomingTitle: "Upcoming",
-      noUpcoming: "No upcoming talks scheduled.",
+      noUpcoming: "Currently being arranged.",
       recentTitle: "Recent Talks",
       viewAll: "View all talks →",
     },
@@ -113,7 +113,7 @@ export const translations = {
         }
       ],
       upcomingTitle: "次回のトーク",
-      noUpcoming: "予定されているトークはありません。",
+      noUpcoming: "現在調整中です。",
       recentTitle: "最近のトーク",
       viewAll: "すべてのトークを見る →",
     },

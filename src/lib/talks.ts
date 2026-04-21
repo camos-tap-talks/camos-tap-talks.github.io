@@ -17,21 +17,22 @@ export type Talk = {
 
 export const talks: Talk[] = [
   // Add talks here as they happen. Example:
-  // {
-  //   id: "1",
-  //   slug: "example-talk",
-  //   date: "2026-05-01",
-  //   titleEn: "Example Talk Title",
-  //   titleJa: "トーク例",
-  //   speakerEn: "Yuto Uesugi",
-  //   speakerJa: "上杉佑人",
-  //   abstractEn: "Abstract in English.",
-  //   abstractJa: "概要（日本語）。",
-  // },
+    // {
+    //   id: "0",
+    //   slug: "first-talk",
+    //   date: "2026-05-30",
+    //   dateTbd: true,
+    //   titleEn: "TBD",
+    //   titleJa: "Coming soon ...",
+    //   speakerEn: "TBD",
+    //   speakerJa: "Coming soon ...",
+    //   abstractEn: "Details to be announced.",
+    //   abstractJa: "詳細は後日公開予定です。",
+    // },
     {
       id: "1",
       slug: "first-talk",
-      date: "2026-05-30",
+      date: "2026-03-30",
       dateTbd: true,
       titleEn: "TBD",
       titleJa: "Coming soon ...",
