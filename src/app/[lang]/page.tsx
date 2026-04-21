@@ -65,6 +65,25 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
+      <section className="mb-8">
+        <p className="mb-4 text-center text-[0.7rem] font-semibold tracking-[0.32em] text-[var(--muted)]">
+          — NEXT TALK —
+        </p>
+        {upcoming.length === 0 ? (
+          <p className="text-sm text-[var(--muted)]">{t.home.noUpcoming}</p>
+        ) : (
+          upcoming.map((talk) => (
+            <TalkCard
+              key={talk.id}
+              talk={talk}
+              locale={locale}
+              variant="upcomingTap"
+              tapNumber={parseInt(talk.id, 10)}
+            />
+          ))
+        )}
+      </section>
+
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
         <IconInitialHeading
           text={t.home.formatTitle}
@@ -108,20 +127,6 @@ export default async function HomePage({ params }: Props) {
             </div>
           ))}
         </dl>
-      </section>
-
-      <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-6 shadow-sm">
-        <IconInitialHeading
-          text={t.home.upcomingTitle}
-          className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight"
-        />
-        {upcoming.length === 0 ? (
-          <p className="text-sm text-[var(--muted)]">{t.home.noUpcoming}</p>
-        ) : (
-          upcoming.map((talk) => (
-            <TalkCard key={talk.id} talk={talk} locale={locale} />
-          ))
-        )}
       </section>
 
       {past.length > 0 && (

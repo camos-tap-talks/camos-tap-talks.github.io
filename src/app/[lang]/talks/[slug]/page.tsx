@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { locales, type Locale, getTranslations } from "@/lib/i18n";
-import { talks, formatDate } from "@/lib/talks";
-import IconInitialHeading from "@/components/IconInitialHeading";
+import { talks } from "@/lib/talks";
+import TalkCard from "@/components/TalkCard";
+import Image from "next/image";
 import Link from "next/link";
 import { SITE_URL } from "@/lib/site";
 
@@ -46,43 +47,55 @@ export default async function TalkPage({ params }: Props) {
   const talk = talks.find((tk) => tk.slug === slug);
   if (!talk) notFound();
 
-  const title = locale === "ja" ? talk.titleJa : talk.titleEn;
-  const speaker = locale === "ja" ? talk.speakerJa : talk.speakerEn;
   const abstract = locale === "ja" ? talk.abstractJa : talk.abstractEn;
   const bio = locale === "ja" ? talk.speakerBioJa : talk.speakerBioEn;
+  const title = locale === "ja" ? talk.titleJa : talk.titleEn;
 
   return (
-    <div className="rounded-[1.5rem] border border-[var(--line)] bg-[var(--surface)] px-6 py-6 shadow-[0_10px_30px_rgba(44,32,24,0.04)]">
+    <div>
       <Link
         href={`/${locale}/talks`}
-        className="mb-8 inline-block text-sm text-[var(--muted)] transition-colors hover:text-[var(--accent-deep)]"
+        className="mb-6 inline-block text-sm text-[var(--muted)] transition-colors hover:text-[var(--accent-deep)]"
       >
         ← {t.nav.talks}
       </Link>
 
-      <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[var(--accent-deep)]">{formatDate(talk.date, locale, talk.dateTbd)}</p>
-      <h1 className="mb-2 text-2xl font-bold text-[var(--foreground)]">{title}</h1>
-      <p className="mb-8 text-[var(--muted)]">
-        {t.talkCard.speaker}: {speaker}
-      </p>
+      <TalkCard
+        talk={talk}
+        locale={locale}
+        variant="upcomingTap"
+        tapNumber={parseInt(talk.id, 10)}
+        disableLink
+      />
 
-      <section className="mb-8">
-        <IconInitialHeading
-          text="Abstract"
-          className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--accent-deep)]"
-        />
-        <p className="leading-relaxed text-[var(--muted)]">{abstract}</p>
-      </section>
-
-      {bio && (
-        <section>
-          <IconInitialHeading
-            text="Speaker Bio"
-            className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--accent-deep)]"
+      {talk.talkImage && (
+        <div className="relative mb-6 aspect-video w-full overflow-hidden">
+          <Image
+            src={talk.talkImage}
+            alt={title}
+            fill
+            className="object-cover"
           />
-          <p className="leading-relaxed text-[var(--muted)]">{bio}</p>
-        </section>
+        </div>
       )}
+
+      <div className="mt-6 space-y-6 px-1">
+        <section>
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+            Abstract
+          </h2>
+          <p className="leading-relaxed text-[var(--muted)]">{abstract}</p>
+        </section>
+
+        {bio && (
+          <section>
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+              Speaker Bio
+            </h2>
+            <p className="leading-relaxed text-[var(--muted)]">{bio}</p>
+          </section>
+        )}
+      </div>
     </div>
   );
 }

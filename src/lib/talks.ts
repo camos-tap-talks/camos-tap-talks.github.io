@@ -11,6 +11,8 @@ export type Talk = {
   abstractJa: string;
   speakerBioEn?: string;
   speakerBioJa?: string;
+  speakerImage?: string;
+  talkImage?: string;
 };
 
 export const talks: Talk[] = [
@@ -32,9 +34,9 @@ export const talks: Talk[] = [
       date: "2026-05-30",
       dateTbd: true,
       titleEn: "TBD",
-      titleJa: "（タイトル未定）",
+      titleJa: "Coming soon ...",
       speakerEn: "TBD",
-      speakerJa: "（スピーカー未定）",
+      speakerJa: "Coming soon ...",
       abstractEn: "Details to be announced.",
       abstractJa: "詳細は後日公開予定です。",
     },
