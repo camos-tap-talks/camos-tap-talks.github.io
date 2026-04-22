@@ -987,7 +987,12 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                       value={abstractJa}
                       onChange={(event) => setAbstractJa(event.target.value)}
                       rows={8}
-                      placeholder="例: このトークでは、..."
+                      placeholder={`例:
+ポケモンの世界には、さまざまな環境に適応した多様な「種」が登場します。水辺に特化したもの、火山地帯に棲むもの、他の個体と共生するもの──これらは現実の生物多様性とどこまで似ているのでしょうか？
+
+本トークでは、ポケモンという身近な題材を入口に、生物多様性とは何か、なぜそれが重要なのかを紹介します。進化や適応、種間相互作用といった基本概念を、実在の動物や生態系の例と比較しながら解説します。また、「もしポケモンが実在したら？」という視点から、生態系のバランスや絶滅リスクについても考えます。
+
+ビール片手に、ゲームの世界と現実の自然を行き来しながら、「多様性」が生まれる仕組みとその価値について一緒に考えてみましょう。`}
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
@@ -1019,7 +1024,12 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                       value={bioJa}
                       onChange={(event) => setBioJa(event.target.value)}
                       rows={5}
-                      placeholder="例: XX大学 インターネット言語研究室 特任教授。"
+                      placeholder={`例: 
+生物多様性と生態系の成り立ちを専門とする。大学および研究機関に所属し、森林・湿地・沿岸域などさまざまな環境でフィールド調査を行っている。種の多様性がどのように生まれ、維持され、失われていくのかを、進化・生態・環境変動の観点から研究している。
+
+これまでに、動植物の種分布や個体群動態、種間相互作用（捕食・共生など）をテーマに研究を進めてきた。近年は、気候変動や人間活動が生物多様性に与える影響の評価にも取り組んでいる。
+
+専門外の人にも生物多様性の面白さを伝えることに関心があり、身近な題材やポップカルチャーを入口にしたアウトリーチ活動にも積極的に関わっている。`}
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
@@ -1170,7 +1180,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                   value={titleEn}
                   onChange={(event) => setTitleEn(event.target.value)}
                   rows={2}
-                  placeholder="e.g. Pokemon and Biodiversity"
+                  placeholder="e.g. Pokémon and Biodiversity"
                   className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">{text.titleTwoLineHint}</p>
@@ -1247,7 +1257,12 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                       value={abstractEn}
                       onChange={(event) => setAbstractEn(event.target.value)}
                       rows={8}
-                      placeholder="e.g. In this talk, we will..."
+                      placeholder={`e.g.
+The world of Pokémon is filled with diverse “species” adapted to different environments—some live in water, others thrive in volcanic regions, and some form complex relationships with other creatures. But how similar is this fictional diversity to real-world biodiversity?
+
+In this talk, I use Pokémon as a familiar entry point to explore what biodiversity is and why it matters. I will introduce key concepts such as evolution, adaptation, and species interactions, drawing parallels between Pokémon and real organisms and ecosystems. We will also consider a simple question: what would happen if Pokémon actually existed? This thought experiment helps us think about ecological balance and extinction risk in a new way.
+
+Over a pint, we will move back and forth between fiction and reality, and explore how diversity emerges—and why it is worth protecting.`}
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
@@ -1279,7 +1294,12 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                       value={bioEn}
                       onChange={(event) => setBioEn(event.target.value)}
                       rows={5}
-                      placeholder="e.g. Assistant Professor, Department of ..."
+                      placeholder={`e.g.        
+Researcher specializing in biodiversity and ecosystem dynamics, affiliated with a university or research institute. Their work involves field studies across a range of environments, including forests, wetlands, and coastal systems, to understand how biodiversity emerges, is maintained, and is lost over time.
+
+Their research covers topics such as species distributions, population dynamics, and species interactions (e.g., predation and symbiosis). More recently, they have been focusing on the impacts of climate change and human activities on biodiversity.
+
+They are also interested in science communication and actively engage in outreach activities, using familiar topics and elements of popular culture to make biodiversity more accessible to a broad audience.`}
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
