@@ -196,8 +196,8 @@ export default function SpeakerRoomClient({ locale }: Props) {
       talkCardPreviewHeading: isJa ? "Talk Card プレビュー" : "Talk Card Preview",
       abstractInputHeading: isJa ? "Abstract 入力" : "Abstract Input",
       abstractPreviewHeading: isJa ? "Abstract プレビュー" : "Abstract Preview",
-      desktopPreviewLabel: isJa ? "プレビュー（デスクトップ版）" : "Preview (Desktop)",
-      mobilePreviewLabel: isJa ? "プレビュー（モバイル版）" : "Preview (Mobile)",
+      desktopPreviewLabel: isJa ? "TALK CARD プレビュー（デスクトップ版）" : "TALK CARD Preview (Desktop)",
+      mobilePreviewLabel: isJa ? "TALK CARD プレビュー（モバイル版）" : "TALK CARD Preview (Mobile)",
       markdownTitle: isJa ? "対応している Markdown / HTML" : "Supported Markdown / HTML",
       submitTitle: isJa ? "提出用 URL" : "Submission URL",
       titleLabel: isJa ? "タイトル" : "Title",
@@ -208,9 +208,9 @@ export default function SpeakerRoomClient({ locale }: Props) {
       dateLabel: isJa ? "日付" : "Date",
       dateTbdLabel: isJa ? "日付未定 (TBD)" : "Date TBD",
       speakerLabel: isJa ? "スピーカー名" : "Speaker",
-      speakerHint: isJa ? "1行以内で入力してください。" : "Keep to one line.",
+      speakerHint: isJa ? "デスクトップ版表示で1行以内に収まるように入力してください。" : "Keep to one line on the desktop preview.",
       abstractLabel: isJa ? "アブストラクト" : "Abstract",
-      bioLabel: isJa ? "スピーカープロフィール" : "Speaker Bio",
+      bioLabel: isJa ? "SPEAKER PROFILE 入力" : "SPEAKER PROFILE Input",
       speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
       uploadTitle: isJa ? "画像アップロード" : "Image Upload",
       uploadHelp: isJa
@@ -276,7 +276,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
             "Image (HTML): `<img src=\"/logo-color.svg\" width=\"120\" align=\"center\" />`",
             "Caption: `<figure align=\"left|center|right\"><img src=\"/logo-color.svg\" width=\"120\" /><figcaption>caption</figcaption></figure>`",
           ],
-      emptyHint: isJa ? "右側にレンダリング結果が表示されます。" : "Rendered output appears on the right.",
+      emptyHint: isJa ? "入力するとレンダリング結果が表示されます。" : "Enter text to see the rendered output.",
       abstractHeading: "Abstract",
       bioHeading: "Speaker Bio",
     }),
@@ -621,7 +621,6 @@ export default function SpeakerRoomClient({ locale }: Props) {
 
               <div className="space-y-4">
                 <label className="block">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractLabel}</span>
                   <textarea
                     value={abstract}
                     onChange={(event) => setAbstract(event.target.value)}
