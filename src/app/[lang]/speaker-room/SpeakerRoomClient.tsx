@@ -214,8 +214,8 @@ export default function SpeakerRoomClient({ locale }: Props) {
       uploadScrollHint: isJa ? "画像アップロードはこちら↓" : "Upload image below ↓",
       speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
       speakerImageAspectHint: isJa
-        ? "表示比率は 11:15 です。画像はこの比率で自動クロップされます。"
-        : "Display ratio is 11:15. Images are auto-cropped to this ratio.",
+        ? "表示比率は 2:3 です。画像はこの比率で自動クロップされます。"
+        : "Display ratio is 2:3. Images are auto-cropped to this ratio.",
       uploadTitle: isJa ? "画像アップロード" : "Image Upload",
       uploadHelp: isJa
         ? "JPEG/PNG のみ、10MB まで、最大10枚。"

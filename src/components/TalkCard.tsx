@@ -50,10 +50,10 @@ export default function TalkCard({
     const usesResponsiveLayout = !usesCompactMobileLayout && !usesFixedDesktopLayout;
     const cardClass =
       usesCompactMobileLayout
-        ? "mb-4 grid min-h-[11rem] grid-cols-[1fr_6.6rem] border border-[#2a2a2a] bg-[#1f1f1f] text-[#ece5d5] [text-shadow:0_0_1px_rgba(255,255,255,0.12)] shadow-[inset_0_0_0_1px_rgba(244,240,230,0.08),0_8px_18px_rgba(0,0,0,0.2)]"
+        ? "mb-4 grid min-h-[11.9rem] grid-cols-[1fr_6.6rem] border border-[#2a2a2a] bg-[#1f1f1f] text-[#ece5d5] [text-shadow:0_0_1px_rgba(255,255,255,0.12)] shadow-[inset_0_0_0_1px_rgba(244,240,230,0.08),0_8px_18px_rgba(0,0,0,0.2)]"
         : usesFixedDesktopLayout
-          ? "mb-4 grid min-h-36 grid-cols-[4.2rem_1fr_6.6rem] border border-[#2a2a2a] bg-[#1f1f1f] text-[#ece5d5] [text-shadow:0_0_1px_rgba(255,255,255,0.12)] shadow-[inset_0_0_0_1px_rgba(244,240,230,0.08),0_8px_18px_rgba(0,0,0,0.2)]"
-          : "mb-4 grid min-h-[11rem] grid-cols-[1fr_6.6rem] border border-[#2a2a2a] bg-[#1f1f1f] text-[#ece5d5] [text-shadow:0_0_1px_rgba(255,255,255,0.12)] shadow-[inset_0_0_0_1px_rgba(244,240,230,0.08),0_8px_18px_rgba(0,0,0,0.2)] md:min-h-36 md:grid-cols-[4.2rem_1fr_6.6rem]";
+          ? "mb-4 grid min-h-[9.9rem] grid-cols-[4.2rem_1fr_6.6rem] border border-[#2a2a2a] bg-[#1f1f1f] text-[#ece5d5] [text-shadow:0_0_1px_rgba(255,255,255,0.12)] shadow-[inset_0_0_0_1px_rgba(244,240,230,0.08),0_8px_18px_rgba(0,0,0,0.2)]"
+          : "mb-4 grid min-h-[11.9rem] grid-cols-[1fr_6.6rem] border border-[#2a2a2a] bg-[#1f1f1f] text-[#ece5d5] [text-shadow:0_0_1px_rgba(255,255,255,0.12)] shadow-[inset_0_0_0_1px_rgba(244,240,230,0.08),0_8px_18px_rgba(0,0,0,0.2)] md:min-h-[9.9rem] md:grid-cols-[4.2rem_1fr_6.6rem]";
 
     const inner = (
       <>
@@ -110,7 +110,11 @@ export default function TalkCard({
 
         <div
           className={`h-full w-full border-l border-[#3f3f3f] ${
-            usesCompactMobileLayout ? "grid grid-rows-[2rem_9rem]" : usesResponsiveLayout ? "grid grid-rows-[2rem_9rem] md:block" : ""
+            usesCompactMobileLayout
+              ? "grid grid-rows-[minmax(2rem,1fr)_9.9rem]"
+              : usesResponsiveLayout
+                ? "grid grid-rows-[minmax(2rem,1fr)_9.9rem] md:block"
+                : ""
           }`}
         >
           {!usesFixedDesktopLayout && (
@@ -120,7 +124,7 @@ export default function TalkCard({
             </div>
           )}
 
-          <div className={`relative h-full w-full ${usesResponsiveLayout ? "md:h-full" : ""}`}>
+          <div className={`relative h-[9.9rem] w-full ${usesResponsiveLayout ? "md:h-full" : ""}`}>
             {talk.speakerImage ? (
               <Image
                 src={talk.speakerImage}
