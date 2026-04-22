@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState, type MouseEvent } from "react";
 import Image from "next/image";
 import type { Locale } from "@/lib/i18n";
 import type { Talk } from "@/lib/talks";
@@ -184,11 +184,23 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       pageNote: isJa
         ? "案内ページを確認後、このページで提出内容を作成してください。"
         : "After reading the guide page, prepare your submission on this page.",
-      requestsTitle: isJa ? "お願いごと" : "Requests",
-      requests: isJa
-        ? ["下書きができたら、最終テキストを管理者に共有してください。"]
+      guideLinkLabel: isJa ? "← スピーカー向けご案内（新規タブで開く）" : "← Speaker Guide (opens in new tab)",
+      workflowTitle: isJa ? "提出手順" : "Submission Steps",
+      inputStepsTitle: isJa ? "入力手順" : "Input Steps",
+      workflowSteps: isJa
+        ? [
+            "Talk Card（基本情報）と Abstract・Speaker Profile（詳細情報）を入力し、プレビューで内容を確認してください。",
+            "画像は、下の方にある「画像アップロード」セクションでアップロードし、生成された URL を用いてください。Abstract・Speaker Profile 内で画像を使用する場合は、Markdown 形式か HTML 形式で記述できます。",
+          ]
         : [
-            "When your draft is ready, share the final text with the organizer.",
+            "Fill in the Talk Card (basic information) and Abstract/Speaker Profile (detailed information), and check the content in the preview.",
+            "Upload images in the \"Image Upload\" section below and use the generated URL. You can use images in Abstract/Speaker Profile using Markdown or HTML format.",
+          ],
+      submissionItemsTitle: isJa ? "提出内容" : "What to Submit",
+      submissionItems: isJa
+        ? ["一番下の「提出用 URL を生成してコピー」ボタンを押してください。生成された URL を保管しておけば、記入内容も保持できます。その URL を世話人へ提出してください。"]
+        : [
+            "Click the \"Generate and copy submission URL\" button at the bottom. If you keep the generated URL, your entered content will also be preserved. Then share that URL with the organizer.",
           ],
       talkCardSectionTitle: "TALK CARD",
       abstractSectionTitle: isJa ? "Abstract" : "Abstract",
@@ -482,18 +494,71 @@ export default function SpeakerSubmitClient({ locale }: Props) {
     }
   };
 
+  const openExternalLinksInNewTab = (event: MouseEvent<HTMLDivElement>) => {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const anchor = target.closest("a[href]");
+    if (!(anchor instanceof HTMLAnchorElement)) {
+      return;
+    }
+
+    const href = anchor.getAttribute("href") ?? "";
+    if (!href || href.startsWith("/") || href.startsWith("#")) {
+      return;
+    }
+
+    let url: URL;
+    try {
+      url = new URL(href, window.location.href);
+    } catch {
+      return;
+    }
+
+    if (url.origin === window.location.origin) {
+      return;
+    }
+
+    event.preventDefault();
+    window.open(url.toString(), "_blank", "noopener,noreferrer");
+  };
+
   return (
-    <div>
+    <div onClickCapture={openExternalLinksInNewTab}>
       <p className="mb-2 text-center text-[0.7rem] font-semibold tracking-[0.32em] text-[var(--muted)]">{text.pageLabel}</p>
       <h1 className="mb-2 text-center text-xl font-semibold text-[var(--foreground)]">{text.pageTitle}</h1>
       <p className="mb-8 text-center text-sm text-[var(--muted)]">{text.pageNote}</p>
 
+      <div className="mb-8">
+        <a
+          href={`/${locale}/speaker`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block text-sm text-[var(--muted)] transition-colors hover:text-[var(--accent-deep)]"
+        >
+          {text.guideLinkLabel}
+        </a>
+      </div>
+
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-6 shadow-sm">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.requestsTitle}</h2>
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.workflowTitle}</h2>
+        <h3 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.inputStepsTitle}</h3>
         <ul className="space-y-2 text-sm text-[var(--muted)]">
-          {text.requests.map((item) => (
+          {text.workflowSteps.map((item) => (
             <li key={item} className="flex items-start gap-2">
-              <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
+              <span className="mt-[0.42rem] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h3 className="mt-5 mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.submissionItemsTitle}</h3>
+        <ul className="space-y-2 text-sm text-[var(--muted)]">
+          {text.submissionItems.map((item) => (
+            <li key={item} className="flex items-start gap-2">
+              <span className="mt-[0.42rem] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
               <span>{item}</span>
             </li>
           ))}
@@ -501,14 +566,18 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       </section>
 
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.markdownTitle}</h2>
-        <ul className="space-y-1 text-xs text-[var(--muted)]">
-          {text.markdownExamples.map((example) => (
-            <li key={example}>
-              <MarkdownText content={example} variant="inline" />
-            </li>
-          ))}
-        </ul>
+        <details>
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+            {text.markdownTitle}
+          </summary>
+          <ul className="mt-3 space-y-1 text-xs text-[var(--muted)]">
+            {text.markdownExamples.map((example) => (
+              <li key={example}>
+                <MarkdownText content={example} variant="inline" />
+              </li>
+            ))}
+          </ul>
+        </details>
       </section>
 
       <section className="mb-8">
