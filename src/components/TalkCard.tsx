@@ -80,18 +80,18 @@ export default function TalkCard({
           </div>
         )}
 
-        <div className={`grid h-full grid-rows-[auto_1fr_auto] gap-1 ${usesCompactMobileLayout ? "px-4 py-4" : "px-5 py-4"}`}>
+        <div className={`grid h-full min-w-0 grid-rows-[auto_1fr_auto] gap-1 ${usesCompactMobileLayout ? "px-4 py-4" : "px-5 py-4"}`}>
           <p
             className={`uppercase tracking-[0.2em] text-[#ddd4bf] ${
               forceMobileTypography ? "text-[0.62rem]" : forceDesktopTypography ? "text-xs" : "text-[0.62rem] md:text-xs"
             }`}
           >
-            {formatDate(talk.date, locale, talk.dateTbd)}
+            {formatDate(talk.date, locale, talk.dateTbd, talk.startTime, talk.endTime, talk.timeTbd)}
           </p>
-          <div className="flex flex-1 items-center">
+          <div className="flex min-w-0 flex-1 items-center">
             <h3
               data-preview-field={titleDataField}
-              className={`whitespace-pre-line font-medium leading-tight text-[#efe8d9] ${titleLineClampClass} ${
+              className={`whitespace-pre-line [overflow-wrap:anywhere] font-medium leading-tight text-[#efe8d9] ${titleLineClampClass} ${
                 forceMobileTypography ? "text-sm" : forceDesktopTypography ? "text-lg" : "text-sm md:text-lg"
               }`}
             >
@@ -160,7 +160,7 @@ export default function TalkCard({
   const defaultInner = (
     <>
       <p className="mb-1 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--accent-deep)] md:text-xs">
-        {formatDate(talk.date, locale, talk.dateTbd)}
+        {formatDate(talk.date, locale, talk.dateTbd, talk.startTime, talk.endTime, talk.timeTbd)}
       </p>
       <h3 className="mb-1 text-base font-medium text-[var(--foreground)] md:text-lg">
         <MarkdownText content={title} variant="inline" />

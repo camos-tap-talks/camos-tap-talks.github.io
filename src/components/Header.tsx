@@ -15,11 +15,16 @@ export default function Header({ locale }: Props) {
   const t = getTranslations(locale);
   const pathname = usePathname();
   const [search, setSearch] = useState("");
-  const isSpeakerSubmit =
+  const isSpeakerSubmitPage =
     pathname === `/${locale}/speaker/submit`
-    || pathname === `/${locale}/speaker/submit/`
-    || pathname === `/${locale}/speaker-room`
-    || pathname === `/${locale}/speaker-room/`;
+    || pathname === `/${locale}/speaker/submit/`;
+  const isSpeakerSubmit =
+    isSpeakerSubmitPage
+    || pathname === `/${locale}/speaker/review`
+    || pathname === `/${locale}/speaker/review/`;
+  const newTabProps = isSpeakerSubmitPage
+    ? { target: "_blank", rel: "noopener noreferrer" }
+    : {};
   const nextLocale = locale === "ja" ? "en" : "ja";
   const switchedPathname = pathname
     ? pathname.replace(/^\/(ja|en)(?=\/|$)/, `/${nextLocale}`)
@@ -51,6 +56,7 @@ export default function Header({ locale }: Props) {
       <div className={`${isSpeakerSubmit ? "w-[min(1120px,calc(100vw-2rem))]" : "max-w-3xl"} mx-auto flex items-center gap-5`}>
         <Link
           href={`/${locale}`}
+          {...newTabProps}
           className="shrink-0 translate-y-[2px] transition-transform hover:scale-[1.03]"
         >
           <Image
@@ -68,6 +74,7 @@ export default function Header({ locale }: Props) {
               <Link
                 key={href}
                 href={href}
+                {...newTabProps}
                 className={
                   isActive(href)
                     ? "font-bold text-white underline decoration-white underline-offset-4"
@@ -82,6 +89,7 @@ export default function Header({ locale }: Props) {
           <div className="flex items-center justify-start pr-2">
             <Link
               href={langSwitchHref}
+              {...newTabProps}
               className="border-l border-white/30 pl-3 font-bold text-white/78 hover:text-white transition-colors text-sm"
             >
               {t.langSwitch}

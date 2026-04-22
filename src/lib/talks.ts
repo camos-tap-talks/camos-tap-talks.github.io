@@ -2,7 +2,10 @@ export type Talk = {
   id: string;
   slug: string;
   date: string; // ISO date string YYYY-MM-DD (ignored when dateTbd is true)
+  startTime?: string; // 24h time string HH:mm
+  endTime?: string; // 24h time string HH:mm
   dateTbd?: boolean;
+  timeTbd?: boolean;
   titleEn: string;
   titleJa: string;
   speakerEn: string;
@@ -21,7 +24,10 @@ export const talks: Talk[] = [
     //   id: "0",
     //   slug: "0-example",
     //   date: "2026-05-30",
+    //   startTime: "19:00",
+    //   endTime: "21:00",
     //   dateTbd: true,
+    //   timeTbd: false,
     //   titleEn: "TBD",
     //   titleJa: "Coming soon ...", （55文字以内、\n で改行）
     //   speakerEn: "TBD",
@@ -64,13 +70,35 @@ export function getPastTalks(): Talk[] {
   return talks.filter((t) => !t.dateTbd && t.date < today).sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export function formatDate(dateStr: string, locale: "en" | "ja", dateTbd?: boolean): string {
+export function formatTimeRange(startTime?: string, endTime?: string, timeTbd?: boolean, locale?: "en" | "ja"): string {
+  if (timeTbd) {
+    return locale === "ja" ? "時間未定" : "TBD";
+  }
+  if (startTime && endTime) {
+    return `${startTime}–${endTime}`;
+  }
+  if (startTime) {
+    return `${startTime}–`;
+  }
+  if (endTime) {
+    return `–${endTime}`;
+  }
+  return "";
+}
+
+export function formatDate(dateStr: string, locale: "en" | "ja", dateTbd?: boolean, startTime?: string, endTime?: string, timeTbd?: boolean): string {
   if (dateTbd) {
     return locale === "ja" ? "x年x月x日" : "TBD";
   }
+
   const date = new Date(dateStr + "T00:00:00");
+  const formattedTime = formatTimeRange(startTime, endTime, timeTbd, locale);
+
   if (locale === "ja") {
-    return date.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+    const formattedDate = date.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+    return formattedTime ? `${formattedDate} ${formattedTime}` : formattedDate;
   }
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+
+  const formattedDate = date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  return formattedTime ? `${formattedDate} ${formattedTime}` : formattedDate;
 }

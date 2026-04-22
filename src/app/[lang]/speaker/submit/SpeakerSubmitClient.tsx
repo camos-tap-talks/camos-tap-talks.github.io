@@ -12,13 +12,20 @@ type Props = {
 };
 
 export type InitialDraft = {
-  title: string;
+  titleJa: string;
+  titleEn: string;
   tapNumber: string;
   date: string;
+  startTime: string;
+  endTime: string;
   dateTbd: boolean;
-  speaker: string;
-  abstract: string;
-  bio: string;
+  timeTbd: boolean;
+  speakerJa: string;
+  speakerEn: string;
+  abstractJa: string;
+  abstractEn: string;
+  bioJa: string;
+  bioEn: string;
   speakerImage: string;
   uploadedImages: Array<{ url: string; deleteUrl?: string }>;
 };
@@ -49,13 +56,20 @@ const MAX_UPLOADED_IMAGES = 10;
 const ACCEPTED_UPLOAD_TYPES = new Set(["image/jpeg", "image/png"]);
 const UPLOAD_SIGN_ENDPOINT = process.env.NEXT_PUBLIC_UPLOAD_SIGN_ENDPOINT ?? "";
 const EMPTY_DRAFT: InitialDraft = {
-  title: "",
+  titleJa: "",
+  titleEn: "",
   tapNumber: "",
   date: "",
+  startTime: "",
+  endTime: "",
   dateTbd: false,
-  speaker: "",
-  abstract: "",
-  bio: "",
+  timeTbd: false,
+  speakerJa: "",
+  speakerEn: "",
+  abstractJa: "",
+  abstractEn: "",
+  bioJa: "",
+  bioEn: "",
   speakerImage: "",
   uploadedImages: [],
 };
@@ -95,16 +109,31 @@ function readDraftFromSearchParams(params: URLSearchParams): InitialDraft {
   }
 
   return {
-    title: params.get("title") ?? "",
+    titleJa: params.get("titleJa") ?? params.get("title") ?? "",
+    titleEn: params.get("titleEn") ?? params.get("title") ?? "",
     tapNumber: params.get("tap") ?? params.get("tapNumber") ?? "",
     date: params.get("date") ?? "",
+    startTime: params.get("startTime") ?? "",
+    endTime: params.get("endTime") ?? "",
     dateTbd: params.get("dateTbd") === "1" || params.get("dateTbd") === "true",
-    speaker: params.get("speaker") ?? "",
-    abstract: params.get("abstract") ?? "",
-    bio: params.get("bio") ?? "",
+    timeTbd: params.get("timeTbd") === "1" || params.get("timeTbd") === "true",
+    speakerJa: params.get("speakerJa") ?? params.get("speaker") ?? "",
+    speakerEn: params.get("speakerEn") ?? params.get("speaker") ?? "",
+    abstractJa: params.get("abstractJa") ?? params.get("abstract") ?? "",
+    abstractEn: params.get("abstractEn") ?? params.get("abstract") ?? "",
+    bioJa: params.get("bioJa") ?? params.get("bio") ?? "",
+    bioEn: params.get("bioEn") ?? params.get("bio") ?? "",
     speakerImage: params.get("speakerImage") ?? "",
     uploadedImages: Array.from(mergedByUrl.values()),
   };
+}
+
+function normalizeTimeInput(value: string): string {
+  const digits = value.replace(/[^0-9]/g, "").slice(0, 4);
+  if (digits.length <= 2) {
+    return digits;
+  }
+  return `${digits.slice(0, 2)}:${digits.slice(2)}`;
 }
 
 function buildInitialUploadedImages(
@@ -142,17 +171,28 @@ function buildInitialUploadedImages(
 export default function SpeakerSubmitClient({ locale }: Props) {
   const isJa = locale === "ja";
 
-  const [title, setTitle] = useState(EMPTY_DRAFT.title);
+  const [titleJa, setTitleJa] = useState(EMPTY_DRAFT.titleJa);
+  const [titleEn, setTitleEn] = useState(EMPTY_DRAFT.titleEn);
   const [tapNumber, setTapNumber] = useState(EMPTY_DRAFT.tapNumber);
   const [date, setDate] = useState(EMPTY_DRAFT.date);
+  const [startTime, setStartTime] = useState(EMPTY_DRAFT.startTime);
+  const [endTime, setEndTime] = useState(EMPTY_DRAFT.endTime);
   const [dateTbd, setDateTbd] = useState(EMPTY_DRAFT.dateTbd);
-  const [speaker, setSpeaker] = useState(EMPTY_DRAFT.speaker);
-  const [abstract, setAbstract] = useState(EMPTY_DRAFT.abstract);
-  const [bio, setBio] = useState(EMPTY_DRAFT.bio);
+  const [timeTbd, setTimeTbd] = useState(EMPTY_DRAFT.timeTbd);
+  const [speakerJa, setSpeakerJa] = useState(EMPTY_DRAFT.speakerJa);
+  const [speakerEn, setSpeakerEn] = useState(EMPTY_DRAFT.speakerEn);
+  const [abstractJa, setAbstractJa] = useState(EMPTY_DRAFT.abstractJa);
+  const [abstractEn, setAbstractEn] = useState(EMPTY_DRAFT.abstractEn);
+  const [bioJa, setBioJa] = useState(EMPTY_DRAFT.bioJa);
+  const [bioEn, setBioEn] = useState(EMPTY_DRAFT.bioEn);
+  const [useJaSection, setUseJaSection] = useState(true);
+  const [useEnSection, setUseEnSection] = useState(true);
+  const [openJaSection, setOpenJaSection] = useState(true);
+  const [openEnSection, setOpenEnSection] = useState(true);
   const [speakerImage, setSpeakerImage] = useState(EMPTY_DRAFT.speakerImage);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const [generatedUrl, setGeneratedUrl] = useState("");
-  const [copyNotice, setCopyNotice] = useState<"idle" | "copied" | "error">("idle");
+  const [copyNotice, setCopyNotice] = useState<"idle" | "copied" | "savedTxt" | "error">("idle");
   const [copiedImageToken, setCopiedImageToken] = useState<string | null>(null);
   const [uploadingTarget, setUploadingTarget] = useState<UploadTarget | null>(null);
   const [uploadNotice, setUploadNotice] = useState("");
@@ -166,15 +206,30 @@ export default function SpeakerSubmitClient({ locale }: Props) {
 
     const nextDraft = readDraftFromSearchParams(params);
     queueMicrotask(() => {
-      setTitle(nextDraft.title);
+      setTitleJa(nextDraft.titleJa);
+      setTitleEn(nextDraft.titleEn);
       setTapNumber(nextDraft.tapNumber);
       setDate(nextDraft.date);
+      setStartTime(nextDraft.startTime);
+      setEndTime(nextDraft.endTime);
       setDateTbd(nextDraft.dateTbd);
-      setSpeaker(nextDraft.speaker);
-      setAbstract(nextDraft.abstract);
-      setBio(nextDraft.bio);
+      setTimeTbd(nextDraft.timeTbd);
+      setSpeakerJa(nextDraft.speakerJa);
+      setSpeakerEn(nextDraft.speakerEn);
+      setAbstractJa(nextDraft.abstractJa);
+      setAbstractEn(nextDraft.abstractEn);
+      setBioJa(nextDraft.bioJa);
+      setBioEn(nextDraft.bioEn);
       setSpeakerImage(nextDraft.speakerImage);
       setUploadedImages(buildInitialUploadedImages(nextDraft.speakerImage, nextDraft.uploadedImages));
+      const hasJa = Boolean(nextDraft.titleJa || nextDraft.speakerJa || nextDraft.abstractJa || nextDraft.bioJa);
+      const hasEn = Boolean(nextDraft.titleEn || nextDraft.speakerEn || nextDraft.abstractEn || nextDraft.bioEn);
+      const nextUseJa = hasJa || !hasEn;
+      const nextUseEn = hasEn || !hasJa;
+      setUseJaSection(nextUseJa);
+      setUseEnSection(nextUseEn);
+      setOpenJaSection(nextUseJa);
+      setOpenEnSection(nextUseEn);
       setGeneratedUrl(window.location.href);
     });
   }, []);
@@ -189,6 +244,12 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       guideLinkLabel: isJa ? "← スピーカー向けご案内（新規タブで開く）" : "← Speaker Guide (opens in new tab)",
       workflowTitle: isJa ? "提出手順" : "Submission Steps",
       inputStepsTitle: isJa ? "入力手順" : "Input Steps",
+      languageSelectionTitle: isJa ? "入力言語の選択" : "Input Language Selection",
+      languageSelectionHelp: isJa
+        ? "入力された情報を HP に記載するので、宣伝したい層や対応可能な言語に合わせて選択してください。*のついた項目は日本語・英語セクションで同期されます。"
+        : "The submitted information will be published on the website, so choose the languages based on the audience you want to reach and the languages you can support. Fields marked with * are synchronized between the Japanese and English sections.",
+      japaneseLabel: isJa ? "日本語" : "Japanese",
+      englishLabel: isJa ? "英語" : "English",
       workflowSteps: isJa
         ? [
             "Talk Card（基本情報）と Abstract・Speaker Profile（詳細情報）を入力し、プレビューで内容を確認してください。",
@@ -200,33 +261,40 @@ export default function SpeakerSubmitClient({ locale }: Props) {
           ],
       submissionItemsTitle: isJa ? "提出内容" : "What to Submit",
       submissionItems: isJa
-        ? ["一番下の「提出用 URL を生成してコピー」ボタンを押してください。生成された URL を保管しておけば、記入内容も保持できます。その URL を世話人へ提出してください。"]
+        ? ["一番下の「URL を生成してコピー」ボタンを押してください。生成された URL を保管しておけば、記入内容も保持できます。その URL を世話人へ提出してください。"]
         : [
-            "Click the \"Generate and copy submission URL\" button at the bottom. If you keep the generated URL, your entered content will also be preserved. Then share that URL with the organizer.",
+            "Click the \"Generate and copy URL\" button at the bottom. If you keep the generated URL, your entered content will also be preserved. Then share that URL with the organizer.",
           ],
       talkCardSectionTitle: "TALK CARD",
-      abstractSectionTitle: isJa ? "Abstract" : "Abstract",
-      talkCardInputHeading: isJa ? "Talk Card 入力" : "Talk Card Input",
-      talkCardPreviewHeading: isJa ? "Talk Card プレビュー" : "Talk Card Preview",
-      abstractInputHeading: isJa ? "Abstract 入力" : "Abstract Input",
-      abstractPreviewHeading: isJa ? "Abstract プレビュー" : "Abstract Preview",
+      sectionInputHeading: isJa ? "入力" : "Input",
+      sectionPreviewHeading: isJa ? "プレビュー" : "Preview",
+      japaneseSectionTitle: isJa ? "日本語セクション" : "Japanese Section",
+      englishSectionTitle: isJa ? "英語セクション" : "English Section",
       desktopPreviewLabel: isJa ? "TALK CARD プレビュー（デスクトップ版）" : "TALK CARD Preview (Desktop)",
       mobilePreviewLabel: isJa ? "TALK CARD プレビュー（モバイル版）" : "TALK CARD Preview (Mobile)",
       markdownTitle: isJa ? "対応している Markdown / HTML" : "Supported Markdown / HTML",
-      submitTitle: isJa ? "提出用 URL" : "Submission URL",
-      titleLabel: isJa ? "タイトル" : "Title",
+      submitTitle: isJa ? "提出用 URL（一時保存用 URL）" : "Submission URL (temporary save URL)",
+      titleJaLabel: isJa ? "タイトル（日本語）" : "Title (Japanese)",
+      titleEnLabel: isJa ? "タイトル（英語）" : "Title (English)",
       titleTwoLineHint: isJa
         ? "改行する場合は、デスクトップ版表示で2行までに収まるように入力してください。"
         : "If you use line breaks, keep the title within 2 lines on the desktop preview.",
-      tapNumberLabel: isJa ? "Tap #" : "Tap #",
-      dateLabel: isJa ? "日付" : "Date",
-      dateTbdLabel: isJa ? "日付未定 (TBD)" : "Date TBD",
-      speakerLabel: isJa ? "スピーカー名" : "Speaker",
+      tapNumberLabel: isJa ? "Tap #*" : "Tap #*",
+      dateLabel: isJa ? "日付*" : "Date*",
+      startTimeLabel: isJa ? "開始時間*" : "Start time*",
+      endTimeLabel: isJa ? "終了時間*" : "End time*",
+      timeHint: isJa ? "xx:xx 形式で入力してください。片方だけでも表示できます。" : "Enter time in xx:xx format. Either side can be left blank.",
+      timeTbdLabel: isJa ? "時間未定 (TBD)*" : "Time TBD*",
+      dateTbdLabel: isJa ? "日付未定 (TBD)*" : "Date TBD*",
+      speakerJaLabel: isJa ? "スピーカー名（日本語）" : "Speaker (Japanese)",
+      speakerEnLabel: isJa ? "スピーカー名（英語）" : "Speaker (English)",
       speakerHint: isJa ? "デスクトップ版表示で1行以内に収まるように入力してください。" : "Keep to one line on the desktop preview.",
-      abstractLabel: isJa ? "アブストラクト" : "Abstract",
-      bioLabel: isJa ? "Speaker Profile 入力" : "Speaker Profile Input",
+      abstractJaLabel: isJa ? "Abstract（日本語）" : "Abstract (Japanese)",
+      abstractEnLabel: isJa ? "Abstract（英語）" : "Abstract (English)",
+      bioJaLabel: isJa ? "Speaker Profile（日本語）" : "Speaker Profile (Japanese)",
+      bioEnLabel: isJa ? "Speaker Profile（英語）" : "Speaker Profile (English)",
       uploadScrollHint: isJa ? "画像アップロードはこちら↓" : "Upload image below ↓",
-      speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
+      speakerImageLabel: isJa ? "スピーカー画像 URL*" : "Speaker image URL*",
       speakerImageAspectHint: isJa
         ? "表示比率は 2:3 です。画像はこの比率で自動クロップされます。"
         : "Display ratio is 2:3. Images are auto-cropped to this ratio.",
@@ -234,6 +302,9 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       uploadHelp: isJa
         ? "JPEG/PNG のみ、10MB まで、最大10枚。"
         : "JPEG/PNG only, up to 10MB, max 10 images.",
+      uploadDeleteNote: isJa
+        ? "アップロードされた画像は HP にトーク登録後削除されます。"
+        : "Uploaded images will be deleted after the talk is registered on the website.",
       uploadMissingEndpoint: isJa
         ? "アップロード設定が未完了です。管理者が署名 URL 発行エンドポイントを設定してください。"
         : "Upload is not configured yet. The admin needs to set a signed URL endpoint.",
@@ -248,13 +319,13 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       uploadDone: isJa ? "画像をアップロードしました。" : "Image uploaded.",
       uploadedImagesTitle: isJa ? "アップロード済み画像" : "Uploaded images",
       uploadedImagesEmpty: isJa ? "まだ画像はアップロードされていません。" : "No uploaded images yet.",
-      copyImageUrlButton: isJa ? "URLをコピー" : "Copy URL",
+      copyImageUrlButton: isJa ? "URL をコピー" : "Copy URL",
       copyImageMarkdownButton: isJa ? "Markdown" : "Markdown",
       copyImageHtmlButton: isJa ? "HTML" : "HTML",
       copyHeading: isJa ? "コピー" : "Copy",
       copyImageUrlChip: isJa ? "URL" : "URL",
-      copiedImageUrlMessage: isJa ? "URLをコピーしました。" : "URL copied.",
-      copiedImageMarkdownMessage: isJa ? "Markdownをコピーしました。" : "Markdown copied.",
+      copiedImageUrlMessage: isJa ? "URL をコピーしました。" : "URL copied.",
+      copiedImageMarkdownMessage: isJa ? "Markdown をコピーしました。" : "Markdown copied.",
       copiedImageHtmlMessage: isJa ? "HTMLをコピーしました。" : "HTML copied.",
       copyImageUrlError: isJa ? "URL のコピーに失敗しました。" : "Could not copy URL.",
       deleteImageButton: isJa ? "削除" : "Delete",
@@ -262,9 +333,14 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       deleteImageError: isJa ? "画像の削除に失敗しました。" : "Could not delete image.",
       deleteUnavailable: isJa ? "この画像は削除 URL がないため削除できません。" : "This image cannot be deleted because no delete URL is available.",
       deleteUnavailableInline: isJa ? "この URL では削除できません" : "Cannot delete from this URL",
-      generateUrlButton: isJa ? "提出用 URL を生成してコピー" : "Generate and copy submission URL",
+      generateUrlButton: isJa ? "URL を生成してコピー" : "Generate and copy URL",
+      downloadUrlButton: isJa ? "URL を生成して .txt を保存" : "Generate URL and save as .txt",
+      submitHelp: isJa
+        ? "生成した URL をそのまま世話人に送るか、URL を保存したテキストファイルを送ってください。"
+        : "After generating the URL, either send the URL directly to the organizer or send the text file that contains the URL.",
       generatedUrlLabel: isJa ? "生成された URL" : "Generated URL",
       copiedMessage: isJa ? "コピーしました。" : "Copied.",
+      savedTextFileMessage: isJa ? "テキストファイルを保存しました。" : "Saved text file.",
       copyErrorMessage: isJa ? "コピーに失敗しました。手動でコピーしてください。" : "Could not copy. Please copy manually.",
       markdownExamples: isJa
         ? [
@@ -295,8 +371,10 @@ export default function SpeakerSubmitClient({ locale }: Props) {
             "Caption: `<figure align=\"left|center|right\"><img src=\"/logo-color.svg\" width=\"120\" /><figcaption>caption</figcaption></figure>`",
           ],
       emptyHint: isJa ? "入力するとレンダリング結果が表示されます。" : "Enter text to see the rendered output.",
-      abstractHeading: "Abstract",
-      bioHeading: "Speaker Bio",
+      abstractJaHeading: isJa ? "Abstract（日本語）" : "Abstract (Japanese)",
+      abstractEnHeading: isJa ? "Abstract（英語）" : "Abstract (English)",
+      bioJaHeading: isJa ? "Speaker Bio（日本語）" : "Speaker Bio (Japanese)",
+      bioEnHeading: isJa ? "Speaker Bio（英語）" : "Speaker Bio (English)",
     }),
     [isJa],
   );
@@ -307,33 +385,59 @@ export default function SpeakerSubmitClient({ locale }: Props) {
   }, [tapNumber]);
   const hasReachedUploadLimit = uploadedImages.length >= MAX_UPLOADED_IMAGES;
 
+  const applyLanguageSelection = (nextUseJa: boolean, nextUseEn: boolean) => {
+    if (!nextUseJa && !nextUseEn) {
+      return;
+    }
+
+    setUseJaSection(nextUseJa);
+    setUseEnSection(nextUseEn);
+    if (nextUseJa && nextUseEn) {
+      setOpenJaSection(true);
+      setOpenEnSection(true);
+      return;
+    }
+    setOpenJaSection(nextUseJa);
+    setOpenEnSection(nextUseEn);
+  };
+
   const previewTalk: Talk = {
     id: "preview",
     slug: "preview",
     date: date || "2099-01-01",
+    startTime: timeTbd ? undefined : startTime.trim() || undefined,
+    endTime: timeTbd ? undefined : endTime.trim() || undefined,
     dateTbd,
-    titleEn: title || "Title preview",
-    titleJa: title || "タイトルプレビュー",
-    speakerEn: speaker || "Speaker name",
-    speakerJa: speaker || "スピーカー名",
-    abstractEn: abstract,
-    abstractJa: abstract,
-    speakerBioEn: bio,
-    speakerBioJa: bio,
+    timeTbd,
+    titleEn: titleEn || "Title preview",
+    titleJa: titleJa || "タイトルプレビュー",
+    speakerEn: speakerEn || "Speaker name",
+    speakerJa: speakerJa || "スピーカー名",
+    abstractEn: abstractEn,
+    abstractJa: abstractJa,
+    speakerBioEn: bioEn,
+    speakerBioJa: bioJa,
     speakerImage: speakerImage || undefined,
   };
 
-  const createSubmissionUrl = async () => {
+  const buildSubmissionUrl = (): string => {
     const url = new URL(window.location.href);
     url.search = "";
 
-    if (title.trim()) url.searchParams.set("title", title);
+    if (titleJa.trim()) url.searchParams.set("titleJa", titleJa);
+    if (titleEn.trim()) url.searchParams.set("titleEn", titleEn);
     if (tapNumber.trim()) url.searchParams.set("tap", tapNumber.trim());
     if (date.trim()) url.searchParams.set("date", date);
+    if (startTime.trim()) url.searchParams.set("startTime", startTime.trim());
+    if (endTime.trim()) url.searchParams.set("endTime", endTime.trim());
     if (dateTbd) url.searchParams.set("dateTbd", "1");
-    if (speaker.trim()) url.searchParams.set("speaker", speaker);
-    if (abstract.trim()) url.searchParams.set("abstract", abstract);
-    if (bio.trim()) url.searchParams.set("bio", bio);
+    if (timeTbd) url.searchParams.set("timeTbd", "1");
+    if (speakerJa.trim()) url.searchParams.set("speakerJa", speakerJa);
+    if (speakerEn.trim()) url.searchParams.set("speakerEn", speakerEn);
+    if (abstractJa.trim()) url.searchParams.set("abstractJa", abstractJa);
+    if (abstractEn.trim()) url.searchParams.set("abstractEn", abstractEn);
+    if (bioJa.trim()) url.searchParams.set("bioJa", bioJa);
+    if (bioEn.trim()) url.searchParams.set("bioEn", bioEn);
     if (speakerImage.trim()) url.searchParams.set("speakerImage", speakerImage);
     for (const image of uploadedImages) {
       url.searchParams.append("uploadedImage", image.url);
@@ -348,7 +452,11 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       }
     }
 
-    const nextUrl = url.toString();
+    return url.toString();
+  };
+
+  const createSubmissionUrl = async () => {
+    const nextUrl = buildSubmissionUrl();
     setGeneratedUrl(nextUrl);
     try {
       await navigator.clipboard.writeText(nextUrl);
@@ -356,6 +464,21 @@ export default function SpeakerSubmitClient({ locale }: Props) {
     } catch {
       setCopyNotice("error");
     }
+  };
+
+  const saveSubmissionUrlAsText = () => {
+    const urlToSave = buildSubmissionUrl();
+    setGeneratedUrl(urlToSave);
+    const blob = new Blob([`${urlToSave}\n`], { type: "text/plain;charset=utf-8" });
+    const blobUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = blobUrl;
+    anchor.download = "speaker-submission-url.txt";
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(blobUrl);
+    setCopyNotice("savedTxt");
   };
 
   const uploadImage = async (target: UploadTarget, file: File | null) => {
@@ -546,6 +669,27 @@ export default function SpeakerSubmitClient({ locale }: Props) {
 
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-6 shadow-sm">
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.workflowTitle}</h2>
+        <h3 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.languageSelectionTitle}</h3>
+        <p className="mb-3 text-xs text-[var(--muted)]">{text.languageSelectionHelp}</p>
+        <div className="flex flex-wrap gap-4 text-sm text-[var(--muted)]">
+          <label className="inline-flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={useJaSection}
+              onChange={(event) => applyLanguageSelection(event.target.checked, useEnSection)}
+            />
+            <span>{text.japaneseLabel}</span>
+          </label>
+          <label className="inline-flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={useEnSection}
+              onChange={(event) => applyLanguageSelection(useJaSection, event.target.checked)}
+            />
+            <span>{text.englishLabel}</span>
+          </label>
+        </div>
+
         <h3 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.inputStepsTitle}</h3>
         <ul className="space-y-2 text-sm text-[var(--muted)]">
           {text.workflowSteps.map((item) => (
@@ -582,95 +726,149 @@ export default function SpeakerSubmitClient({ locale }: Props) {
         </details>
       </section>
 
-      <section className="mb-8">
-        <div className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
-          <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.talkCardInputHeading}</h3>
+      <section className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+        <details
+          open={openJaSection}
+          onToggle={(event) => {
+            if (!useJaSection) {
+              setOpenJaSection(false);
+              return;
+            }
+            setOpenJaSection(event.currentTarget.open);
+          }}
+        >
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+            {text.japaneseSectionTitle}
+          </summary>
 
-          <div className="space-y-4">
-            <div className="flex flex-wrap items-end gap-4">
-              <label className="w-24 shrink-0">
-                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.tapNumberLabel}</span>
-                <input
-                  value={tapNumber}
-                  onChange={(event) => setTapNumber(event.target.value.replace(/[^0-9]/g, ""))}
-                  inputMode="numeric"
-                  placeholder="0"
+          <div className="mt-4">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionInputHeading}</h3>
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-end gap-4">
+                <label className="w-24 shrink-0">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.tapNumberLabel}</span>
+                  <input
+                    value={tapNumber}
+                    onChange={(event) => setTapNumber(event.target.value.replace(/[^0-9]/g, ""))}
+                    inputMode="numeric"
+                    placeholder="0"
+                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+
+                <label className="w-auto shrink-0">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={date.replace(/-/g, "/")}
+                    onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
+                    placeholder="yyyy/mm/dd"
+                    className="w-[11.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+
+                <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
+                  <input
+                    type="checkbox"
+                    checked={dateTbd}
+                    onChange={(event) => setDateTbd(event.target.checked)}
+                  />
+                  <span>{text.dateTbdLabel}</span>
+                </label>
+
+                <label className="w-auto shrink-0">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.startTimeLabel}</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={5}
+                    value={startTime}
+                    onChange={(event) => setStartTime(normalizeTimeInput(event.target.value))}
+                    placeholder="xx:xx"
+                    disabled={timeTbd}
+                    className="w-[8.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+
+                <label className="w-auto shrink-0">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.endTimeLabel}</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={5}
+                    value={endTime}
+                    onChange={(event) => setEndTime(normalizeTimeInput(event.target.value))}
+                    placeholder="xx:xx"
+                    disabled={timeTbd}
+                    className="w-[8.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+
+                <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
+                  <input
+                    type="checkbox"
+                    checked={timeTbd}
+                    onChange={(event) => setTimeTbd(event.target.checked)}
+                  />
+                  <span>{text.timeTbdLabel}</span>
+                </label>
+              </div>
+              <p className="text-xs text-[var(--muted)]">{text.timeHint}</p>
+
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.titleJaLabel}</span>
+                <textarea
+                  value={titleJa}
+                  onChange={(event) => setTitleJa(event.target.value)}
+                  rows={2}
+                  placeholder="例: ポケモンと生物多様性"
                   className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                 />
+                <p className="mt-1 text-xs text-[var(--muted)]">{text.titleTwoLineHint}</p>
               </label>
 
-              <label className="w-auto shrink-0">
-                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.speakerJaLabel}</span>
                 <input
-                  type="text"
-                  inputMode="numeric"
-                  value={date.replace(/-/g, "/")}
-                  onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
-                  placeholder="yyyy/mm/dd"
-                  className="w-[11.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  value={speakerJa}
+                  onChange={(event) => setSpeakerJa(event.target.value)}
+                  placeholder="例: 鴨巣 太郎（麦酒大学）"
+                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                 />
+                <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerHint}</p>
               </label>
 
-              <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.speakerImageLabel}</span>
                 <input
-                  type="checkbox"
-                  checked={dateTbd}
-                  onChange={(event) => setDateTbd(event.target.checked)}
+                  value={speakerImage}
+                  onChange={(event) => setSpeakerImage(event.target.value)}
+                  placeholder="例: https://example.com/photo.jpg"
+                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                 />
-                <span>{text.dateTbdLabel}</span>
+                <p className="mt-1 text-xs text-[var(--muted)]">
+                  <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
+                </p>
+                <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerImageAspectHint}</p>
               </label>
             </div>
 
-            <label className="block">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.titleLabel}</span>
-              <textarea
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                rows={2}
-                placeholder={isJa ? "例: ポケモンと生物多様性" : "e.g. Pokemon and Biodiversity"}
-                className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-              />
-              <p className="mt-1 text-xs text-[var(--muted)]">{text.titleTwoLineHint}</p>
-            </label>
+            <div className="mt-5 border-t border-[var(--line)] pt-5">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
 
-            <label className="block">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.speakerLabel}</span>
-              <input
-                value={speaker}
-                onChange={(event) => setSpeaker(event.target.value)}
-                placeholder={isJa ? "例: 鴨巣 太郎（麦酒大学）" : "e.g. Taro Camos (Beer University)"}
-                className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-              />
-              <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerHint}</p>
-            </label>
-
-            <label className="block">
-              <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.speakerImageLabel}</span>
-              <input
-                value={speakerImage}
-                onChange={(event) => setSpeakerImage(event.target.value)}
-                placeholder={isJa ? "例: https://example.com/photo.jpg" : "e.g. https://example.com/photo.jpg"}
-                className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-              />
-              <p className="mt-1 text-xs text-[var(--muted)]">
-                <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
-              </p>
-              <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerImageAspectHint}</p>
-            </label>
-
-            <div className="border-t border-[var(--line)] pt-5">
               <section className="w-full overflow-x-auto pb-1">
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.desktopPreviewLabel}</h4>
                 <div className="w-[720px] min-w-[720px]">
                   <TalkCard
                     talk={previewTalk}
-                    locale={locale}
+                    locale="ja"
                     variant="upcomingTap"
                     tapNumber={normalizedTapNumber}
                     disableLink
                     forceDesktopTypography
                     titleMaxLines={2}
-                    titleDataField="desktop-title"
+                    titleDataField="desktop-title-ja"
                   />
                 </div>
               </section>
@@ -680,7 +878,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                 <div className="w-[342px] min-w-[342px]">
                   <TalkCard
                     talk={previewTalk}
-                    locale={locale}
+                    locale="ja"
                     variant="upcomingTap"
                     tapNumber={normalizedTapNumber}
                     disableLink
@@ -689,69 +887,281 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                 </div>
               </section>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="mb-8">
-        <div className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
-          <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
-            <div className="pr-0 xl:pr-6">
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.abstractInputHeading}</h3>
-
-              <div className="space-y-4">
+            <div className="mt-5 flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
+              <div className="pr-0 xl:pr-6">
                 <label className="block">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractJaLabel}</span>
                   <textarea
-                    value={abstract}
-                    onChange={(event) => setAbstract(event.target.value)}
+                    value={abstractJa}
+                    onChange={(event) => setAbstractJa(event.target.value)}
                     rows={8}
-                    placeholder={isJa ? "例: このトークでは、..." : "e.g. In this talk, we will..."}
+                    placeholder="例: このトークでは、..."
                     className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                   />
                 </label>
 
-                <div className="border-t border-[var(--line)] pt-4">
-                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.bioLabel}</h3>
+                <label className="mt-4 block border-t border-[var(--line)] pt-4">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioJaLabel}</span>
                   <textarea
-                    value={bio}
-                    onChange={(event) => setBio(event.target.value)}
+                    value={bioJa}
+                    onChange={(event) => setBioJa(event.target.value)}
                     rows={5}
-                    placeholder={isJa ? "例: XX大学 インターネット言語研究室 特任教授。" : "e.g. Assistant Professor, Department of ..."}
+                    placeholder="例: XX大学 インターネット言語研究室 特任教授。"
                     className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                   />
-                </div>
+                </label>
+              </div>
+
+              <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+
+                {!(abstractJa || bioJa) ? (
+                  <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
+                ) : (
+                  <div className="space-y-6">
+                    {abstractJa && (
+                      <section>
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+                          {text.abstractJaHeading}
+                        </h4>
+                        <MarkdownText content={abstractJa} className="leading-relaxed text-[var(--muted)]" />
+                      </section>
+                    )}
+
+                    {bioJa && (
+                      <section>
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+                          {text.bioJaHeading}
+                        </h4>
+                        <MarkdownText content={bioJa} className="leading-relaxed text-[var(--muted)]" />
+                      </section>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
+          </div>
+        </details>
+      </section>
 
-            <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.abstractPreviewHeading}</h3>
+      <section className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+        <details
+          open={openEnSection}
+          onToggle={(event) => {
+            if (!useEnSection) {
+              setOpenEnSection(false);
+              return;
+            }
+            setOpenEnSection(event.currentTarget.open);
+          }}
+        >
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
+            {text.englishSectionTitle}
+          </summary>
 
-              {!abstract && !bio ? (
-                <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
-              ) : (
-                <div className="space-y-6">
-                  {abstract && (
-                    <section>
-                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
-                        {text.abstractHeading}
-                      </h4>
-                      <MarkdownText content={abstract} className="leading-relaxed text-[var(--muted)]" />
-                    </section>
-                  )}
+          <div className="mt-4">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionInputHeading}</h3>
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-end gap-4">
+                <label className="w-24 shrink-0">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.tapNumberLabel}</span>
+                  <input
+                    value={tapNumber}
+                    onChange={(event) => setTapNumber(event.target.value.replace(/[^0-9]/g, ""))}
+                    inputMode="numeric"
+                    placeholder="0"
+                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
 
-                  {bio && (
-                    <section>
-                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
-                        {text.bioHeading}
-                      </h4>
-                      <MarkdownText content={bio} className="leading-relaxed text-[var(--muted)]" />
-                    </section>
-                  )}
+                <label className="w-auto shrink-0">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={date.replace(/-/g, "/")}
+                    onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
+                    placeholder="yyyy/mm/dd"
+                    className="w-[11.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+
+                <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
+                  <input
+                    type="checkbox"
+                    checked={dateTbd}
+                    onChange={(event) => setDateTbd(event.target.checked)}
+                  />
+                  <span>{text.dateTbdLabel}</span>
+                </label>
+
+                <label className="w-auto shrink-0">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.startTimeLabel}</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={5}
+                    value={startTime}
+                    onChange={(event) => setStartTime(normalizeTimeInput(event.target.value))}
+                    placeholder="xx:xx"
+                    disabled={timeTbd}
+                    className="w-[8.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+
+                <label className="w-auto shrink-0">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.endTimeLabel}</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={5}
+                    value={endTime}
+                    onChange={(event) => setEndTime(normalizeTimeInput(event.target.value))}
+                    placeholder="xx:xx"
+                    disabled={timeTbd}
+                    className="w-[8.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+
+                <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
+                  <input
+                    type="checkbox"
+                    checked={timeTbd}
+                    onChange={(event) => setTimeTbd(event.target.checked)}
+                  />
+                  <span>{text.timeTbdLabel}</span>
+                </label>
+              </div>
+              <p className="text-xs text-[var(--muted)]">{text.timeHint}</p>
+
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.titleEnLabel}</span>
+                <textarea
+                  value={titleEn}
+                  onChange={(event) => setTitleEn(event.target.value)}
+                  rows={2}
+                  placeholder="e.g. Pokemon and Biodiversity"
+                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                />
+                <p className="mt-1 text-xs text-[var(--muted)]">{text.titleTwoLineHint}</p>
+              </label>
+
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.speakerEnLabel}</span>
+                <input
+                  value={speakerEn}
+                  onChange={(event) => setSpeakerEn(event.target.value)}
+                  placeholder="e.g. Taro Camos (Beer University)"
+                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                />
+                <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerHint}</p>
+              </label>
+
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.speakerImageLabel}</span>
+                <input
+                  value={speakerImage}
+                  onChange={(event) => setSpeakerImage(event.target.value)}
+                  placeholder="e.g. https://example.com/photo.jpg"
+                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                />
+                <p className="mt-1 text-xs text-[var(--muted)]">
+                  <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
+                </p>
+                <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerImageAspectHint}</p>
+              </label>
+            </div>
+
+            <div className="mt-5 border-t border-[var(--line)] pt-5">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+
+              <section className="w-full overflow-x-auto pb-1">
+                <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.desktopPreviewLabel}</h4>
+                <div className="w-[720px] min-w-[720px]">
+                  <TalkCard
+                    talk={previewTalk}
+                    locale="en"
+                    variant="upcomingTap"
+                    tapNumber={normalizedTapNumber}
+                    disableLink
+                    forceDesktopTypography
+                    titleMaxLines={2}
+                    titleDataField="desktop-title-en"
+                  />
                 </div>
-              )}
+              </section>
+
+              <section className="mt-5 w-full overflow-x-auto pb-1">
+                <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.mobilePreviewLabel}</h4>
+                <div className="w-[342px] min-w-[342px]">
+                  <TalkCard
+                    talk={previewTalk}
+                    locale="en"
+                    variant="upcomingTap"
+                    tapNumber={normalizedTapNumber}
+                    disableLink
+                    forceMobileTypography
+                  />
+                </div>
+              </section>
+            </div>
+
+            <div className="mt-5 flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
+              <div className="pr-0 xl:pr-6">
+                <label className="block">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractEnLabel}</span>
+                  <textarea
+                    value={abstractEn}
+                    onChange={(event) => setAbstractEn(event.target.value)}
+                    rows={8}
+                    placeholder="e.g. In this talk, we will..."
+                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+
+                <label className="mt-4 block border-t border-[var(--line)] pt-4">
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioEnLabel}</span>
+                  <textarea
+                    value={bioEn}
+                    onChange={(event) => setBioEn(event.target.value)}
+                    rows={5}
+                    placeholder="e.g. Assistant Professor, Department of ..."
+                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  />
+                </label>
+              </div>
+
+              <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+
+                {!(abstractEn || bioEn) ? (
+                  <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
+                ) : (
+                  <div className="space-y-6">
+                    {abstractEn && (
+                      <section>
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+                          {text.abstractEnHeading}
+                        </h4>
+                        <MarkdownText content={abstractEn} className="leading-relaxed text-[var(--muted)]" />
+                      </section>
+                    )}
+
+                    {bioEn && (
+                      <section>
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+                          {text.bioEnHeading}
+                        </h4>
+                        <MarkdownText content={bioEn} className="leading-relaxed text-[var(--muted)]" />
+                      </section>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </details>
       </section>
 
       <section id="image-upload" className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
@@ -781,6 +1191,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
           </label>
           <p className="text-xs text-[var(--muted)]">{text.uploadHelp}</p>
         </div>
+        <p className="mt-2 text-xs text-[var(--muted)]">{text.uploadDeleteNote}</p>
 
         {uploadingTarget !== null && <p className="mt-2 text-xs text-[var(--accent-deep)]">{text.uploadInProgress}</p>}
         {hasReachedUploadLimit && <p className="mt-2 text-xs text-[var(--accent-deep)]">{text.uploadLimitError}</p>}
@@ -865,13 +1276,23 @@ export default function SpeakerSubmitClient({ locale }: Props) {
 
       <section className="mb-8 rounded-xl bg-[var(--accent)] px-5 py-5 shadow-sm">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-white">{text.submitTitle}</h2>
-        <button
-          type="button"
-          onClick={createSubmissionUrl}
-          className="inline-flex items-center rounded-md border-2 border-[#3a2417] bg-white px-4 py-2.5 text-sm font-semibold text-[#3a2417] shadow-[0_3px_0_#3a2417] transition hover:-translate-y-0.5 hover:bg-[#fff4ea] active:translate-y-0 active:shadow-[0_1px_0_#3a2417] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
-        >
-          {text.generateUrlButton}
-        </button>
+        <p className="mb-3 text-sm text-white/90">{text.submitHelp}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={createSubmissionUrl}
+            className="inline-flex items-center rounded-md border-2 border-[#3a2417] bg-white px-4 py-2.5 text-sm font-semibold text-[#3a2417] shadow-[0_3px_0_#3a2417] transition hover:-translate-y-0.5 hover:bg-[#fff4ea] active:translate-y-0 active:shadow-[0_1px_0_#3a2417] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+          >
+            {text.generateUrlButton}
+          </button>
+          <button
+            type="button"
+            onClick={saveSubmissionUrlAsText}
+            className="inline-flex items-center rounded-md border-2 border-[#3a2417] bg-white px-4 py-2.5 text-sm font-semibold text-[#3a2417] shadow-[0_3px_0_#3a2417] transition hover:-translate-y-0.5 hover:bg-[#fff4ea] active:translate-y-0 active:shadow-[0_1px_0_#3a2417] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+          >
+            {text.downloadUrlButton}
+          </button>
+        </div>
 
         {generatedUrl && (
           <div className="mt-3 space-y-2">
@@ -883,6 +1304,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
               className="w-full rounded-none border border-white/60 bg-white px-3 py-2 text-xs text-[#3a2417]"
             />
             {copyNotice === "copied" && <p className="text-xs text-white">{text.copiedMessage}</p>}
+            {copyNotice === "savedTxt" && <p className="text-xs text-white">{text.savedTextFileMessage}</p>}
             {copyNotice === "error" && <p className="text-xs text-white">{text.copyErrorMessage}</p>}
           </div>
         )}
