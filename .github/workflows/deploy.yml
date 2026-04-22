@@ -34,6 +34,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          NEXT_PUBLIC_UPLOAD_SIGN_ENDPOINT: https://camos-tap-talks-speaker-worker.yuesugi.workers.dev/sign
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
