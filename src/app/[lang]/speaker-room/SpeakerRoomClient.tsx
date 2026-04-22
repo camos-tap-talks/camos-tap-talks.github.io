@@ -213,6 +213,9 @@ export default function SpeakerRoomClient({ locale }: Props) {
       bioLabel: isJa ? "Speaker Profile 入力" : "Speaker Profile Input",
       uploadScrollHint: isJa ? "画像アップロードはこちら↓" : "Upload image below ↓",
       speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
+      speakerImageAspectHint: isJa
+        ? "表示比率は 11:15 です。画像はこの比率で自動クロップされます。"
+        : "Display ratio is 11:15. Images are auto-cropped to this ratio.",
       uploadTitle: isJa ? "画像アップロード" : "Image Upload",
       uploadHelp: isJa
         ? "JPEG/PNG のみ、10MB まで、最大10枚。"
@@ -581,6 +584,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
               <p className="mt-1 text-xs text-[var(--muted)]">
                 <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
               </p>
+              <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerImageAspectHint}</p>
             </label>
 
             <div className="border-t border-[var(--line)] pt-5">
@@ -593,6 +597,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
                     variant="upcomingTap"
                     tapNumber={normalizedTapNumber}
                     disableLink
+                    forceDesktopTypography
                     titleMaxLines={2}
                     titleDataField="desktop-title"
                   />
