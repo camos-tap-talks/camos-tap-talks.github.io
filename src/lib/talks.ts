@@ -70,9 +70,18 @@ export function getPastTalks(): Talk[] {
   return talks.filter((t) => !t.dateTbd && t.date < today).sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export function formatTimeRange(startTime?: string, endTime?: string, timeTbd?: boolean, locale?: "en" | "ja"): string {
+export function buildTalkPathSlug(tapNumber: string | number | undefined, slug: string, fallback = "preview"): string {
+  const numericTap = typeof tapNumber === "number"
+    ? tapNumber
+    : Number.parseInt(String(tapNumber ?? ""), 10);
+  const normalizedTap = Number.isFinite(numericTap) && numericTap > 0 ? numericTap : 0;
+  const normalizedSlug = slug.trim() || fallback;
+  return `${normalizedTap}-${normalizedSlug}`;
+}
+
+export function formatTimeRange(startTime?: string, endTime?: string, timeTbd?: boolean): string {
   if (timeTbd) {
-    return locale === "ja" ? "時間未定" : "TBD";
+    return "";
   }
   if (startTime && endTime) {
     return `${startTime}–${endTime}`;
@@ -92,7 +101,7 @@ export function formatDate(dateStr: string, locale: "en" | "ja", dateTbd?: boole
   }
 
   const date = new Date(dateStr + "T00:00:00");
-  const formattedTime = formatTimeRange(startTime, endTime, timeTbd, locale);
+  const formattedTime = formatTimeRange(startTime, endTime, timeTbd);
 
   if (locale === "ja") {
     const formattedDate = date.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });

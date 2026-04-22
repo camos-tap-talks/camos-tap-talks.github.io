@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useState, type MouseEvent } from "react";
 import Image from "next/image";
 import type { Locale } from "@/lib/i18n";
 import type { Talk } from "@/lib/talks";
+import { buildTalkPathSlug } from "@/lib/talks";
 import TalkCard from "@/components/TalkCard";
 import MarkdownText from "@/components/MarkdownText";
 
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export type InitialDraft = {
+  slug: string;
   titleJa: string;
   titleEn: string;
   tapNumber: string;
@@ -20,6 +22,8 @@ export type InitialDraft = {
   endTime: string;
   dateTbd: boolean;
   timeTbd: boolean;
+  startTimeTbd: boolean;
+  endTimeTbd: boolean;
   speakerJa: string;
   speakerEn: string;
   abstractJa: string;
@@ -56,6 +60,7 @@ const MAX_UPLOADED_IMAGES = 10;
 const ACCEPTED_UPLOAD_TYPES = new Set(["image/jpeg", "image/png"]);
 const UPLOAD_SIGN_ENDPOINT = process.env.NEXT_PUBLIC_UPLOAD_SIGN_ENDPOINT ?? "";
 const EMPTY_DRAFT: InitialDraft = {
+  slug: "",
   titleJa: "",
   titleEn: "",
   tapNumber: "",
@@ -64,6 +69,8 @@ const EMPTY_DRAFT: InitialDraft = {
   endTime: "",
   dateTbd: false,
   timeTbd: false,
+  startTimeTbd: false,
+  endTimeTbd: false,
   speakerJa: "",
   speakerEn: "",
   abstractJa: "",
@@ -109,6 +116,7 @@ function readDraftFromSearchParams(params: URLSearchParams): InitialDraft {
   }
 
   return {
+    slug: params.get("slug") ?? "",
     titleJa: params.get("titleJa") ?? params.get("title") ?? "",
     titleEn: params.get("titleEn") ?? params.get("title") ?? "",
     tapNumber: params.get("tap") ?? params.get("tapNumber") ?? "",
@@ -117,6 +125,16 @@ function readDraftFromSearchParams(params: URLSearchParams): InitialDraft {
     endTime: params.get("endTime") ?? "",
     dateTbd: params.get("dateTbd") === "1" || params.get("dateTbd") === "true",
     timeTbd: params.get("timeTbd") === "1" || params.get("timeTbd") === "true",
+    startTimeTbd:
+      params.get("startTimeTbd") === "1"
+      || params.get("startTimeTbd") === "true"
+      || params.get("timeTbd") === "1"
+      || params.get("timeTbd") === "true",
+    endTimeTbd:
+      params.get("endTimeTbd") === "1"
+      || params.get("endTimeTbd") === "true"
+      || params.get("timeTbd") === "1"
+      || params.get("timeTbd") === "true",
     speakerJa: params.get("speakerJa") ?? params.get("speaker") ?? "",
     speakerEn: params.get("speakerEn") ?? params.get("speaker") ?? "",
     abstractJa: params.get("abstractJa") ?? params.get("abstract") ?? "",
@@ -126,6 +144,16 @@ function readDraftFromSearchParams(params: URLSearchParams): InitialDraft {
     speakerImage: params.get("speakerImage") ?? "",
     uploadedImages: Array.from(mergedByUrl.values()),
   };
+}
+
+function normalizeSlugInput(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48);
 }
 
 function normalizeTimeInput(value: string): string {
@@ -170,7 +198,9 @@ function buildInitialUploadedImages(
 
 export default function SpeakerSubmitClient({ locale }: Props) {
   const isJa = locale === "ja";
+  const emptyInputClass = (value: string, inactive = false) => (inactive || value.trim() ? "bg-white" : "bg-[#eef8ff]");
 
+  const [slug, setSlug] = useState(EMPTY_DRAFT.slug);
   const [titleJa, setTitleJa] = useState(EMPTY_DRAFT.titleJa);
   const [titleEn, setTitleEn] = useState(EMPTY_DRAFT.titleEn);
   const [tapNumber, setTapNumber] = useState(EMPTY_DRAFT.tapNumber);
@@ -178,7 +208,8 @@ export default function SpeakerSubmitClient({ locale }: Props) {
   const [startTime, setStartTime] = useState(EMPTY_DRAFT.startTime);
   const [endTime, setEndTime] = useState(EMPTY_DRAFT.endTime);
   const [dateTbd, setDateTbd] = useState(EMPTY_DRAFT.dateTbd);
-  const [timeTbd, setTimeTbd] = useState(EMPTY_DRAFT.timeTbd);
+  const [startTimeTbd, setStartTimeTbd] = useState(EMPTY_DRAFT.startTimeTbd);
+  const [endTimeTbd, setEndTimeTbd] = useState(EMPTY_DRAFT.endTimeTbd);
   const [speakerJa, setSpeakerJa] = useState(EMPTY_DRAFT.speakerJa);
   const [speakerEn, setSpeakerEn] = useState(EMPTY_DRAFT.speakerEn);
   const [abstractJa, setAbstractJa] = useState(EMPTY_DRAFT.abstractJa);
@@ -206,6 +237,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
 
     const nextDraft = readDraftFromSearchParams(params);
     queueMicrotask(() => {
+      setSlug(nextDraft.slug);
       setTitleJa(nextDraft.titleJa);
       setTitleEn(nextDraft.titleEn);
       setTapNumber(nextDraft.tapNumber);
@@ -213,7 +245,8 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       setStartTime(nextDraft.startTime);
       setEndTime(nextDraft.endTime);
       setDateTbd(nextDraft.dateTbd);
-      setTimeTbd(nextDraft.timeTbd);
+      setStartTimeTbd(nextDraft.startTimeTbd);
+      setEndTimeTbd(nextDraft.endTimeTbd);
       setSpeakerJa(nextDraft.speakerJa);
       setSpeakerEn(nextDraft.speakerEn);
       setAbstractJa(nextDraft.abstractJa);
@@ -272,20 +305,25 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       englishSectionTitle: isJa ? "英語セクション" : "English Section",
       desktopPreviewLabel: isJa ? "TALK CARD プレビュー（デスクトップ版）" : "TALK CARD Preview (Desktop)",
       mobilePreviewLabel: isJa ? "TALK CARD プレビュー（モバイル版）" : "TALK CARD Preview (Mobile)",
+      urlPreviewLabel: isJa ? "URL プレビュー" : "URL Preview",
       markdownTitle: isJa ? "対応している Markdown / HTML" : "Supported Markdown / HTML",
+      markdownScrollHint: isJa ? "対応している Markdown / HTML はこちら↑" : "Supported Markdown / HTML is above ↑",
       submitTitle: isJa ? "提出用 URL（一時保存用 URL）" : "Submission URL (temporary save URL)",
+      slugLabel: isJa ? "Slug*" : "Slug*",
+      slugHint: isJa
+        ? "URL に使われます。基本は 1 単語、長くても 3 単語まで。通常は family name / first name か研究に関する単語を小文字で入力してください。"
+        : "Used in the URL. Prefer 1 word, at most 3. Usually use a family name, first name, or a research-related word in lowercase.",
       titleJaLabel: isJa ? "タイトル（日本語）" : "Title (Japanese)",
       titleEnLabel: isJa ? "タイトル（英語）" : "Title (English)",
       titleTwoLineHint: isJa
         ? "改行する場合は、デスクトップ版表示で2行までに収まるように入力してください。"
         : "If you use line breaks, keep the title within 2 lines on the desktop preview.",
       tapNumberLabel: isJa ? "Tap #*" : "Tap #*",
+      tapNumberHint: isJa ? "通し番号" : "Serial number",
       dateLabel: isJa ? "日付*" : "Date*",
       startTimeLabel: isJa ? "開始時間*" : "Start time*",
       endTimeLabel: isJa ? "終了時間*" : "End time*",
-      timeHint: isJa ? "xx:xx 形式で入力してください。片方だけでも表示できます。" : "Enter time in xx:xx format. Either side can be left blank.",
-      timeTbdLabel: isJa ? "時間未定 (TBD)*" : "Time TBD*",
-      dateTbdLabel: isJa ? "日付未定 (TBD)*" : "Date TBD*",
+      undecidedLabel: isJa ? "未定" : "TBD",
       speakerJaLabel: isJa ? "スピーカー名（日本語）" : "Speaker (Japanese)",
       speakerEnLabel: isJa ? "スピーカー名（英語）" : "Speaker (English)",
       speakerHint: isJa ? "デスクトップ版表示で1行以内に収まるように入力してください。" : "Keep to one line on the desktop preview.",
@@ -384,12 +422,10 @@ export default function SpeakerSubmitClient({ locale }: Props) {
     return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
   }, [tapNumber]);
   const hasReachedUploadLimit = uploadedImages.length >= MAX_UPLOADED_IMAGES;
+  const talkPathSlug = useMemo(() => buildTalkPathSlug(tapNumber, slug, "preview"), [tapNumber, slug]);
+  const timeTbd = startTimeTbd && endTimeTbd;
 
   const applyLanguageSelection = (nextUseJa: boolean, nextUseEn: boolean) => {
-    if (!nextUseJa && !nextUseEn) {
-      return;
-    }
-
     setUseJaSection(nextUseJa);
     setUseEnSection(nextUseEn);
     if (nextUseJa && nextUseEn) {
@@ -403,10 +439,10 @@ export default function SpeakerSubmitClient({ locale }: Props) {
 
   const previewTalk: Talk = {
     id: "preview",
-    slug: "preview",
+    slug: talkPathSlug,
     date: date || "2099-01-01",
-    startTime: timeTbd ? undefined : startTime.trim() || undefined,
-    endTime: timeTbd ? undefined : endTime.trim() || undefined,
+    startTime: startTimeTbd ? undefined : startTime.trim() || undefined,
+    endTime: endTimeTbd ? undefined : endTime.trim() || undefined,
     dateTbd,
     timeTbd,
     titleEn: titleEn || "Title preview",
@@ -424,13 +460,16 @@ export default function SpeakerSubmitClient({ locale }: Props) {
     const url = new URL(window.location.href);
     url.search = "";
 
+    if (slug.trim()) url.searchParams.set("slug", slug.trim());
     if (titleJa.trim()) url.searchParams.set("titleJa", titleJa);
     if (titleEn.trim()) url.searchParams.set("titleEn", titleEn);
     if (tapNumber.trim()) url.searchParams.set("tap", tapNumber.trim());
     if (date.trim()) url.searchParams.set("date", date);
-    if (startTime.trim()) url.searchParams.set("startTime", startTime.trim());
-    if (endTime.trim()) url.searchParams.set("endTime", endTime.trim());
+    if (!startTimeTbd && startTime.trim()) url.searchParams.set("startTime", startTime.trim());
+    if (!endTimeTbd && endTime.trim()) url.searchParams.set("endTime", endTime.trim());
     if (dateTbd) url.searchParams.set("dateTbd", "1");
+    if (startTimeTbd) url.searchParams.set("startTimeTbd", "1");
+    if (endTimeTbd) url.searchParams.set("endTimeTbd", "1");
     if (timeTbd) url.searchParams.set("timeTbd", "1");
     if (speakerJa.trim()) url.searchParams.set("speakerJa", speakerJa);
     if (speakerEn.trim()) url.searchParams.set("speakerEn", speakerEn);
@@ -711,7 +750,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
         </ul>
       </section>
 
-      <section className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="supported-markdown" className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <details>
           <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
             {text.markdownTitle}
@@ -744,7 +783,18 @@ export default function SpeakerSubmitClient({ locale }: Props) {
           <div className="mt-4">
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionInputHeading}</h3>
             <div className="space-y-4">
-              <div className="flex flex-wrap items-end gap-4">
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.slugLabel}</span>
+                <input
+                  value={slug}
+                  onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
+                  placeholder="e.g. suzuki / genomics"
+                  className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(slug)}`}
+                />
+                <p className="mt-1 text-xs text-[var(--muted)]">{text.slugHint}</p>
+              </label>
+
+              <div className="flex flex-wrap items-start gap-4">
                 <label className="w-24 shrink-0">
                   <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.tapNumberLabel}</span>
                   <input
@@ -752,70 +802,87 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                     onChange={(event) => setTapNumber(event.target.value.replace(/[^0-9]/g, ""))}
                     inputMode="numeric"
                     placeholder="0"
-                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                    className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(tapNumber)}`}
                   />
+                  <p className="mt-1 text-xs text-[var(--muted)]">{text.tapNumberHint}</p>
                 </label>
 
-                <label className="w-auto shrink-0">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    value={date.replace(/-/g, "/")}
-                    onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
-                    placeholder="yyyy/mm/dd"
-                    className="w-[11.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
+                <div className="w-auto shrink-0">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={date.replace(/-/g, "/")}
+                      onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
+                      placeholder="yyyy/mm/dd"
+                      data-empty-highlight={dateTbd ? "off" : undefined}
+                      style={dateTbd ? { backgroundColor: "#ffffff" } : undefined}
+                      className={`w-[11.5rem] rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(date, dateTbd)}`}
+                    />
+                  </label>
+                  <label className="mt-1 inline-flex items-center gap-1.5 text-[0.7rem] text-[var(--muted)]">
+                    <input
+                      type="checkbox"
+                      checked={dateTbd}
+                      onChange={(event) => setDateTbd(event.target.checked)}
+                    />
+                    <span>{text.undecidedLabel}</span>
+                  </label>
+                </div>
 
-                <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
-                  <input
-                    type="checkbox"
-                    checked={dateTbd}
-                    onChange={(event) => setDateTbd(event.target.checked)}
-                  />
-                  <span>{text.dateTbdLabel}</span>
-                </label>
+                <div className="w-auto shrink-0">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.startTimeLabel}</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={5}
+                      value={startTime}
+                      onChange={(event) => setStartTime(normalizeTimeInput(event.target.value))}
+                      placeholder="xx:xx"
+                      disabled={startTimeTbd}
+                      data-empty-highlight={startTimeTbd ? "off" : undefined}
+                      style={startTimeTbd ? { backgroundColor: "#ffffff" } : undefined}
+                      className={`w-[8.5rem] rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(startTime, startTimeTbd)}`}
+                    />
+                  </label>
+                  <label className="mt-1 inline-flex items-center gap-1.5 text-[0.7rem] text-[var(--muted)]">
+                    <input
+                      type="checkbox"
+                      checked={startTimeTbd}
+                      onChange={(event) => setStartTimeTbd(event.target.checked)}
+                    />
+                    <span>{text.undecidedLabel}</span>
+                  </label>
+                </div>
 
-                <label className="w-auto shrink-0">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.startTimeLabel}</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={5}
-                    value={startTime}
-                    onChange={(event) => setStartTime(normalizeTimeInput(event.target.value))}
-                    placeholder="xx:xx"
-                    disabled={timeTbd}
-                    className="w-[8.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
-
-                <label className="w-auto shrink-0">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.endTimeLabel}</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={5}
-                    value={endTime}
-                    onChange={(event) => setEndTime(normalizeTimeInput(event.target.value))}
-                    placeholder="xx:xx"
-                    disabled={timeTbd}
-                    className="w-[8.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
-
-                <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
-                  <input
-                    type="checkbox"
-                    checked={timeTbd}
-                    onChange={(event) => setTimeTbd(event.target.checked)}
-                  />
-                  <span>{text.timeTbdLabel}</span>
-                </label>
+                <div className="w-auto shrink-0">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.endTimeLabel}</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={5}
+                      value={endTime}
+                      onChange={(event) => setEndTime(normalizeTimeInput(event.target.value))}
+                      placeholder="xx:xx"
+                      disabled={endTimeTbd}
+                      data-empty-highlight={endTimeTbd ? "off" : undefined}
+                      style={endTimeTbd ? { backgroundColor: "#ffffff" } : undefined}
+                      className={`w-[8.5rem] rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(endTime, endTimeTbd)}`}
+                    />
+                  </label>
+                  <label className="mt-1 inline-flex items-center gap-1.5 text-[0.7rem] text-[var(--muted)]">
+                    <input
+                      type="checkbox"
+                      checked={endTimeTbd}
+                      onChange={(event) => setEndTimeTbd(event.target.checked)}
+                    />
+                    <span>{text.undecidedLabel}</span>
+                  </label>
+                </div>
               </div>
-              <p className="text-xs text-[var(--muted)]">{text.timeHint}</p>
-
               <label className="block">
                 <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.titleJaLabel}</span>
                 <textarea
@@ -834,7 +901,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                   value={speakerJa}
                   onChange={(event) => setSpeakerJa(event.target.value)}
                   placeholder="例: 鴨巣 太郎（麦酒大学）"
-                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(speakerJa)}`}
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerHint}</p>
               </label>
@@ -845,17 +912,19 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                   value={speakerImage}
                   onChange={(event) => setSpeakerImage(event.target.value)}
                   placeholder="例: https://example.com/photo.jpg"
-                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(speakerImage)}`}
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">
                   <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
+                  <span> {text.speakerImageAspectHint}</span>
                 </p>
-                <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerImageAspectHint}</p>
               </label>
             </div>
 
             <div className="mt-5 border-t border-[var(--line)] pt-5">
               <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.urlPreviewLabel}</p>
+              <p className="mb-4 break-all rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]">.../ja/talks/{talkPathSlug}</p>
 
               <section className="w-full overflow-x-auto pb-1">
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.desktopPreviewLabel}</h4>
@@ -888,57 +957,68 @@ export default function SpeakerSubmitClient({ locale }: Props) {
               </section>
             </div>
 
-            <div className="mt-5 flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
-              <div className="pr-0 xl:pr-6">
-                <label className="block">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractJaLabel}</span>
-                  <textarea
-                    value={abstractJa}
-                    onChange={(event) => setAbstractJa(event.target.value)}
-                    rows={8}
-                    placeholder="例: このトークでは、..."
-                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
+            <div className="mt-5 space-y-5">
+              <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
+                <div className="pr-0 xl:pr-6">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractJaLabel}</span>
+                    <textarea
+                      value={abstractJa}
+                      onChange={(event) => setAbstractJa(event.target.value)}
+                      rows={8}
+                      placeholder="例: このトークでは、..."
+                      className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                    />
+                    <p className="mt-1 text-xs text-[var(--muted)]">
+                      <a href="#supported-markdown" className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
+                    </p>
+                  </label>
+                </div>
 
-                <label className="mt-4 block border-t border-[var(--line)] pt-4">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioJaLabel}</span>
-                  <textarea
-                    value={bioJa}
-                    onChange={(event) => setBioJa(event.target.value)}
-                    rows={5}
-                    placeholder="例: XX大学 インターネット言語研究室 特任教授。"
-                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
+                <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
+                  <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+                  {abstractJa ? (
+                    <section>
+                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+                        {text.abstractJaHeading}
+                      </h4>
+                      <MarkdownText content={abstractJa} className="leading-relaxed text-[var(--muted)]" />
+                    </section>
+                  ) : (
+                    <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
-                <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+              <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
+                <div className="pr-0 xl:pr-6">
+                  <label className="block border-t border-[var(--line)] pt-4 xl:border-t-0 xl:pt-0">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioJaLabel}</span>
+                    <textarea
+                      value={bioJa}
+                      onChange={(event) => setBioJa(event.target.value)}
+                      rows={5}
+                      placeholder="例: XX大学 インターネット言語研究室 特任教授。"
+                      className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                    />
+                    <p className="mt-1 text-xs text-[var(--muted)]">
+                      <a href="#supported-markdown" className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
+                    </p>
+                  </label>
+                </div>
 
-                {!(abstractJa || bioJa) ? (
-                  <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
-                ) : (
-                  <div className="space-y-6">
-                    {abstractJa && (
-                      <section>
-                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
-                          {text.abstractJaHeading}
-                        </h4>
-                        <MarkdownText content={abstractJa} className="leading-relaxed text-[var(--muted)]" />
-                      </section>
-                    )}
-
-                    {bioJa && (
-                      <section>
-                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
-                          {text.bioJaHeading}
-                        </h4>
-                        <MarkdownText content={bioJa} className="leading-relaxed text-[var(--muted)]" />
-                      </section>
-                    )}
-                  </div>
-                )}
+                <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
+                  {bioJa ? (
+                    <section>
+                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+                        {text.bioJaHeading}
+                      </h4>
+                      <MarkdownText content={bioJa} className="leading-relaxed text-[var(--muted)]" />
+                    </section>
+                  ) : (
+                    <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -963,7 +1043,18 @@ export default function SpeakerSubmitClient({ locale }: Props) {
           <div className="mt-4">
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionInputHeading}</h3>
             <div className="space-y-4">
-              <div className="flex flex-wrap items-end gap-4">
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.slugLabel}</span>
+                <input
+                  value={slug}
+                  onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
+                  placeholder="e.g. suzuki / genomics"
+                  className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(slug)}`}
+                />
+                <p className="mt-1 text-xs text-[var(--muted)]">{text.slugHint}</p>
+              </label>
+
+              <div className="flex flex-wrap items-start gap-4">
                 <label className="w-24 shrink-0">
                   <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.tapNumberLabel}</span>
                   <input
@@ -971,70 +1062,87 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                     onChange={(event) => setTapNumber(event.target.value.replace(/[^0-9]/g, ""))}
                     inputMode="numeric"
                     placeholder="0"
-                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                    className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(tapNumber)}`}
                   />
+                  <p className="mt-1 text-xs text-[var(--muted)]">{text.tapNumberHint}</p>
                 </label>
 
-                <label className="w-auto shrink-0">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    value={date.replace(/-/g, "/")}
-                    onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
-                    placeholder="yyyy/mm/dd"
-                    className="w-[11.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
+                <div className="w-auto shrink-0">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={date.replace(/-/g, "/")}
+                      onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
+                      placeholder="yyyy/mm/dd"
+                      data-empty-highlight={dateTbd ? "off" : undefined}
+                      style={dateTbd ? { backgroundColor: "#ffffff" } : undefined}
+                      className={`w-[11.5rem] rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(date, dateTbd)}`}
+                    />
+                  </label>
+                  <label className="mt-1 inline-flex items-center gap-1.5 text-[0.7rem] text-[var(--muted)]">
+                    <input
+                      type="checkbox"
+                      checked={dateTbd}
+                      onChange={(event) => setDateTbd(event.target.checked)}
+                    />
+                    <span>{text.undecidedLabel}</span>
+                  </label>
+                </div>
 
-                <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
-                  <input
-                    type="checkbox"
-                    checked={dateTbd}
-                    onChange={(event) => setDateTbd(event.target.checked)}
-                  />
-                  <span>{text.dateTbdLabel}</span>
-                </label>
+                <div className="w-auto shrink-0">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.startTimeLabel}</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={5}
+                      value={startTime}
+                      onChange={(event) => setStartTime(normalizeTimeInput(event.target.value))}
+                      placeholder="xx:xx"
+                      disabled={startTimeTbd}
+                      data-empty-highlight={startTimeTbd ? "off" : undefined}
+                      style={startTimeTbd ? { backgroundColor: "#ffffff" } : undefined}
+                      className={`w-[8.5rem] rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(startTime, startTimeTbd)}`}
+                    />
+                  </label>
+                  <label className="mt-1 inline-flex items-center gap-1.5 text-[0.7rem] text-[var(--muted)]">
+                    <input
+                      type="checkbox"
+                      checked={startTimeTbd}
+                      onChange={(event) => setStartTimeTbd(event.target.checked)}
+                    />
+                    <span>{text.undecidedLabel}</span>
+                  </label>
+                </div>
 
-                <label className="w-auto shrink-0">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.startTimeLabel}</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={5}
-                    value={startTime}
-                    onChange={(event) => setStartTime(normalizeTimeInput(event.target.value))}
-                    placeholder="xx:xx"
-                    disabled={timeTbd}
-                    className="w-[8.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
-
-                <label className="w-auto shrink-0">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.endTimeLabel}</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={5}
-                    value={endTime}
-                    onChange={(event) => setEndTime(normalizeTimeInput(event.target.value))}
-                    placeholder="xx:xx"
-                    disabled={timeTbd}
-                    className="w-[8.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
-
-                <label className="flex shrink-0 items-center gap-2 pb-2 text-sm text-[var(--muted)]">
-                  <input
-                    type="checkbox"
-                    checked={timeTbd}
-                    onChange={(event) => setTimeTbd(event.target.checked)}
-                  />
-                  <span>{text.timeTbdLabel}</span>
-                </label>
+                <div className="w-auto shrink-0">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.endTimeLabel}</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={5}
+                      value={endTime}
+                      onChange={(event) => setEndTime(normalizeTimeInput(event.target.value))}
+                      placeholder="xx:xx"
+                      disabled={endTimeTbd}
+                      data-empty-highlight={endTimeTbd ? "off" : undefined}
+                      style={endTimeTbd ? { backgroundColor: "#ffffff" } : undefined}
+                      className={`w-[8.5rem] rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(endTime, endTimeTbd)}`}
+                    />
+                  </label>
+                  <label className="mt-1 inline-flex items-center gap-1.5 text-[0.7rem] text-[var(--muted)]">
+                    <input
+                      type="checkbox"
+                      checked={endTimeTbd}
+                      onChange={(event) => setEndTimeTbd(event.target.checked)}
+                    />
+                    <span>{text.undecidedLabel}</span>
+                  </label>
+                </div>
               </div>
-              <p className="text-xs text-[var(--muted)]">{text.timeHint}</p>
-
               <label className="block">
                 <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.titleEnLabel}</span>
                 <textarea
@@ -1053,7 +1161,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                   value={speakerEn}
                   onChange={(event) => setSpeakerEn(event.target.value)}
                   placeholder="e.g. Taro Camos (Beer University)"
-                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(speakerEn)}`}
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerHint}</p>
               </label>
@@ -1064,17 +1172,19 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                   value={speakerImage}
                   onChange={(event) => setSpeakerImage(event.target.value)}
                   placeholder="e.g. https://example.com/photo.jpg"
-                  className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                  className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(speakerImage)}`}
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">
                   <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
+                  <span> {text.speakerImageAspectHint}</span>
                 </p>
-                <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerImageAspectHint}</p>
               </label>
             </div>
 
             <div className="mt-5 border-t border-[var(--line)] pt-5">
               <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.urlPreviewLabel}</p>
+              <p className="mb-4 break-all rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]">.../en/talks/{talkPathSlug}</p>
 
               <section className="w-full overflow-x-auto pb-1">
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.desktopPreviewLabel}</h4>
@@ -1107,57 +1217,68 @@ export default function SpeakerSubmitClient({ locale }: Props) {
               </section>
             </div>
 
-            <div className="mt-5 flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
-              <div className="pr-0 xl:pr-6">
-                <label className="block">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractEnLabel}</span>
-                  <textarea
-                    value={abstractEn}
-                    onChange={(event) => setAbstractEn(event.target.value)}
-                    rows={8}
-                    placeholder="e.g. In this talk, we will..."
-                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
+            <div className="mt-5 space-y-5">
+              <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
+                <div className="pr-0 xl:pr-6">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractEnLabel}</span>
+                    <textarea
+                      value={abstractEn}
+                      onChange={(event) => setAbstractEn(event.target.value)}
+                      rows={8}
+                      placeholder="e.g. In this talk, we will..."
+                      className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                    />
+                    <p className="mt-1 text-xs text-[var(--muted)]">
+                      <a href="#supported-markdown" className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
+                    </p>
+                  </label>
+                </div>
 
-                <label className="mt-4 block border-t border-[var(--line)] pt-4">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioEnLabel}</span>
-                  <textarea
-                    value={bioEn}
-                    onChange={(event) => setBioEn(event.target.value)}
-                    rows={5}
-                    placeholder="e.g. Assistant Professor, Department of ..."
-                    className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
-                  />
-                </label>
+                <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
+                  <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+                  {abstractEn ? (
+                    <section>
+                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+                        {text.abstractEnHeading}
+                      </h4>
+                      <MarkdownText content={abstractEn} className="leading-relaxed text-[var(--muted)]" />
+                    </section>
+                  ) : (
+                    <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
-                <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
+              <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
+                <div className="pr-0 xl:pr-6">
+                  <label className="block border-t border-[var(--line)] pt-4 xl:border-t-0 xl:pt-0">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioEnLabel}</span>
+                    <textarea
+                      value={bioEn}
+                      onChange={(event) => setBioEn(event.target.value)}
+                      rows={5}
+                      placeholder="e.g. Assistant Professor, Department of ..."
+                      className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
+                    />
+                    <p className="mt-1 text-xs text-[var(--muted)]">
+                      <a href="#supported-markdown" className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
+                    </p>
+                  </label>
+                </div>
 
-                {!(abstractEn || bioEn) ? (
-                  <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
-                ) : (
-                  <div className="space-y-6">
-                    {abstractEn && (
-                      <section>
-                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
-                          {text.abstractEnHeading}
-                        </h4>
-                        <MarkdownText content={abstractEn} className="leading-relaxed text-[var(--muted)]" />
-                      </section>
-                    )}
-
-                    {bioEn && (
-                      <section>
-                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
-                          {text.bioEnHeading}
-                        </h4>
-                        <MarkdownText content={bioEn} className="leading-relaxed text-[var(--muted)]" />
-                      </section>
-                    )}
-                  </div>
-                )}
+                <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
+                  {bioEn ? (
+                    <section>
+                      <h4 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+                        {text.bioEnHeading}
+                      </h4>
+                      <MarkdownText content={bioEn} className="leading-relaxed text-[var(--muted)]" />
+                    </section>
+                  ) : (
+                    <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -2,13 +2,17 @@
 
 import { useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { formatTimeRange } from "@/lib/talks";
+import type { Talk } from "@/lib/talks";
+import { buildTalkPathSlug } from "@/lib/talks";
+import TalkCard from "@/components/TalkCard";
+import MarkdownText from "@/components/MarkdownText";
 
 type Props = {
   locale: Locale;
 };
 
 type ParsedDraft = {
+  slug: string;
   titleJa: string;
   titleEn: string;
   tapNumber: string;
@@ -27,7 +31,18 @@ type ParsedDraft = {
   uploadedImages: Array<{ url: string; deleteUrl?: string }>;
 };
 
+type UploadedImageUsage = "speakerImage" | "abstractJa" | "abstractEn" | "bioJa" | "bioEn";
+
+type UploadedImageMapping = {
+  sourceUrl: string;
+  replacementUrl: string;
+  localPath: string;
+  downloadFileName: string;
+  usages: UploadedImageUsage[];
+};
+
 const EMPTY_DRAFT: ParsedDraft = {
+  slug: "",
   titleJa: "",
   titleEn: "",
   tapNumber: "",
@@ -80,6 +95,7 @@ function parseDraftFromSearchParams(params: URLSearchParams): ParsedDraft {
   }
 
   return {
+    slug: params.get("slug") ?? "",
     titleJa: params.get("titleJa") ?? params.get("title") ?? "",
     titleEn: params.get("titleEn") ?? params.get("title") ?? "",
     tapNumber: params.get("tap") ?? params.get("tapNumber") ?? "",
@@ -99,16 +115,81 @@ function parseDraftFromSearchParams(params: URLSearchParams): ParsedDraft {
   };
 }
 
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 64);
-}
-
 function codeString(value: string): string {
   return JSON.stringify(value);
+}
+
+function inferImageExtension(url: string): string {
+  try {
+    const pathname = new URL(url).pathname;
+    const match = pathname.match(/\.([a-zA-Z0-9]+)$/);
+    const ext = match?.[1]?.toLowerCase();
+    return ext === "png" ? "png" : "jpg";
+  } catch {
+    return "jpg";
+  }
+}
+
+function buildUploadedImageMappings(draft: ParsedDraft): UploadedImageMapping[] {
+  const slugCore = buildTalkPathSlug(draft.tapNumber, draft.slug, "new-talk");
+  const usageMap = new Map<string, Set<UploadedImageUsage>>();
+
+  const addUsage = (url: string, usage: UploadedImageUsage) => {
+    if (!url.trim()) {
+      return;
+    }
+    const existing = usageMap.get(url) ?? new Set<UploadedImageUsage>();
+    existing.add(usage);
+    usageMap.set(url, existing);
+  };
+
+  if (draft.speakerImage.trim()) {
+    addUsage(draft.speakerImage.trim(), "speakerImage");
+  }
+
+  for (const image of draft.uploadedImages) {
+    const imageUrl = image.url.trim();
+    if (!imageUrl) {
+      continue;
+    }
+    if (draft.abstractJa.includes(imageUrl)) addUsage(imageUrl, "abstractJa");
+    if (draft.abstractEn.includes(imageUrl)) addUsage(imageUrl, "abstractEn");
+    if (draft.bioJa.includes(imageUrl)) addUsage(imageUrl, "bioJa");
+    if (draft.bioEn.includes(imageUrl)) addUsage(imageUrl, "bioEn");
+  }
+
+  let contentImageIndex = 0;
+
+  return draft.uploadedImages
+    .filter((image) => usageMap.has(image.url.trim()))
+    .map((image) => {
+      const sourceUrl = image.url.trim();
+      const usages = Array.from(usageMap.get(sourceUrl) ?? []);
+      const ext = inferImageExtension(sourceUrl);
+      const fileStem = usages.includes("speakerImage")
+        ? `${slugCore}-speaker`
+        : `${slugCore}-image-${++contentImageIndex}`;
+      const downloadFileName = `${fileStem}.${ext}`;
+      const replacementUrl = `/speakers/${downloadFileName}`;
+
+      return {
+        sourceUrl,
+        replacementUrl,
+        localPath: `public${replacementUrl}`,
+        downloadFileName,
+        usages,
+      };
+    });
+}
+
+function replaceMappedUrls(value: string, mappings: UploadedImageMapping[]): string {
+  let nextValue = value;
+
+  for (const mapping of mappings) {
+    nextValue = nextValue.split(mapping.sourceUrl).join(mapping.replacementUrl);
+  }
+
+  return nextValue;
 }
 
 export default function SpeakerReviewClient({ locale }: Props) {
@@ -144,7 +225,21 @@ export default function SpeakerReviewClient({ locale }: Props) {
             "Add/edit the generated snippet in src/lib/talks.ts.",
             "Adjust public EN/JA content as needed before publishing.",
           ],
-      extractedTitle: isJa ? "抽出結果" : "Extracted Draft",
+      previewTitle: isJa ? "プレビュー" : "Preview",
+      talkCardPreviewTitle: "Talk Card",
+      abstractPreviewTitle: "Abstract",
+      bioPreviewTitle: "Speaker Profile",
+      imageAssetsTitle: isJa ? "画像の local 対応" : "Local image mapping",
+      imageAssetsDescription: isJa
+        ? "HP で使う画像は local に保存し、下の対応表に沿って URL を差し替えてください。"
+        : "For images that will be used on the website, download them locally and replace the URLs using the mapping below.",
+      noImageAssets: isJa ? "local 対応が必要なアップロード画像はありません。" : "There are no uploaded images that need local replacement.",
+      downloadImage: isJa ? "画像をダウンロード" : "Download image",
+      downloadAllImages: isJa ? "画像を一括ダウンロード" : "Download all images",
+      urlPreviewLabel: "URL",
+      sourceUrlLabel: isJa ? "元 URL" : "Source URL",
+      localPathLabel: isJa ? "保存先 path" : "Local path",
+      usedInLabel: isJa ? "使用箇所" : "Used in",
       snippetTitle: isJa ? "talks.ts 追加用の雛形" : "Snippet for talks.ts",
       copySnippet: isJa ? "雛形をコピー" : "Copy snippet",
       copied: isJa ? "コピーしました。" : "Copied.",
@@ -161,6 +256,13 @@ export default function SpeakerReviewClient({ locale }: Props) {
         speakerImage: isJa ? "スピーカー画像" : "Speaker image",
         uploadedImages: isJa ? "アップロード画像" : "Uploaded images",
       },
+      usageLabels: {
+        speakerImage: isJa ? "スピーカー画像" : "Speaker image",
+        abstractJa: isJa ? "Abstract（日本語）" : "Abstract (Japanese)",
+        abstractEn: isJa ? "Abstract（英語）" : "Abstract (English)",
+        bioJa: isJa ? "Speaker Profile（日本語）" : "Speaker Profile (Japanese)",
+        bioEn: isJa ? "Speaker Profile（英語）" : "Speaker Profile (English)",
+      },
     }),
     [isJa],
   );
@@ -169,6 +271,36 @@ export default function SpeakerReviewClient({ locale }: Props) {
     () => Object.values(draft).some((value) => (Array.isArray(value) ? value.length > 0 : Boolean(value))),
     [draft],
   );
+  const talkPathSlug = useMemo(() => buildTalkPathSlug(draft.tapNumber, draft.slug, "preview"), [draft.tapNumber, draft.slug]);
+
+  const previewTalk = useMemo<Talk>(() => ({
+    id: draft.tapNumber.trim() || "preview",
+    slug: talkPathSlug,
+    date: draft.date || "2099-01-01",
+    startTime: draft.timeTbd ? undefined : draft.startTime.trim() || undefined,
+    endTime: draft.timeTbd ? undefined : draft.endTime.trim() || undefined,
+    dateTbd: draft.dateTbd,
+    timeTbd: draft.timeTbd,
+    titleJa: draft.titleJa || "タイトルプレビュー",
+    titleEn: draft.titleEn || "Title preview",
+    speakerJa: draft.speakerJa || "スピーカー名",
+    speakerEn: draft.speakerEn || "Speaker name",
+    abstractJa: draft.abstractJa,
+    abstractEn: draft.abstractEn,
+    speakerBioJa: draft.bioJa,
+    speakerBioEn: draft.bioEn,
+    speakerImage: draft.speakerImage || undefined,
+  }), [draft, talkPathSlug]);
+
+  const uploadedImageMappings = useMemo(() => buildUploadedImageMappings(draft), [draft]);
+
+  const replacedDraft = useMemo(() => ({
+    abstractJa: replaceMappedUrls(draft.abstractJa, uploadedImageMappings),
+    abstractEn: replaceMappedUrls(draft.abstractEn, uploadedImageMappings),
+    bioJa: replaceMappedUrls(draft.bioJa, uploadedImageMappings),
+    bioEn: replaceMappedUrls(draft.bioEn, uploadedImageMappings),
+    speakerImage: replaceMappedUrls(draft.speakerImage, uploadedImageMappings),
+  }), [draft.abstractEn, draft.abstractJa, draft.bioEn, draft.bioJa, draft.speakerImage, uploadedImageMappings]);
 
   const snippet = useMemo(() => {
     if (!hasLoadedDraft) {
@@ -176,7 +308,7 @@ export default function SpeakerReviewClient({ locale }: Props) {
     }
 
     const tapPart = draft.tapNumber.trim() || "x";
-    const slugCore = slugify(`${tapPart}-${draft.speakerEn || draft.speakerJa}-${draft.titleEn || draft.titleJa}`) || "new-talk";
+    const slugCore = buildTalkPathSlug(tapPart, draft.slug, "new-talk");
 
     return [
       "{",
@@ -191,16 +323,16 @@ export default function SpeakerReviewClient({ locale }: Props) {
       `  titleJa: ${codeString(draft.titleJa || "TBD")},`,
       `  speakerEn: ${codeString(draft.speakerEn || "TBD")},`,
       `  speakerJa: ${codeString(draft.speakerJa || "TBD")},`,
-      `  abstractEn: ${codeString(draft.abstractEn || "")},`,
-      `  abstractJa: ${codeString(draft.abstractJa || "")},`,
-      `  speakerBioEn: ${codeString(draft.bioEn || "")},`,
-      `  speakerBioJa: ${codeString(draft.bioJa || "")},`,
-      draft.speakerImage.trim() ? `  speakerImage: ${codeString(draft.speakerImage)},` : "",
+      `  abstractEn: ${codeString(replacedDraft.abstractEn || "")},`,
+      `  abstractJa: ${codeString(replacedDraft.abstractJa || "")},`,
+      `  speakerBioEn: ${codeString(replacedDraft.bioEn || "")},`,
+      `  speakerBioJa: ${codeString(replacedDraft.bioJa || "")},`,
+      replacedDraft.speakerImage.trim() ? `  speakerImage: ${codeString(replacedDraft.speakerImage)},` : "",
       "},",
     ]
       .filter(Boolean)
       .join("\n");
-  }, [draft, hasLoadedDraft]);
+  }, [draft, hasLoadedDraft, replacedDraft]);
 
   const parseSubmissionUrl = () => {
     setCopiedToken("none");
@@ -238,6 +370,29 @@ export default function SpeakerReviewClient({ locale }: Props) {
       setCopiedToken("snippet");
     } catch {
       setCopiedToken("error");
+    }
+  };
+
+  const downloadImage = async (mapping: UploadedImageMapping) => {
+    const response = await fetch(mapping.sourceUrl);
+    if (!response.ok) {
+      throw new Error("download failed");
+    }
+
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = blobUrl;
+    anchor.download = mapping.downloadFileName;
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(blobUrl);
+  };
+
+  const downloadAllImages = async () => {
+    for (const mapping of uploadedImageMappings) {
+      await downloadImage(mapping);
     }
   };
 
@@ -300,58 +455,123 @@ export default function SpeakerReviewClient({ locale }: Props) {
       </section>
 
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-6 shadow-sm">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.extractedTitle}</h2>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.previewTitle}</h2>
         {!hasLoadedDraft ? (
           <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
         ) : (
-          <dl className="grid gap-3 text-sm text-[var(--muted)] sm:grid-cols-2">
-            <div>
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.titleJa}</dt>
-              <dd>{draft.titleJa || "-"}</dd>
+          <div className="space-y-8">
+            <section>
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.talkCardPreviewTitle}</h3>
+              <div className="grid gap-6 xl:grid-cols-2">
+                <div>
+                  <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">Japanese</h4>
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.urlPreviewLabel}</p>
+                  <p className="mb-4 break-all rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]">.../ja/talks/{talkPathSlug}</p>
+                  <TalkCard
+                    talk={previewTalk}
+                    locale="ja"
+                    variant="upcomingTap"
+                    tapNumber={Number.parseInt(draft.tapNumber, 10) || 0}
+                    disableLink
+                    forceDesktopTypography
+                    titleMaxLines={2}
+                  />
+                </div>
+                <div>
+                  <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">English</h4>
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.urlPreviewLabel}</p>
+                  <p className="mb-4 break-all rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]">.../en/talks/{talkPathSlug}</p>
+                  <TalkCard
+                    talk={previewTalk}
+                    locale="en"
+                    variant="upcomingTap"
+                    tapNumber={Number.parseInt(draft.tapNumber, 10) || 0}
+                    disableLink
+                    forceDesktopTypography
+                    titleMaxLines={2}
+                  />
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.abstractPreviewTitle}</h3>
+              <div className="grid gap-6 xl:grid-cols-2">
+                <div>
+                  <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">Japanese</h4>
+                  {draft.abstractJa ? <MarkdownText content={draft.abstractJa} className="leading-relaxed text-[var(--muted)]" /> : <p className="text-sm text-[var(--muted)]">-</p>}
+                </div>
+                <div>
+                  <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">English</h4>
+                  {draft.abstractEn ? <MarkdownText content={draft.abstractEn} className="leading-relaxed text-[var(--muted)]" /> : <p className="text-sm text-[var(--muted)]">-</p>}
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.bioPreviewTitle}</h3>
+              <div className="grid gap-6 xl:grid-cols-2">
+                <div>
+                  <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">Japanese</h4>
+                  {draft.bioJa ? <MarkdownText content={draft.bioJa} className="leading-relaxed text-[var(--muted)]" /> : <p className="text-sm text-[var(--muted)]">-</p>}
+                </div>
+                <div>
+                  <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">English</h4>
+                  {draft.bioEn ? <MarkdownText content={draft.bioEn} className="leading-relaxed text-[var(--muted)]" /> : <p className="text-sm text-[var(--muted)]">-</p>}
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+      </section>
+
+      <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-6 shadow-sm">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.imageAssetsTitle}</h2>
+        <p className="mb-4 text-sm text-[var(--muted)]">{text.imageAssetsDescription}</p>
+
+        {uploadedImageMappings.length === 0 ? (
+          <p className="text-sm text-[var(--muted)]">{text.noImageAssets}</p>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => void downloadAllImages()}
+                className="inline-flex items-center rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-1.5 text-sm font-semibold text-[var(--foreground)] hover:bg-[color-mix(in_srgb,var(--accent)_8%,white)]"
+              >
+                {text.downloadAllImages}
+              </button>
             </div>
-            <div>
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.titleEn}</dt>
-              <dd>{draft.titleEn || "-"}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.tap}</dt>
-              <dd>{draft.tapNumber || "-"}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.date}</dt>
-              <dd>{draft.dateTbd ? "TBD" : draft.date || "-"}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.time}</dt>
-              <dd>{draft.dateTbd ? "-" : formatTimeRange(draft.startTime, draft.endTime, draft.timeTbd, locale) || "-"}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.speakerJa}</dt>
-              <dd>{draft.speakerJa || "-"}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.speakerEn}</dt>
-              <dd>{draft.speakerEn || "-"}</dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.speakerImage}</dt>
-              <dd className="break-all">{draft.speakerImage || "-"}</dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="font-semibold text-[var(--foreground)]">{text.fields.uploadedImages}</dt>
-              <dd>
-                {draft.uploadedImages.length === 0 ? (
-                  "-"
-                ) : (
-                  <ul className="space-y-1">
-                    {draft.uploadedImages.map((image) => (
-                      <li key={image.url} className="break-all">{image.url}</li>
-                    ))}
-                  </ul>
-                )}
-              </dd>
-            </div>
-          </dl>
+            {uploadedImageMappings.map((mapping) => (
+              <div key={mapping.sourceUrl} className="rounded-lg border border-[var(--line)] bg-white px-4 py-4">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-[var(--foreground)]">{mapping.downloadFileName}</p>
+                  <button
+                    type="button"
+                    onClick={() => void downloadImage(mapping)}
+                    className="inline-flex items-center rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-1.5 text-sm font-semibold text-[var(--foreground)] hover:bg-[color-mix(in_srgb,var(--accent)_8%,white)]"
+                  >
+                    {text.downloadImage}
+                  </button>
+                </div>
+
+                <dl className="space-y-3 text-sm text-[var(--muted)]">
+                  <div>
+                    <dt className="font-semibold text-[var(--foreground)]">{text.usedInLabel}</dt>
+                    <dd>{mapping.usages.map((usage) => text.usageLabels[usage]).join(" / ")}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold text-[var(--foreground)]">{text.sourceUrlLabel}</dt>
+                    <dd className="break-all">{mapping.sourceUrl}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold text-[var(--foreground)]">{text.localPathLabel}</dt>
+                    <dd className="break-all">{mapping.localPath}</dd>
+                  </div>
+                </dl>
+              </div>
+            ))}
+          </div>
         )}
       </section>
 

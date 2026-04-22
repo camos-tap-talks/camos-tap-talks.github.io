@@ -23,6 +23,15 @@ body {
   font-family: var(--font-sans), sans-serif;
 }
 
+html {
+  scroll-padding-top: 5.5rem;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([data-empty-highlight="off"]):placeholder-shown,
+textarea:placeholder-shown {
+  background: #eef8ff;
+}
+
 a {
   color: inherit;
 }
