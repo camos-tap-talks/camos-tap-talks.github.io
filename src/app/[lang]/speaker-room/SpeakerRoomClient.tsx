@@ -211,12 +211,9 @@ export default function SpeakerRoomClient({ locale }: Props) {
       speakerHint: isJa ? "デスクトップ版表示で1行以内に収まるように入力してください。" : "Keep to one line on the desktop preview.",
       abstractLabel: isJa ? "アブストラクト" : "Abstract",
       bioLabel: isJa ? "Speaker Profile 入力" : "Speaker Profile Input",
+      speakerImageUploadHint: isJa ? "画像アップロードはこちら↓" : "Upload images below ↓",
       speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
-      speakerImageUploadHintBefore: isJa ? "画像をアップロードして URL を取得する場合は、下の「" : "To get a URL by uploading an image, use the “",
-      speakerImageUploadHintLink: isJa ? "画像アップロード" : "Image Upload",
-      speakerImageUploadHintAfter: isJa ? "」セクションをご利用ください。" : "” section below.",
       uploadTitle: isJa ? "画像アップロード" : "Image Upload",
-      uploadHelp: isJa
         ? "JPEG/PNG のみ、10MB まで、最大10枚。"
         : "JPEG/PNG only, up to 10MB, max 10 images.",
       uploadMissingEndpoint: isJa
@@ -580,11 +577,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
                 placeholder={isJa ? "例: https://example.com/photo.jpg" : "e.g. https://example.com/photo.jpg"}
                 className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
               />
-              <p className="mt-1 text-xs text-[var(--muted)]">
-                {text.speakerImageUploadHintBefore}
-                <a href="#image-upload" className="underline hover:opacity-70">{text.speakerImageUploadHintLink}</a>
-                {text.speakerImageUploadHintAfter}
-              </p>
+              <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerImageUploadHint}</p>
             </label>
 
             <div className="border-t border-[var(--line)] pt-5">
@@ -682,7 +675,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
         </div>
       </section>
 
-      <section className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm" id="image-upload">
+      <section className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.uploadTitle}</h2>
 
         <div className="flex flex-wrap items-center gap-3">
