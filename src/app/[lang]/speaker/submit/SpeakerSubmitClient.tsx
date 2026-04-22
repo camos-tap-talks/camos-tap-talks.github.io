@@ -341,9 +341,9 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       uploadHelp: isJa
         ? "JPEG/PNG のみ、10MB まで、最大10枚。"
         : "JPEG/PNG only, up to 10MB, max 10 images.",
-      uploadDeleteNote: isJa
-        ? "アップロードされた画像は HP にトーク登録後削除されます。"
-        : "Uploaded images will be deleted after the talk is registered on the website.",
+      uploadCopyrightNotice: isJa
+        ? "本サイトでは、写真・画像に関する著作権と利用に関する注意書きを掲載しています。ご提供いただいた写真・画像は、HP や SNS などでの告知に利用します。"
+        : "This site includes a copyright and usage notice for photos and images. Images and photos you provide may be used for announcements on the website and social media.",
       uploadMissingEndpoint: isJa
         ? "アップロード設定が未完了です。管理者が署名 URL 発行エンドポイントを設定してください。"
         : "Upload is not configured yet. The admin needs to set a signed URL endpoint.",
@@ -1327,7 +1327,8 @@ They are also interested in science communication and actively engage in outreac
       </section>
 
       <section id="image-upload" className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.uploadTitle}</h2>
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.uploadTitle}</h2>
+        <p className="text-xs mb-4 text-[var(--muted)]">{text.uploadCopyrightNotice}</p>
 
         <div className="flex flex-wrap items-center gap-3">
           <input
@@ -1353,7 +1354,6 @@ They are also interested in science communication and actively engage in outreac
           </label>
           <p className="text-xs text-[var(--muted)]">{text.uploadHelp}</p>
         </div>
-        <p className="mt-2 text-xs text-[var(--muted)]">{text.uploadDeleteNote}</p>
 
         {uploadingTarget !== null && <p className="mt-2 text-xs text-[var(--accent-deep)]">{text.uploadInProgress}</p>}
         {hasReachedUploadLimit && <p className="mt-2 text-xs text-[var(--accent-deep)]">{text.uploadLimitError}</p>}
