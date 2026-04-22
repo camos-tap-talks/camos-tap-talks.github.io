@@ -15,7 +15,11 @@ export default function Header({ locale }: Props) {
   const t = getTranslations(locale);
   const pathname = usePathname();
   const [search, setSearch] = useState("");
-  const isSpeakerRoom = pathname === `/${locale}/speaker-room` || pathname === `/${locale}/speaker-room/`;
+  const isSpeakerSubmit =
+    pathname === `/${locale}/speaker/submit`
+    || pathname === `/${locale}/speaker/submit/`
+    || pathname === `/${locale}/speaker-room`
+    || pathname === `/${locale}/speaker-room/`;
   const nextLocale = locale === "ja" ? "en" : "ja";
   const switchedPathname = pathname
     ? pathname.replace(/^\/(ja|en)(?=\/|$)/, `/${nextLocale}`)
@@ -42,7 +46,7 @@ export default function Header({ locale }: Props) {
         backgroundColor: "#d1773b",
       }}
     >
-      <div className={`${isSpeakerRoom ? "w-[min(1120px,calc(100vw-2rem))]" : "max-w-3xl"} mx-auto flex items-center gap-5`}>
+      <div className={`${isSpeakerSubmit ? "w-[min(1120px,calc(100vw-2rem))]" : "max-w-3xl"} mx-auto flex items-center gap-5`}>
         <Link
           href={`/${locale}`}
           className="shrink-0 translate-y-[2px] transition-transform hover:scale-[1.03]"

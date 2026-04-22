@@ -139,7 +139,7 @@ function buildInitialUploadedImages(
   }));
 }
 
-export default function SpeakerRoomClient({ locale }: Props) {
+export default function SpeakerSubmitClient({ locale }: Props) {
   const isJa = locale === "ja";
 
   const [title, setTitle] = useState(EMPTY_DRAFT.title);
@@ -179,11 +179,11 @@ export default function SpeakerRoomClient({ locale }: Props) {
 
   const text = useMemo(
     () => ({
-      pageLabel: "SPEAKER ROOM",
-      pageTitle: isJa ? "スピーカー用ページ" : "Speaker Draft Page",
+      pageLabel: "SPEAKER SUBMIT",
+      pageTitle: isJa ? "スピーカー提出ページ" : "Speaker Submit Page",
       pageNote: isJa
-        ? "このページはリンクされていません。共有された URL からのみアクセスできます。"
-        : "This page is intentionally unlinked. Access is available only via the shared URL.",
+        ? "案内ページを確認後、このページで提出内容を作成してください。"
+        : "After reading the guide page, prepare your submission on this page.",
       requestsTitle: isJa ? "お願いごと" : "Requests",
       requests: isJa
         ? ["下書きができたら、最終テキストを管理者に共有してください。"]
