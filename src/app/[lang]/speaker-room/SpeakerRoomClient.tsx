@@ -211,7 +211,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
       speakerHint: isJa ? "デスクトップ版表示で1行以内に収まるように入力してください。" : "Keep to one line on the desktop preview.",
       abstractLabel: isJa ? "アブストラクト" : "Abstract",
       bioLabel: isJa ? "Speaker Profile 入力" : "Speaker Profile Input",
-      speakerImageUploadHint: isJa ? "画像アップロードはこちら↓" : "Upload images below ↓",
+      uploadScrollHint: isJa ? "画像アップロードはこちら↓" : "Upload image below ↓",
       speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
       uploadTitle: isJa ? "画像アップロード" : "Image Upload",
       uploadHelp: isJa
@@ -564,7 +564,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
               <input
                 value={speaker}
                 onChange={(event) => setSpeaker(event.target.value)}
-                placeholder={isJa ? "例: 鴨巣 太郎（麦酒大学）" : "e.g. Taro Camosu (Bakushu University)"}
+                placeholder={isJa ? "例: 鴨巣 太郎（麦酒大学）" : "e.g. Taro Camos (Beer University)"}
                 className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
               />
               <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerHint}</p>
@@ -578,7 +578,9 @@ export default function SpeakerRoomClient({ locale }: Props) {
                 placeholder={isJa ? "例: https://example.com/photo.jpg" : "e.g. https://example.com/photo.jpg"}
                 className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
               />
-              <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerImageUploadHint}</p>
+              <p className="mt-1 text-xs text-[var(--muted)]">
+                <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
+              </p>
             </label>
 
             <div className="border-t border-[var(--line)] pt-5">
@@ -632,8 +634,8 @@ export default function SpeakerRoomClient({ locale }: Props) {
                   />
                 </label>
 
-                <label className="block">
-                  <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioLabel}</span>
+                <div className="border-t border-[var(--line)] pt-4">
+                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.bioLabel}</h3>
                   <textarea
                     value={bio}
                     onChange={(event) => setBio(event.target.value)}
@@ -641,7 +643,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
                     placeholder={isJa ? "例: XX大学 インターネット言語研究室 特任教授。" : "e.g. Assistant Professor, Department of ..."}
                     className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                   />
-                </label>
+                </div>
               </div>
             </div>
 
@@ -676,7 +678,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
         </div>
       </section>
 
-      <section className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="image-upload" className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.uploadTitle}</h2>
 
         <div className="flex flex-wrap items-center gap-3">
