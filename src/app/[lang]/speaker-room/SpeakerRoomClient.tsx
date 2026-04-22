@@ -192,10 +192,12 @@ export default function SpeakerRoomClient({ locale }: Props) {
           ],
       talkCardSectionTitle: "TALK CARD",
       abstractSectionTitle: isJa ? "Abstract" : "Abstract",
-      inputHeading: isJa ? "入力" : "Input",
-      previewHeading: isJa ? "プレビュー" : "Preview",
-      desktopPreviewLabel: isJa ? "デスクトップ版プレビュー" : "Desktop Preview",
-      mobilePreviewLabel: isJa ? "モバイル版" : "Mobile",
+      talkCardInputHeading: isJa ? "Talk Card 入力" : "Talk Card Input",
+      talkCardPreviewHeading: isJa ? "Talk Card プレビュー" : "Talk Card Preview",
+      abstractInputHeading: isJa ? "Abstract 入力" : "Abstract Input",
+      abstractPreviewHeading: isJa ? "Abstract プレビュー" : "Abstract Preview",
+      desktopPreviewLabel: isJa ? "プレビュー（デスクトップ版）" : "Preview (Desktop)",
+      mobilePreviewLabel: isJa ? "プレビュー（モバイル版）" : "Preview (Mobile)",
       markdownTitle: isJa ? "対応している Markdown / HTML" : "Supported Markdown / HTML",
       submitTitle: isJa ? "提出用 URL" : "Submission URL",
       titleLabel: isJa ? "タイトル" : "Title",
@@ -206,6 +208,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
       dateLabel: isJa ? "日付" : "Date",
       dateTbdLabel: isJa ? "日付未定 (TBD)" : "Date TBD",
       speakerLabel: isJa ? "スピーカー名" : "Speaker",
+      speakerHint: isJa ? "1行以内で入力してください。" : "Keep to one line.",
       abstractLabel: isJa ? "アブストラクト" : "Abstract",
       bioLabel: isJa ? "スピーカープロフィール" : "Speaker Bio",
       speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
@@ -505,10 +508,8 @@ export default function SpeakerRoomClient({ locale }: Props) {
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.talkCardSectionTitle}</h2>
-
         <div className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
-          <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.inputHeading}</h3>
+          <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.talkCardInputHeading}</h3>
 
           <div className="space-y-4">
             <div className="flex flex-wrap items-end gap-4">
@@ -565,6 +566,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
                 placeholder={isJa ? "例: 鴨巣 太郎（麦酒大学）" : "e.g. Taro Camosu (Bakushu University)"}
                 className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
               />
+              <p className="mt-1 text-xs text-[var(--muted)]">{text.speakerHint}</p>
             </label>
 
             <label className="block">
@@ -572,14 +574,12 @@ export default function SpeakerRoomClient({ locale }: Props) {
               <input
                 value={speakerImage}
                 onChange={(event) => setSpeakerImage(event.target.value)}
-                placeholder="https://img.yuesugi.com/uploads/2026-04-21/icon-orange.png"
+                placeholder={isJa ? "例: https://example.com/photo.jpg" : "e.g. https://example.com/photo.jpg"}
                 className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
               />
             </label>
 
             <div className="border-t border-[var(--line)] pt-5">
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.previewHeading}</h3>
-
               <section className="w-full overflow-x-auto pb-1">
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.desktopPreviewLabel}</h4>
                 <div className="w-[720px] min-w-[720px]">
@@ -614,12 +614,10 @@ export default function SpeakerRoomClient({ locale }: Props) {
       </section>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.abstractSectionTitle}</h2>
-
         <div className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
           <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
             <div className="pr-0 xl:pr-6">
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.inputHeading}</h3>
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.abstractInputHeading}</h3>
 
               <div className="space-y-4">
                 <label className="block">
@@ -628,6 +626,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
                     value={abstract}
                     onChange={(event) => setAbstract(event.target.value)}
                     rows={8}
+                    placeholder={isJa ? "例: このトークでは、..." : "e.g. In this talk, we will..."}
                     className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                   />
                 </label>
@@ -638,6 +637,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
                     value={bio}
                     onChange={(event) => setBio(event.target.value)}
                     rows={5}
+                    placeholder={isJa ? "例: XX大学 インターネット言語研究室 特任教授。" : "e.g. Assistant Professor, Department of ..."}
                     className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                   />
                 </label>
@@ -645,7 +645,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
             </div>
 
             <div className="mt-5 border-t border-[var(--line)] pt-5 xl:mt-0 xl:border-t-0 xl:border-l xl:pl-6 xl:pt-0">
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.previewHeading}</h3>
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.abstractPreviewHeading}</h3>
 
               {!abstract && !bio ? (
                 <p className="text-sm text-[var(--muted)]">{text.emptyHint}</p>
