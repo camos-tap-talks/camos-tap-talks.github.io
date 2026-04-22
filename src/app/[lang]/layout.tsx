@@ -37,7 +37,7 @@ export default async function LangLayout({ children, params }: Props) {
     <div className="min-h-screen flex flex-col">
       <Header locale={lang as Locale} />
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 pt-24 pb-10">{children}</main>
-      <Footer locale={lang as Locale} />
+      <Footer />
     </div>
   );
 }

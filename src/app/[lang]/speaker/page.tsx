@@ -64,7 +64,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
         </h2>
         <p className="mb-2 text-sm leading-relaxed text-[var(--muted)]">
           {isJa
-            ? <>はじめに、<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">15分程度で自己紹介や研究紹介</span>をお願いします。その後 Q&A（1時間以上想定）に移り、聴衆の興味にしたがってカジュアルにお話しいただけますと幸いです。</> : <>First, please <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">introduce yourself and your research for about 15 minutes</span>. Anything that serves as a starting point for the audience is fine. After that, we will move on to a casual Q&A session based on the audience's interests.</>}
+            ? <>はじめに、<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">15分程度で自己紹介や研究紹介</span>をお願いします。その後 Q&A（1時間以上想定）に移り、聴衆の興味にしたがってカジュアルにお話しいただけますと幸いです。</> : <>First, please <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">introduce yourself and your research for about 15 minutes</span>. Anything that serves as a starting point for the audience is fine. After that, we will move on to a casual Q&A session based on the audience&apos;s interests.</>}
         </p>
         <p className="mb-4 text-sm leading-relaxed text-[var(--muted)]">
           {isJa
@@ -250,7 +250,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
             <span>
               {isJa
                 ? "タップルーム「本郷菊坂町かもす」では毎週金曜日に働いています。"
-                : "I work at the taproom 'Hongo Kikusaka-cho Camos' every Friday."}
+                : "I work at the taproom &apos;Hongo Kikusaka-cho Camos&apos; every Friday."}
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -275,7 +275,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
         <ul className="space-y-2 text-sm leading-relaxed text-[var(--muted)]">
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-                <span>{isJa ? <><span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">自己紹介・研究紹介を含む15分程度のスライド・トーク</span>。時間は目安ですので気にし過ぎる必要はございません。</> : <><span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">A ~15-minute presentation including a self-introduction and overview of your research</span>. The time is just a guideline, so don't worry too much about it.</>}</span>
+                <span>{isJa ? <><span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">自己紹介・研究紹介を含む15分程度のスライド・トーク</span>。時間は目安ですので気にし過ぎる必要はございません。</> : <><span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">A ~15-minute presentation including a self-introduction and overview of your research</span>. The time is just a guideline, so don&apos;t worry too much about it.</>}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />

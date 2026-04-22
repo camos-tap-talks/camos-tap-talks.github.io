@@ -26,7 +26,9 @@ export default function Header({ locale }: Props) {
     : `/${nextLocale}`;
 
   useEffect(() => {
-    setSearch(window.location.search);
+    queueMicrotask(() => {
+      setSearch(window.location.search);
+    });
   }, []);
 
   const langSwitchHref = search ? `${switchedPathname}${search}` : switchedPathname;
@@ -43,7 +45,7 @@ export default function Header({ locale }: Props) {
     <header
       className="fixed top-0 left-0 right-0 z-50 py-3 px-6 text-white shadow-sm"
       style={{
-        backgroundColor: "#d1773b",
+        backgroundColor: "var(--accent)",
       }}
     >
       <div className={`${isSpeakerSubmit ? "w-[min(1120px,calc(100vw-2rem))]" : "max-w-3xl"} mx-auto flex items-center gap-5`}>

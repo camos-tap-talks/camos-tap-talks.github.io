@@ -165,16 +165,18 @@ export default function SpeakerSubmitClient({ locale }: Props) {
     }
 
     const nextDraft = readDraftFromSearchParams(params);
-    setTitle(nextDraft.title);
-    setTapNumber(nextDraft.tapNumber);
-    setDate(nextDraft.date);
-    setDateTbd(nextDraft.dateTbd);
-    setSpeaker(nextDraft.speaker);
-    setAbstract(nextDraft.abstract);
-    setBio(nextDraft.bio);
-    setSpeakerImage(nextDraft.speakerImage);
-    setUploadedImages(buildInitialUploadedImages(nextDraft.speakerImage, nextDraft.uploadedImages));
-    setGeneratedUrl(window.location.href);
+    queueMicrotask(() => {
+      setTitle(nextDraft.title);
+      setTapNumber(nextDraft.tapNumber);
+      setDate(nextDraft.date);
+      setDateTbd(nextDraft.dateTbd);
+      setSpeaker(nextDraft.speaker);
+      setAbstract(nextDraft.abstract);
+      setBio(nextDraft.bio);
+      setSpeakerImage(nextDraft.speakerImage);
+      setUploadedImages(buildInitialUploadedImages(nextDraft.speakerImage, nextDraft.uploadedImages));
+      setGeneratedUrl(window.location.href);
+    });
   }, []);
 
   const text = useMemo(
@@ -846,7 +848,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                         onClick={() => void deleteUploadedImage(image)}
                         className={`mt-2 inline-flex w-full items-center justify-center rounded-none px-2 py-1 text-[0.65rem] font-semibold text-white ${
                           image.deleteUrl
-                            ? "bg-[#d1773b] hover:bg-[color-mix(in_srgb,#d1773b_88%,#000)]"
+                            ? "bg-[var(--accent)] hover:bg-[color-mix(in_srgb,var(--accent)_88%,#000)]"
                             : "cursor-not-allowed bg-[color-mix(in_srgb,var(--line)_70%,#fff)] text-[var(--muted)]"
                         }`}
                       >
@@ -861,7 +863,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
         </div>
       </section>
 
-      <section className="mb-8 rounded-xl bg-[#d1773b] px-5 py-5 shadow-sm">
+      <section className="mb-8 rounded-xl bg-[var(--accent)] px-5 py-5 shadow-sm">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-white">{text.submitTitle}</h2>
         <button
           type="button"

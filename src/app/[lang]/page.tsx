@@ -147,7 +147,7 @@ export default async function HomePage({ params }: Props) {
         </section>
       )}
 
-      <section className="mb-8  bg-[#d1773b] px-6 py-7 text-white">
+      <section className="mb-8 bg-[var(--accent)] px-6 py-7 text-white">
         <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-white/85">{t.camos.label}</p>
         <div className="mb-4 flex items-center gap-2">
           <h2 className="text-lg font-bold">{t.camos.title}</h2>

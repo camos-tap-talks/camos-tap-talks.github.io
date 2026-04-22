@@ -43,8 +43,12 @@ export const talks: Talk[] = [
     },
 ];
 
+function getTodayDateString(): string {
+  return new Date().toISOString().split("T")[0];
+}
+
 export function getUpcomingTalks(): Talk[] {
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayDateString();
   return talks
     .filter((t) => t.dateTbd || t.date >= today)
     .sort((a, b) => {
@@ -56,7 +60,7 @@ export function getUpcomingTalks(): Talk[] {
 }
 
 export function getPastTalks(): Talk[] {
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayDateString();
   return talks.filter((t) => !t.dateTbd && t.date < today).sort((a, b) => b.date.localeCompare(a.date));
 }
 
