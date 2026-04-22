@@ -1,5 +1,16 @@
+type R2ObjectLike = {
+  body: ReadableStream | null;
+  writeHttpMetadata: (headers: Headers) => void;
+};
+
+type R2BucketBinding = {
+  put: (key: string, value: ReadableStream, options?: { httpMetadata?: { contentType?: string } }) => Promise<void>;
+  get: (key: string) => Promise<R2ObjectLike | null>;
+  delete: (key: string) => Promise<void>;
+};
+
 type Env = {
-  TEMP_UPLOADS: R2Bucket;
+  TEMP_UPLOADS: R2BucketBinding;
   SIGNING_SECRET: string;
   PUBLIC_BASE_URL: string;
   ALLOWED_ORIGINS: string;

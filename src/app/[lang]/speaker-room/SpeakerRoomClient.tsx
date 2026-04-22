@@ -211,8 +211,8 @@ export default function SpeakerRoomClient({ locale }: Props) {
       speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
       uploadTitle: isJa ? "画像アップロード" : "Image Upload",
       uploadHelp: isJa
-        ? "JPEG/PNG のみ、10MB まで。"
-        : "JPEG/PNG only, up to 10MB.",
+        ? "JPEG/PNG のみ、10MB まで、最大10枚。"
+        : "JPEG/PNG only, up to 10MB, max 10 images.",
       uploadMissingEndpoint: isJa
         ? "アップロード設定が未完了です。管理者が署名 URL 発行エンドポイントを設定してください。"
         : "Upload is not configured yet. The admin needs to set a signed URL endpoint.",

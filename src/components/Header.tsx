@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import type { Locale } from "@/lib/i18n";
 import { getTranslations } from "@/lib/i18n";
@@ -13,14 +14,18 @@ type Props = {
 export default function Header({ locale }: Props) {
   const t = getTranslations(locale);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const [search, setSearch] = useState("");
   const isSpeakerRoom = pathname === `/${locale}/speaker-room` || pathname === `/${locale}/speaker-room/`;
   const nextLocale = locale === "ja" ? "en" : "ja";
   const switchedPathname = pathname
     ? pathname.replace(/^\/(ja|en)(?=\/|$)/, `/${nextLocale}`)
     : `/${nextLocale}`;
-  const switchedSearch = searchParams.toString();
-  const langSwitchHref = switchedSearch ? `${switchedPathname}?${switchedSearch}` : switchedPathname;
+
+  useEffect(() => {
+    setSearch(window.location.search);
+  }, []);
+
+  const langSwitchHref = search ? `${switchedPathname}${search}` : switchedPathname;
 
   const isActive = (href: string) =>
     pathname === href || pathname === href + "/";
