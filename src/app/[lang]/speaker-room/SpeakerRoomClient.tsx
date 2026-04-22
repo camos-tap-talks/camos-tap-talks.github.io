@@ -526,9 +526,11 @@ export default function SpeakerRoomClient({ locale }: Props) {
               <label className="w-auto shrink-0">
                 <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
                 <input
-                  type="date"
-                  value={date}
-                  onChange={(event) => setDate(event.target.value)}
+                  type="text"
+                  inputMode="numeric"
+                  value={date.replace(/-/g, "/")}
+                  onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
+                  placeholder="yyyy/mm/dd"
                   className="w-[11.5rem] rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                 />
               </label>
