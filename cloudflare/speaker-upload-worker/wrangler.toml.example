@@ -1,0 +1,12 @@
+name = "speaker-upload-signer"
+main = "src/index.ts"
+compatibility_date = "2026-04-21"
+
+# Set in Cloudflare dashboard or with `wrangler secret put`
+# - SIGNING_SECRET
+# - PUBLIC_BASE_URL (example: https://img.yuesugi.com)
+# - ALLOWED_ORIGINS (comma-separated, example: https://camos-tap-talks.github.io,https://yuesugi.com)
+
+[[r2_buckets]]
+binding = "TEMP_UPLOADS"
+bucket_name = "speaker-temp-uploads"

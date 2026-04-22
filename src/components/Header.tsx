@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import type { Locale } from "@/lib/i18n";
 import { getTranslations } from "@/lib/i18n";
@@ -13,6 +13,14 @@ type Props = {
 export default function Header({ locale }: Props) {
   const t = getTranslations(locale);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isSpeakerRoom = pathname === `/${locale}/speaker-room` || pathname === `/${locale}/speaker-room/`;
+  const nextLocale = locale === "ja" ? "en" : "ja";
+  const switchedPathname = pathname
+    ? pathname.replace(/^\/(ja|en)(?=\/|$)/, `/${nextLocale}`)
+    : `/${nextLocale}`;
+  const switchedSearch = searchParams.toString();
+  const langSwitchHref = switchedSearch ? `${switchedPathname}?${switchedSearch}` : switchedPathname;
 
   const isActive = (href: string) =>
     pathname === href || pathname === href + "/";
@@ -29,7 +37,7 @@ export default function Header({ locale }: Props) {
         backgroundColor: "#d1773b",
       }}
     >
-      <div className="max-w-3xl mx-auto flex items-center gap-5">
+      <div className={`${isSpeakerRoom ? "w-[min(1120px,calc(100vw-2rem))]" : "max-w-3xl"} mx-auto flex items-center gap-5`}>
         <Link
           href={`/${locale}`}
           className="shrink-0 translate-y-[2px] transition-transform hover:scale-[1.03]"
@@ -43,7 +51,7 @@ export default function Header({ locale }: Props) {
           />
         </Link>
 
-        <div className="ml-auto flex items-center gap-5">
+        <div className="ml-auto flex items-center gap-5 pr-2">
           <nav className="flex items-center gap-5 text-sm">
             {navLinks.map(({ href, label }) => (
               <Link
@@ -60,9 +68,9 @@ export default function Header({ locale }: Props) {
             ))}
           </nav>
 
-          <div className="flex items-center min-w-[3.6rem] justify-start">
+          <div className="flex items-center justify-start pr-2">
             <Link
-              href={t.langSwitchPath}
+              href={langSwitchHref}
               className="border-l border-white/30 pl-3 font-bold text-white/78 hover:text-white transition-colors text-sm"
             >
               {t.langSwitch}

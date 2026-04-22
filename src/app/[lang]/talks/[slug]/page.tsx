@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { locales, type Locale, getTranslations } from "@/lib/i18n";
 import { talks } from "@/lib/talks";
 import TalkCard from "@/components/TalkCard";
+import MarkdownText from "@/components/MarkdownText";
 import Image from "next/image";
 import Link from "next/link";
 import { SITE_URL } from "@/lib/site";
@@ -84,7 +85,7 @@ export default async function TalkPage({ params }: Props) {
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
             Abstract
           </h2>
-          <p className="leading-relaxed text-[var(--muted)]">{abstract}</p>
+          <MarkdownText content={abstract} className="leading-relaxed text-[var(--muted)]" />
         </section>
 
         {bio && (
@@ -92,7 +93,7 @@ export default async function TalkPage({ params }: Props) {
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
               Speaker Bio
             </h2>
-            <p className="leading-relaxed text-[var(--muted)]">{bio}</p>
+            <MarkdownText content={bio} className="leading-relaxed text-[var(--muted)]" />
           </section>
         )}
       </div>

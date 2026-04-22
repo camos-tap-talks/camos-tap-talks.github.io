@@ -19,11 +19,11 @@ export const talks: Talk[] = [
   // Add talks here as they happen. Example:
     // {
     //   id: "0",
-    //   slug: "first-talk",
+    //   slug: "0-example",
     //   date: "2026-05-30",
     //   dateTbd: true,
     //   titleEn: "TBD",
-    //   titleJa: "Coming soon ...",
+    //   titleJa: "Coming soon ...", （55文字以内、\n で改行）
     //   speakerEn: "TBD",
     //   speakerJa: "Coming soon ...",
     //   abstractEn: "Details to be announced.",
@@ -31,15 +31,15 @@ export const talks: Talk[] = [
     // },
     {
       id: "1",
-      slug: "first-talk",
+      slug: "1-first",
       date: "2026-03-30",
       dateTbd: true,
       titleEn: "TBD",
-      titleJa: "Coming soon ...",
+      titleJa: "Coming soon ...\n ...",
       speakerEn: "TBD",
       speakerJa: "Coming soon ...",
       abstractEn: "Details to be announced.",
-      abstractJa: "詳細は後日公開予定です。",
+    abstractJa: "詳細は後日公開予定です。",
     },
 ];
 

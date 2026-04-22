@@ -1,0 +1,16 @@
+name = "camos-tap-talks-speaker-worker"
+main = "src/index.ts"
+compatibility_date = "2026-04-21"
+
+[vars]
+PUBLIC_BASE_URL = "https://camos-tap-talks-speaker-worker.yuesugi.workers.dev/files"
+ALLOWED_ORIGINS = "http://localhost:3000,https://camos-tap-talks.github.io"
+
+# Set in Cloudflare dashboard or with `wrangler secret put`
+# - SIGNING_SECRET
+# - PUBLIC_BASE_URL (example: https://img.yuesugi.com)
+# - ALLOWED_ORIGINS (comma-separated, example: https://camos-tap-talks.github.io,http://localhost:3000)
+
+[[r2_buckets]]
+binding = "TEMP_UPLOADS"
+bucket_name = "camos-tap-talks-speaker-temp-uploads"
