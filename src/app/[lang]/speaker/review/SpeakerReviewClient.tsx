@@ -466,7 +466,7 @@ export default function SpeakerReviewClient({ locale }: Props) {
                 <div>
                   <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">Japanese</h4>
                   <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.urlPreviewLabel}</p>
-                  <p className="mb-4 break-all rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]">.../ja/talks/{talkPathSlug}</p>
+                  <p className="mb-4 break-all text-sm text-[var(--foreground)]">.../ja/talks/{talkPathSlug}</p>
                   <TalkCard
                     talk={previewTalk}
                     locale="ja"
@@ -480,7 +480,7 @@ export default function SpeakerReviewClient({ locale }: Props) {
                 <div>
                   <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">English</h4>
                   <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.urlPreviewLabel}</p>
-                  <p className="mb-4 break-all rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]">.../en/talks/{talkPathSlug}</p>
+                  <p className="mb-4 break-all text-sm text-[var(--foreground)]">.../en/talks/{talkPathSlug}</p>
                   <TalkCard
                     talk={previewTalk}
                     locale="en"

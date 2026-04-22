@@ -218,6 +218,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
   const [bioEn, setBioEn] = useState(EMPTY_DRAFT.bioEn);
   const [useJaSection, setUseJaSection] = useState(true);
   const [useEnSection, setUseEnSection] = useState(true);
+  const [openMarkdownSection, setOpenMarkdownSection] = useState(false);
   const [openJaSection, setOpenJaSection] = useState(true);
   const [openEnSection, setOpenEnSection] = useState(true);
   const [speakerImage, setSpeakerImage] = useState(EMPTY_DRAFT.speakerImage);
@@ -689,6 +690,23 @@ export default function SpeakerSubmitClient({ locale }: Props) {
     window.open(url.toString(), "_blank", "noopener,noreferrer");
   };
 
+  const openMarkdownGuide = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setOpenMarkdownSection(true);
+    requestAnimationFrame(() => {
+      const section = document.getElementById("supported-markdown");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const scrollToImageUpload = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    requestAnimationFrame(() => {
+      const section = document.getElementById("image-upload");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
   return (
     <div onClickCapture={openExternalLinksInNewTab}>
       <p className="mb-2 text-center text-[0.7rem] font-semibold tracking-[0.32em] text-[var(--muted)]">{text.pageLabel}</p>
@@ -751,7 +769,10 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       </section>
 
       <section id="supported-markdown" className="mb-8 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
-        <details>
+        <details
+          open={openMarkdownSection}
+          onToggle={(event) => setOpenMarkdownSection(event.currentTarget.open)}
+        >
           <summary className="cursor-pointer text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
             {text.markdownTitle}
           </summary>
@@ -915,7 +936,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                   className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(speakerImage)}`}
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">
-                  <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
+                  <a href="#image-upload" onClick={scrollToImageUpload} className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
                   <span> {text.speakerImageAspectHint}</span>
                 </p>
               </label>
@@ -923,8 +944,8 @@ export default function SpeakerSubmitClient({ locale }: Props) {
 
             <div className="mt-5 border-t border-[var(--line)] pt-5">
               <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.urlPreviewLabel}</p>
-              <p className="mb-4 break-all rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]">.../ja/talks/{talkPathSlug}</p>
+              <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.urlPreviewLabel}</h4>
+              <p className="mb-4 break-all text-sm text-[var(--foreground)]">.../ja/talks/{talkPathSlug}</p>
 
               <section className="w-full overflow-x-auto pb-1">
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.desktopPreviewLabel}</h4>
@@ -970,7 +991,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
-                      <a href="#supported-markdown" className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
+                      <a href="#supported-markdown" onClick={openMarkdownGuide} className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
                     </p>
                   </label>
                 </div>
@@ -1002,7 +1023,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
-                      <a href="#supported-markdown" className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
+                      <a href="#supported-markdown" onClick={openMarkdownGuide} className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
                     </p>
                   </label>
                 </div>
@@ -1175,7 +1196,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                   className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(speakerImage)}`}
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">
-                  <a href="#image-upload" className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
+                  <a href="#image-upload" onClick={scrollToImageUpload} className="underline hover:text-[var(--foreground)]">{text.uploadScrollHint}</a>
                   <span> {text.speakerImageAspectHint}</span>
                 </p>
               </label>
@@ -1183,8 +1204,8 @@ export default function SpeakerSubmitClient({ locale }: Props) {
 
             <div className="mt-5 border-t border-[var(--line)] pt-5">
               <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.sectionPreviewHeading}</h3>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.urlPreviewLabel}</p>
-              <p className="mb-4 break-all rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]">.../en/talks/{talkPathSlug}</p>
+              <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.urlPreviewLabel}</h4>
+              <p className="mb-4 break-all text-sm text-[var(--foreground)]">.../en/talks/{talkPathSlug}</p>
 
               <section className="w-full overflow-x-auto pb-1">
                 <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">{text.desktopPreviewLabel}</h4>
@@ -1230,7 +1251,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
-                      <a href="#supported-markdown" className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
+                      <a href="#supported-markdown" onClick={openMarkdownGuide} className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
                     </p>
                   </label>
                 </div>
@@ -1262,7 +1283,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
-                      <a href="#supported-markdown" className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
+                      <a href="#supported-markdown" onClick={openMarkdownGuide} className="underline hover:text-[var(--foreground)]">{text.markdownScrollHint}</a>
                     </p>
                   </label>
                 </div>
