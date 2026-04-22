@@ -214,6 +214,7 @@ export default function SpeakerRoomClient({ locale }: Props) {
       speakerImageUploadHint: isJa ? "画像アップロードはこちら↓" : "Upload images below ↓",
       speakerImageLabel: isJa ? "スピーカー画像 URL" : "Speaker image URL",
       uploadTitle: isJa ? "画像アップロード" : "Image Upload",
+      uploadHelp: isJa
         ? "JPEG/PNG のみ、10MB まで、最大10枚。"
         : "JPEG/PNG only, up to 10MB, max 10 images.",
       uploadMissingEndpoint: isJa
