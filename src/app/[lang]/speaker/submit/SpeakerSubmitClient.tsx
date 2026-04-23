@@ -833,7 +833,6 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                     <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
                     <input
                       type="text"
-                      inputMode="numeric"
                       value={date.replace(/-/g, "/")}
                       onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
                       placeholder="yyyy/mm/dd"
@@ -857,7 +856,6 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                     <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.startTimeLabel}</span>
                     <input
                       type="text"
-                      inputMode="numeric"
                       maxLength={5}
                       value={startTime}
                       onChange={(event) => setStartTime(normalizeTimeInput(event.target.value))}
@@ -883,7 +881,6 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                     <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.endTimeLabel}</span>
                     <input
                       type="text"
-                      inputMode="numeric"
                       maxLength={5}
                       value={endTime}
                       onChange={(event) => setEndTime(normalizeTimeInput(event.target.value))}
@@ -1103,7 +1100,6 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                     <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.dateLabel}</span>
                     <input
                       type="text"
-                      inputMode="numeric"
                       value={date.replace(/-/g, "/")}
                       onChange={(event) => setDate(event.target.value.replace(/\//g, "-"))}
                       placeholder="yyyy/mm/dd"
@@ -1127,7 +1123,6 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                     <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.startTimeLabel}</span>
                     <input
                       type="text"
-                      inputMode="numeric"
                       maxLength={5}
                       value={startTime}
                       onChange={(event) => setStartTime(normalizeTimeInput(event.target.value))}
@@ -1153,7 +1148,6 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                     <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.endTimeLabel}</span>
                     <input
                       type="text"
-                      inputMode="numeric"
                       maxLength={5}
                       value={endTime}
                       onChange={(event) => setEndTime(normalizeTimeInput(event.target.value))}
