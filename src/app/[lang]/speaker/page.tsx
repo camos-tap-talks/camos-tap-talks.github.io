@@ -64,24 +64,24 @@ export default async function SpeakerGuidePage({ params }: Props) {
         </h2>
         <p className="mb-2 text-sm leading-relaxed text-[var(--muted)]">
           {isJa
-            ? <>はじめに、<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">15分程度で自己紹介や研究紹介</span>をお願いします。その後 Q&A（1時間以上想定）に移り、聴衆の興味にしたがってカジュアルにお話しいただけますと幸いです。</> : <>First, please <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">introduce yourself and your research for about 15 minutes</span>. Anything that serves as a starting point for the audience is fine. After that, we will move on to a casual Q&A session based on the audience&apos;s interests.</>}
+            ? <>はじめに、<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">15分程度で自己紹介・研究紹介</span>をお願いします。その後 Q&A（1時間以上想定）に移り、聴衆の聴衆の関心に合わせてカジュアルにお話しください。</> : <>First, please <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">introduce yourself and your research for about 15 minutes</span>. After that, we will move on to a casual Q&A session based on the audience's interests.</>}
         </p>
         <p className="mb-4 text-sm leading-relaxed text-[var(--muted)]">
           {isJa
-            ? <>聴衆側は、参加登録不要（参加費もなし）で、途中参加・退出も可としております。途中から入って来られた方向けに、定期的に<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">ダイジェスト版の自己紹介・研究紹介</span>をお願いできますと幸いです。タイミング・やり方等はお任せします。</> : <>Audience members can join without registration (and there is no participation fee), and they are free to come and go as they please. It would be appreciated if you could provide a <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">digest version of your self-introduction and research overview</span> periodically for those who join in the middle. The timing and method are up to you.</>}
+            ? <>聴衆側は、参加登録不要（参加費もなし）で、途中参加・退出も可です。途中参加の方向けに、適宜<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">ダイジェスト版説明</span>をお願いできますと幸いです。タイミング・やり方等はお任せします。</> : <>Audience members can join without registration (and there is no participation fee), and they are free to come and go as they please. It would be appreciated if you could provide a <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">digest version of your explanation</span> for those who join in the middle. The timing and method are up to you.</>}
         </p>
         <ul className="space-y-2 text-sm leading-relaxed text-[var(--muted)]">
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-            <span>{isJa ? "スライドを用いたトークを想定していますが、聴衆にとってのとっかかりとなれば何でも構いません。ポスター発表、トークのみ、実験実演など、形式は自由です。飲食店ですので、特殊な物を持ち込まれる場合は事前にご相談ください。" : "We assume talks will use slides, but anything that serves as a starting point for the audience is fine. Poster presentations, talks only, or live demonstrations are all acceptable. Since this is a bar, please consult us in advance if you plan to bring any special items."}</span>
+            <span>{isJa ? "スライド使用を想定していますが、形式は自由です（ポスター発表、トークのみ、実験実演など）。聴衆にとってのとっかかりとなれば何でも構いません。飲食店ですので、特殊な持ち込みがある場合は事前にご相談ください。" : "Slides are assumed, but the format is flexible (poster presentations, talks only, live demonstrations, etc.). Anything that serves as a starting point for the audience is fine. Since this is a bar, please consult us in advance if you plan to bring any special items."}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-            <span>{isJa ? "世話人はワンオペでお店を運営していますので、進行は基本的にスピーカーにお任せしています。世話人の余裕のあるときにはファシリテーターとしてサポートすることもあります。" : "The organizer runs the bar alone, so the progress is basically left to the speaker. The organizer may support as a facilitator when available."}</span>
+            <span>{isJa ? "世話人はワンオペでお店を運営していますので、進行は基本的にスピーカーにお任せしています。世話人の余裕のあるときにはファシリテーターとしてサポートします。" : "The organizer runs the bar alone, so the progress is basically left to the speaker. The organizer may support as a facilitator when available."}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-            <span>{isJa ? "プロジェクターを利用される場合は、10分程度早めにお越しいただき接続確認をお願いします。" : "If you plan to use the projector, please arrive about 10 minutes early to check the connection."}</span>
+            <span>{isJa ? "プロジェクター利用の場合は、10分程度早めにお越しください。" : "If you plan to use the projector, please arrive about 10 minutes early."}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
@@ -123,7 +123,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
         <ul className="space-y-2 text-sm leading-relaxed text-[var(--muted)]">
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-            <span>{isJa ? "日本語で話す場合：聴衆の多くは日本語話者であることが予想されますが、普段は英語話者のお客さんも一定数いらっしゃいます。日本語で発表される場合でも、英語話者の方がいらっしゃったら簡単な英語の説明を加えていただくなどしていただけますと幸いです。" : "If presenting in Japanese: Most of the audience are expected to be Japanese speakers, but there will also be some English-speaking attendees. Even if you present in Japanese, it would be appreciated if you could provide a brief explanation in English for the English-speaking attendees."}</span>
+            <span>{isJa ? "日本語で話す場合：聴衆の多くは日本語話者ですが、英語話者も一定数いらっしゃいます。日本語で発表される場合も、適宜簡単な英語での説明を加えていただけますと幸いです。" : "If presenting in Japanese: Most of the audience are Japanese speakers, but there will also be some English-speaking attendees. Even if you present in Japanese, it would be appreciated if you could provide a brief explanation in English for the English-speaking attendees."}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />

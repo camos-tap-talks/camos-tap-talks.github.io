@@ -280,8 +280,8 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       inputStepsTitle: isJa ? "入力手順" : "Input Steps",
       languageSelectionTitle: isJa ? "入力言語の選択" : "Input Language Selection",
       languageSelectionHelp: isJa
-        ? "入力された情報を HP に記載するので、宣伝したい層や対応可能な言語に合わせて選択してください。*のついた項目は日本語・英語セクションで同期されます。"
-        : "The submitted information will be published on the website, so choose the languages based on the audience you want to reach and the languages you can support. Fields marked with * are synchronized between the Japanese and English sections.",
+        ? "入力された情報を HP に記載するので、宣伝したい層や対応可能な言語に合わせて選択してください。*のついた項目は下の「日本語セクション」と「英語セクション」で同期されます。"
+        : "The submitted information will be published on the website, so choose the languages based on the audience you want to reach and the languages you can support. Fields marked with * are synchronized between the Japanese and English sections in the input section below.",
       japaneseLabel: isJa ? "日本語" : "Japanese",
       englishLabel: isJa ? "英語" : "English",
       workflowSteps: isJa
