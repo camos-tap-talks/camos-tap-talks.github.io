@@ -809,7 +809,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                 <input
                   value={slug}
                   onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
-                  placeholder="e.g. suzuki / genomics"
+                  placeholder="e.g. taro / biodiversity"
                   className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(slug)}`}
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">{text.slugHint}</p>
@@ -1076,7 +1076,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
                 <input
                   value={slug}
                   onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
-                  placeholder="e.g. suzuki / genomics"
+                  placeholder="e.g. taro / biodiversity"
                   className={`w-full rounded-none border border-[var(--line)] px-3 py-2 text-sm text-[var(--foreground)] ${emptyInputClass(slug)}`}
                 />
                 <p className="mt-1 text-xs text-[var(--muted)]">{text.slugHint}</p>
