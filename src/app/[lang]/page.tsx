@@ -33,6 +33,7 @@ export default async function HomePage({ params }: Props) {
   if (!locales.includes(lang as Locale)) notFound();
 
   const locale = lang as Locale;
+  const isJa = locale === "ja";
   const t = getTranslations(locale);
   const upcoming = getUpcomingTalks();
   const past = getPastTalks().slice(0, 3);
@@ -114,6 +115,42 @@ export default async function HomePage({ params }: Props) {
         </ul>
       </section>
 
+      <section className="mb-8">
+        <div className="mx-auto grid max-w-[560px] grid-cols-2 gap-6 sm:gap-12">
+          <figure className="relative rotate-[-2deg]">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-0 z-10 h-6 w-24 -translate-x-1/2 -translate-y-1/2 rotate-[-4deg] bg-[var(--accent)] opacity-60"
+            />
+            <div className="relative aspect-[4/3] overflow-hidden shadow-[0_0px_10px_rgba(54,32,20,0.2)]">
+              <Image
+                src="/camos_exterior-1.jpg"
+                alt={isJa ? "本郷菊坂町かもすの外観" : "Exterior of Hongo Kikusaka-cho Camos"}
+                fill
+                sizes="(min-width: 1024px) 220px, (min-width: 640px) 33vw, 40vw"
+                className="object-cover"
+              />
+            </div>
+          </figure>
+
+          <figure className="relative mt-2 rotate-[2deg] sm:mt-4">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-0 z-10 h-6 w-24 -translate-x-1/2 -translate-y-1/2 rotate-[7deg] bg-[var(--accent)] opacity-60"
+            />
+            <div className="relative aspect-[4/3] overflow-hidden shadow-[0_0px_10px_rgba(54,32,20,0.2)]">
+              <Image
+                src="/camos_taps-1.jpg"
+                alt={isJa ? "本郷菊坂町かもすのタップ" : "Taps at Hongo Kikusaka-cho Camos"}
+                fill
+                sizes="(min-width: 1024px) 220px, (min-width: 640px) 33vw, 40vw"
+                className="object-cover object-[center_38%]"
+              />
+            </div>
+          </figure>
+        </div>
+      </section>
+
       <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
         <IconInitialHeading
           text={t.home.faqTitle}
@@ -147,27 +184,52 @@ export default async function HomePage({ params }: Props) {
         </section>
       )}
 
-      <section className="mb-8 bg-[var(--accent)] px-6 py-7 text-white">
-        <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-white/85">{t.camos.label}</p>
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="text-lg font-bold">{t.camos.title}</h2>
-          <a
-            href="https://www.instagram.com/hk.camos"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${t.camos.instagram} @hk.camos`}
-            className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-sm text-white/90 transition-colors hover:text-white"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 fill-current">
-              <path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 1.7A4.06 4.06 0 0 0 3.7 7.75v8.5A4.06 4.06 0 0 0 7.75 20.3h8.5a4.06 4.06 0 0 0 4.05-4.05v-8.5a4.06 4.06 0 0 0-4.05-4.05h-8.5Zm8.95 1.27a1.12 1.12 0 1 1 0 2.24 1.12 1.12 0 0 1 0-2.24ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.7A3.3 3.3 0 1 0 12 15.3a3.3 3.3 0 0 0 0-6.6Z" />
-            </svg>
-          </a>
-        </div>
-        <div className="space-y-3 text-sm">
-          <p>{t.camos.address}</p>
-          <div>
-            <p>{t.camos.hours}</p>
-            <p className="mt-0.5 text-xs opacity-80">{t.camos.hoursNote}</p>
+      <section className="overflow-hidden shadow-sm">
+        <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)]">
+          <div className="bg-[var(--accent)] px-6 py-7 text-white md:px-7 md:py-8">
+            <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-white/85">{t.camos.label}</p>
+            <div className="mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold">{t.camos.title}</h2>
+              <a
+                href="https://www.instagram.com/hk.camos"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${t.camos.instagram} @hk.camos`}
+                className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-sm text-white/90 transition-colors hover:text-white"
+              >
+                <span
+                  aria-hidden="true"
+                  className="h-5 w-5 bg-current [mask-image:url('/icons/instagram.svg')] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [-webkit-mask-image:url('/icons/instagram.svg')] [-webkit-mask-position:center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain]"
+                />
+              </a>
+            </div>
+            <div className="space-y-3 text-sm">
+              <p>{t.camos.address}</p>
+              <div>
+                <p className="whitespace-pre-line">{t.camos.hours}</p>
+                <p className="mt-0.5 text-xs opacity-80">{t.camos.hoursNote}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative min-h-[260px]">
+            <Image
+              src="/interior.jpg"
+              alt={isJa ? "CAMOS store photo" : "CAMOS store photo"}
+              fill
+              sizes="(min-width: 768px) 40vw, 100vw"
+              className="object-cover"
+            />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-16 md:hidden" aria-hidden="true">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+                <path d="M0 0 H100 V50 C50 25 16 40 0 0 Z" fill="var(--accent)" />
+              </svg>
+            </div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-20 md:block" aria-hidden="true">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+                <path d="M0 0 H50 C50 50 100 50 100 100 H0 Z" fill="var(--accent)" />
+              </svg>
+            </div>
           </div>
         </div>
       </section>
