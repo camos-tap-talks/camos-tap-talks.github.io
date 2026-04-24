@@ -214,8 +214,8 @@ export default async function HomePage({ params }: Props) {
 
           <div className="relative min-h-[260px]">
             <Image
-              src="/interior.jpg"
-              alt={isJa ? "CAMOS store photo" : "CAMOS store photo"}
+              src="/camos_interior-1.jpg"
+              alt={isJa ? "本郷菊坂町かもすの内観" : "Interior of Hongo Kikusaka-cho Camos"}
               fill
               sizes="(min-width: 768px) 40vw, 100vw"
               className="object-cover"
