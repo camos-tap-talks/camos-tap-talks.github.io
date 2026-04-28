@@ -56,6 +56,7 @@ export const translations = {
       upcoming: "Upcoming",
       past: "Past",
       noTalks: "No talks yet.",
+      reportTitle: "Report",
     },
     talkCard: {
       speaker: "Speaker",
@@ -110,6 +111,10 @@ export const translations = {
           answer: "ソフトドリンクもありますので、アルコールが苦手な方も安心してご参加いただけます。",
         },
         {
+          question: "食べるものはありますか？",
+          answer: "軽食・おつまみはあります。フードは持ち込み可能です。ゴミはお持ち帰りください。",
+        },
+        {
           question: "タップルームとは何ですか？",
           answer: "ビール醸造所に併設されたバーのことです。ビールを注ぐタップが並んでいることからタップルーム（Taproom）と呼ばれています。",
         }
@@ -125,6 +130,7 @@ export const translations = {
       upcoming: "予定",
       past: "過去",
       noTalks: "まだトークはありません。",
+      reportTitle: "開催レポート",
     },
     talkCard: {
       speaker: "スピーカー",

@@ -16,6 +16,10 @@ export type Talk = {
   speakerBioJa?: string;
   speakerImage?: string;
   talkImage?: string;
+  reportEn?: string;
+  reportJa?: string;
+  reportImages?: string[]; // paths under /public/, e.g. "/report/1-first/photo1.jpg"
+  reportPublished?: boolean; // set to true to show the report section publicly
 };
 
 export const talks: Talk[] = [
@@ -37,15 +41,22 @@ export const talks: Talk[] = [
     // },
     {
       id: "1",
-      slug: "1-first",
-      date: "2026-03-30",
-      dateTbd: true,
+      slug: "1-karita",
+      date: "2026-05-29",
+      startTime: "18:30",
+      endTime: "20:30",
+      dateTbd: false,
+      timeTbd: false,
       titleEn: "TBD",
       titleJa: "Coming soon ...\n ...",
       speakerEn: "TBD",
       speakerJa: "Coming soon ...",
       abstractEn: "Details to be announced.",
-    abstractJa: "詳細は後日公開予定です。",
+      abstractJa: "詳細は後日公開予定です。",
+      // reportEn: "Report to be announced.",
+      reportJa: "レポートは後日公開予定です。",
+      reportImages: ["/test.jpg"],
+      reportPublished: false,
     },
 ];
 
@@ -104,10 +115,10 @@ export function formatDate(dateStr: string, locale: "en" | "ja", dateTbd?: boole
   const formattedTime = formatTimeRange(startTime, endTime, timeTbd);
 
   if (locale === "ja") {
-    const formattedDate = date.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+    const formattedDate = date.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
     return formattedTime ? `${formattedDate} ${formattedTime}` : formattedDate;
   }
 
-  const formattedDate = date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  const formattedDate = date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", weekday: "short" });
   return formattedTime ? `${formattedDate} ${formattedTime}` : formattedDate;
 }
