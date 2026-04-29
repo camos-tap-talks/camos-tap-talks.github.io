@@ -24,8 +24,10 @@ export const translations = {
         "No advance registration is needed. Just come by on the day.",
         "Participation is free. Please order a drink at the counter, then feel free to join the talk and Q&A.",
         "You can arrive late or leave early. We also briefly recap the talk during the session so late arrivals can follow along.",
-        "As a general rule, photography and audio/video recording are not allowed. They are permitted only with the speaker's explicit permission.",
       ],
+      noticeTitle: "Notice",
+      noticeText:
+        "Photography and audio/video recording are not allowed. They are permitted only with the speaker's explicit permission.",
       faqTitle: "FAQ",
       faqItems: [
         {
@@ -92,10 +94,11 @@ export const translations = {
       participationTitle: "参加方法",
       participationItems: [
         "事前申し込みは不要です。当日そのままご来店ください！",
-        "参加費無料です。カウンターでドリンクをご注文のうえ、トークや Q&A にお気軽にご参加ください。",
+        "参加費無料です。カウンターでドリンクをご購入のうえ、トークにお気軽にご参加ください。",
         "途中参加・途中退出も自由です。途中参加の方にもわかるように、何度か研究紹介トークの内容を振り返る時間を設けます。",
-        "注意事項：撮影・録音等は原則禁止です。スピーカーの許可があった場合にのみ可能です。",
       ],
+      noticeTitle: "注意事項",
+      noticeText: "撮影・録音等は原則禁止です。スピーカーの許可があった場合にのみ可能です。",
       faqTitle: "よくある質問",
       faqItems: [
         {

@@ -113,6 +113,17 @@ export default async function HomePage({ params }: Props) {
             </li>
           ))}
         </ul>
+
+        <div className="mt-5">
+          <p className="text-sm leading-relaxed text-[var(--muted)]">
+            <span className="align-middle rounded bg-[var(--accent)] px-2 py-0.75 text-sm font-semibold text-white mr-3">
+              {t.home.noticeTitle}
+            </span>
+            <span className="align-middle">
+              {t.home.noticeText}
+            </span>
+          </p>
+        </div>
       </section>
 
       <section className="mb-8">
