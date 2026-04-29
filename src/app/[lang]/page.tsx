@@ -220,8 +220,8 @@ export default async function HomePage({ params }: Props) {
               sizes="(min-width: 768px) 40vw, 100vw"
               className="object-cover"
             />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-16 md:hidden" aria-hidden="true">
-              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+            <div className="pointer-events-none absolute inset-x-0 -top-px h-16 md:hidden" aria-hidden="true">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="block h-full w-full">
                 <path d="M0 0 H100 V50 C50 25 16 40 0 0 Z" fill="var(--accent)" />
               </svg>
             </div>
