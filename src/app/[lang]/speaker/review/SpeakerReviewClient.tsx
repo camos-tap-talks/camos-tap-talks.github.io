@@ -99,7 +99,7 @@ function parseDraftFromSearchParams(params: URLSearchParams): ParsedDraft {
     titleJa: params.get("titleJa") ?? params.get("title") ?? "",
     titleEn: params.get("titleEn") ?? params.get("title") ?? "",
     tapNumber: params.get("tap") ?? params.get("tapNumber") ?? "",
-    date: params.get("date") ?? "",
+    date: normalizeDateFormat(params.get("date") ?? ""),
     startTime: params.get("startTime") ?? "",
     endTime: params.get("endTime") ?? "",
     dateTbd: params.get("dateTbd") === "1" || params.get("dateTbd") === "true",
@@ -117,6 +117,26 @@ function parseDraftFromSearchParams(params: URLSearchParams): ParsedDraft {
 
 function codeString(value: string): string {
   return JSON.stringify(value);
+}
+
+function normalizeDateFormat(dateStr: string): string {
+  if (!dateStr.trim()) {
+    return "";
+  }
+  // Convert YYYYMMDD or YYYY/MM/DD or YYYY-MM-DD to YYYY-MM-DD
+  const cleaned = dateStr.trim().replace(/[^0-9]/g, "");
+  if (cleaned.length === 8) {
+    return `${cleaned.slice(0, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(6, 8)}`;
+  }
+  // If already in YYYY-MM-DD or similar format with dashes/slashes
+  const parts = dateStr.trim().split(/[-\/]/);
+  if (parts.length === 3 && parts[0].length === 4) {
+    const year = parts[0];
+    const month = parts[1].padStart(2, "0");
+    const day = parts[2].padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  return dateStr.trim();
 }
 
 function inferImageExtension(url: string): string {
@@ -323,12 +343,15 @@ export default function SpeakerReviewClient({ locale }: Props) {
       `  titleJa: ${codeString(draft.titleJa || "TBD")},`,
       `  speakerEn: ${codeString(draft.speakerEn || "TBD")},`,
       `  speakerJa: ${codeString(draft.speakerJa || "TBD")},`,
-      `  abstractEn: ${codeString(replacedDraft.abstractEn || "")},`,
-      `  abstractJa: ${codeString(replacedDraft.abstractJa || "")},`,
+    `  abstractEn: ${codeString(replacedDraft.abstractEn || "Details to be announced.")},`,
+    `  abstractJa: ${codeString(replacedDraft.abstractJa || "詳細は後日公開予定です。")},`,
       `  speakerBioEn: ${codeString(replacedDraft.bioEn || "")},`,
       `  speakerBioJa: ${codeString(replacedDraft.bioJa || "")},`,
       replacedDraft.speakerImage.trim() ? `  speakerImage: ${codeString(replacedDraft.speakerImage)},` : "",
-      "},",
+      `  reportEn: ${codeString("Report to be announced.")},`,
+      `  reportJa: ${codeString("レポートは後日公開予定です。")},`,
+      `  reportPublished: false,`,
+      `},`,
     ]
       .filter(Boolean)
       .join("\n");
