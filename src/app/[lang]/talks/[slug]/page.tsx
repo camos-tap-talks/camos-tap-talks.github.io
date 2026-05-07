@@ -48,9 +48,18 @@ export default async function TalkPage({ params }: Props) {
   const talk = talks.find((tk) => tk.slug === slug);
   if (!talk) notFound();
 
-  const abstract = locale === "ja" ? talk.abstractJa : talk.abstractEn;
-  const bio = locale === "ja" ? talk.speakerBioJa : talk.speakerBioEn;
-  const title = locale === "ja" ? talk.titleJa : talk.titleEn;
+  // Determine which language to use based on talk.language setting
+  const getLanguageForLocale = (locale: Locale, talkLanguage?: "ja" | "en" | "both"): "ja" | "en" => {
+    if (talkLanguage === "ja") return "ja";
+    if (talkLanguage === "en") return "en";
+    return locale === "ja" ? "ja" : "en";
+  };
+  
+  const displayLanguage = getLanguageForLocale(locale, talk.language);
+  const abstract = displayLanguage === "ja" ? talk.abstractJa : talk.abstractEn;
+  const bio = displayLanguage === "ja" ? talk.speakerBioJa : talk.speakerBioEn;
+  const title = displayLanguage === "ja" ? talk.titleJa : talk.titleEn;
+  const isLanguageLimited = talk.language && talk.language !== "both";
 
   return (
     <div>
@@ -81,6 +90,11 @@ export default async function TalkPage({ params }: Props) {
       )}
 
       <div className="mt-6 space-y-6 px-1">
+        {isLanguageLimited && (
+          <div className="mb-4 inline-block rounded bg-[var(--surface)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--muted)]">
+            {displayLanguage === "ja" ? "🇯🇵 日本語のみ" : "🇺🇸 English only"}
+          </div>
+        )}
         <section>
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
             Abstract

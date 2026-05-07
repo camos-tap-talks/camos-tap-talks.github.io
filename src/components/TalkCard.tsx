@@ -34,8 +34,17 @@ export default function TalkCard({
   titleDataField,
   speakerDataField,
 }: Props) {
-  const title = locale === "ja" ? talk.titleJa : talk.titleEn;
-  const speaker = locale === "ja" ? talk.speakerJa : talk.speakerEn;
+  // Determine which language to use based on talk.language setting
+  const getLanguageForLocale = (locale: Locale, talkLanguage?: "ja" | "en" | "both"): "ja" | "en" => {
+    if (talkLanguage === "ja") return "ja";
+    if (talkLanguage === "en") return "en";
+    return locale === "ja" ? "ja" : "en";
+  };
+  
+  const displayLanguage = getLanguageForLocale(locale, talk.language);
+  const title = displayLanguage === "ja" ? talk.titleJa : talk.titleEn;
+  const speaker = displayLanguage === "ja" ? talk.speakerJa : talk.speakerEn;
+  const isLanguageLimited = talk.language && talk.language !== "both";
   const normalizedTapNumber = Number.isFinite(tapNumber) ? tapNumber : null;
   const tapLabel = `${showTapHash ? "#" : ""}${normalizedTapNumber ?? talk.id}`;
   const titleLineClampClass =
@@ -88,7 +97,7 @@ export default function TalkCard({
           >
             {formatDate(talk.date, locale, talk.dateTbd, talk.startTime, talk.endTime, talk.timeTbd)}
           </p>
-          <div className="flex min-w-0 flex-1 items-center">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
             <h3
               data-preview-field={titleDataField}
               className={`whitespace-pre-line [overflow-wrap:anywhere] font-medium leading-tight text-[#efe8d9] ${titleLineClampClass} ${
@@ -97,6 +106,11 @@ export default function TalkCard({
             >
               {titleContent}
             </h3>
+            {isLanguageLimited && (
+              <span className="inline-flex shrink-0 items-center rounded bg-[#3f3f3f] px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[#ddd4bf]">
+                {displayLanguage === "ja" ? "日本語のみ" : "English only"}
+              </span>
+            )}
           </div>
           <p
             data-preview-field={speakerDataField}

@@ -20,6 +20,7 @@ export type Talk = {
   reportJa?: string;
   reportImages?: string[]; // paths under /public/, e.g. "/report/1-first/photo1.jpg"
   reportPublished?: boolean; // set to true to show the report section publicly
+  language?: "ja" | "en" | "both"; // "ja" = Japanese only, "en" = English only, "both" = bilingual (default)
 };
 
 export const talks: Talk[] = [
@@ -60,8 +61,8 @@ export const talks: Talk[] = [
     speakerBioJa: "",
     speakerImage: "/speakers/1-karita-speaker.jpg",
     talkImage: "",
-    reportEn: "",
-    reportJa: "",
+    reportEn: "Report to be announced.",
+    reportJa: "レポートは後日公開予定です。",
     reportPublished: false,
   },
 ];

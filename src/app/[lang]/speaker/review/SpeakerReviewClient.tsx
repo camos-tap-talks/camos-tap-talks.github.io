@@ -351,6 +351,7 @@ export default function SpeakerReviewClient({ locale }: Props) {
       `  reportEn: ${codeString("Report to be announced.")},`,
       `  reportJa: ${codeString("レポートは後日公開予定です。")},`,
       `  reportPublished: false,`,
+      `  language: "both", // or "ja" / "en" for language-specific content`,
       `},`,
     ]
       .filter(Boolean)
