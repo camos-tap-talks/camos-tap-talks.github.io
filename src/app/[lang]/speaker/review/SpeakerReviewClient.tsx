@@ -339,6 +339,7 @@ export default function SpeakerReviewClient({ locale }: Props) {
       `  timeTbd: ${draft.timeTbd ? "true" : "false"},`,
       !draft.timeTbd && draft.startTime.trim() ? `  startTime: ${codeString(draft.startTime.trim())},` : "",
       !draft.timeTbd && draft.endTime.trim() ? `  endTime: ${codeString(draft.endTime.trim())},` : "",
+      `  language: "",`,
       `  titleEn: ${codeString(draft.titleEn || "TBD")},`,
       `  titleJa: ${codeString(draft.titleJa || "TBD")},`,
       `  speakerEn: ${codeString(draft.speakerEn || "TBD")},`,
@@ -351,7 +352,6 @@ export default function SpeakerReviewClient({ locale }: Props) {
       `  reportEn: ${codeString("Report to be announced.")},`,
       `  reportJa: ${codeString("レポートは後日公開予定です。")},`,
       `  reportPublished: false,`,
-      `  language: "both", // or "ja" / "en" for language-specific content`,
       `},`,
     ]
       .filter(Boolean)

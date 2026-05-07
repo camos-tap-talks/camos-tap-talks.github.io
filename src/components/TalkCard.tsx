@@ -44,7 +44,10 @@ export default function TalkCard({
   const displayLanguage = getLanguageForLocale(locale, talk.language);
   const title = displayLanguage === "ja" ? talk.titleJa : talk.titleEn;
   const speaker = displayLanguage === "ja" ? talk.speakerJa : talk.speakerEn;
-  const isLanguageLimited = talk.language && talk.language !== "both";
+  // Show badge only when the page locale differs from the talk's language
+  const isLanguageLimited =
+    (talk.language === "ja" && locale !== "ja") ||
+    (talk.language === "en" && locale !== "en");
   const normalizedTapNumber = Number.isFinite(tapNumber) ? tapNumber : null;
   const tapLabel = `${showTapHash ? "#" : ""}${normalizedTapNumber ?? talk.id}`;
   const titleLineClampClass =
@@ -90,27 +93,29 @@ export default function TalkCard({
         )}
 
         <div className={`grid h-full min-w-0 grid-rows-[auto_1fr_auto] gap-1 ${usesCompactMobileLayout ? "px-4 py-4" : "px-5 py-4"}`}>
-          <p
-            className={`uppercase tracking-[0.2em] text-[#ddd4bf] ${
-              forceMobileTypography ? "text-[0.62rem]" : forceDesktopTypography ? "text-xs" : "text-[0.62rem] md:text-xs"
-            }`}
-          >
-            {formatDate(talk.date, locale, talk.dateTbd, talk.startTime, talk.endTime, talk.timeTbd)}
-          </p>
-          <div className="flex min-w-0 flex-1 items-center gap-2">
+          <div className="flex items-center justify-between gap-2">
+            <p
+              className={`uppercase tracking-[0.2em] text-[#ddd4bf] ${
+                forceMobileTypography ? "text-[0.62rem]" : forceDesktopTypography ? "text-xs" : "text-[0.62rem] md:text-xs"
+              }`}
+            >
+              {formatDate(talk.date, locale, talk.dateTbd, talk.startTime, talk.endTime, talk.timeTbd)}
+            </p>
+            {isLanguageLimited && (
+              <span className="inline-flex shrink-0 items-center rounded bg-[#3f3f3f] px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[#ddd4bf]">
+                {displayLanguage === "ja" ? "in Japanese" : "in English"}
+              </span>
+            )}
+          </div>
+          <div className="flex min-w-0 flex-1 items-center">
             <h3
               data-preview-field={titleDataField}
               className={`whitespace-pre-line [overflow-wrap:anywhere] font-medium leading-tight text-[#efe8d9] ${titleLineClampClass} ${
-                forceMobileTypography ? "text-sm" : forceDesktopTypography ? "text-lg" : "text-sm md:text-lg"
+                forceMobileTypography ? "text-base" : forceDesktopTypography ? "text-lg" : "text-base md:text-lg"
               }`}
             >
               {titleContent}
             </h3>
-            {isLanguageLimited && (
-              <span className="inline-flex shrink-0 items-center rounded bg-[#3f3f3f] px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[#ddd4bf]">
-                {displayLanguage === "ja" ? "日本語のみ" : "English only"}
-              </span>
-            )}
           </div>
           <p
             data-preview-field={speakerDataField}

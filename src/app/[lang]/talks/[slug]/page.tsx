@@ -90,11 +90,6 @@ export default async function TalkPage({ params }: Props) {
       )}
 
       <div className="mt-6 space-y-6 px-1">
-        {isLanguageLimited && (
-          <div className="mb-4 inline-block rounded bg-[var(--surface)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--muted)]">
-            {displayLanguage === "ja" ? "🇯🇵 日本語のみ" : "🇺🇸 English only"}
-          </div>
-        )}
         <section>
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
             Abstract

@@ -6,6 +6,7 @@ export type Talk = {
   endTime?: string; // 24h time string HH:mm
   dateTbd?: boolean;
   timeTbd?: boolean;
+  language?: "ja" | "en" | "both"; // "ja" = Japanese only, "en" = English only, "both" = bilingual (default)
   titleEn: string;
   titleJa: string;
   speakerEn: string;
@@ -20,7 +21,6 @@ export type Talk = {
   reportJa?: string;
   reportImages?: string[]; // paths under /public/, e.g. "/report/1-first/photo1.jpg"
   reportPublished?: boolean; // set to true to show the report section publicly
-  language?: "ja" | "en" | "both"; // "ja" = Japanese only, "en" = English only, "both" = bilingual (default)
 };
 
 export const talks: Talk[] = [
@@ -39,6 +39,7 @@ export const talks: Talk[] = [
     //   speakerJa: "Coming soon ...",
     //   abstractEn: "Details to be announced.",
     //   abstractJa: "詳細は後日公開予定です。",
+    //   language: "both", // or "ja" / "en" for language-specific content
     //   reportEn: "Report to be announced.",
     //   reportJa: "レポートは後日公開予定です。",
     //   reportPublished: false,
@@ -51,6 +52,7 @@ export const talks: Talk[] = [
     timeTbd: false,
     startTime: "18:30",
     endTime: "20:30",
+    language: "ja",
     titleEn: "TBD",
     titleJa: "ふえる微生物の陣取り合戦",
     speakerEn: "TBD",
