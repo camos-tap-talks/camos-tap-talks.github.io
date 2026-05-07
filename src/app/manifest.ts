@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "Tap Talks",
     description: "An informal talk series at Hongo Kikusaka-cho Camos, Hongo, Tokyo",
     start_url: "/",
-    display: "standalone",
+    display: "browser",
     background_color: "#ffffff",
     theme_color: "#ffffff",
     icons: [
