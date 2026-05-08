@@ -215,7 +215,21 @@ export default async function HomePage({ params }: Props) {
               </a>
             </div>
             <div className="space-y-3 text-sm">
-              <p>{t.camos.address}</p>
+              <div className="flex items-center gap-2">
+                <span>{t.camos.address}</span>
+                <a
+                  href="https://maps.app.goo.gl/kPMa8hr8W9A1qczS9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={isJa ? "Google Maps で開く" : "Open in Google Maps"}
+                  className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-sm text-white/90 transition-colors hover:text-white"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="h-4 w-4 bg-current [mask-image:url('/icons/google-maps.svg')] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [-webkit-mask-image:url('/icons/google-maps.svg')] [-webkit-mask-position:center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain]"
+                  />
+                </a>
+              </div>
               <div>
                 <p className="whitespace-pre-line">{t.camos.hours}</p>
                 <p className="mt-0.5 text-xs opacity-80">{t.camos.hoursNote}</p>

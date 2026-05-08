@@ -36,6 +36,20 @@ a {
   color: inherit;
 }
 
+.text-link-subtle {
+  color: color-mix(in srgb, var(--muted) 90%, black);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in srgb, var(--muted) 55%, transparent);
+  text-underline-offset: 0.25em;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+.text-link-subtle:hover {
+  color: var(--accent-deep);
+  text-decoration-color: var(--accent);
+}
+
 ::selection {
   background: color-mix(in srgb, var(--accent) 24%, white);
   color: var(--foreground);

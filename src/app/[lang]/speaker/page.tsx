@@ -172,7 +172,18 @@ export default async function SpeakerGuidePage({ params }: Props) {
                   {isJa ? "住所" : "Address"}
                 </th>
                 <td className="px-2 py-2">
-                    <p>{t.camos.address}</p>
+                    <div className="inline-flex items-center gap-2">
+                      <span>{t.camos.address}</span>
+                      <a
+                        href="https://maps.app.goo.gl/kPMa8hr8W9A1qczS9"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={isJa ? "Google Maps で開く" : "Open in Google Maps"}
+                        className="inline-flex items-center text-[var(--accent-deep)]"
+                      >
+                        <Image src="/google-maps.svg" alt="" width={16} height={16} aria-hidden="true" />
+                      </a>
+                    </div>
                     <p className="mt-0.5 text-xs opacity-80">
                       {isJa
                         ? "最寄駅は本郷三丁目駅（都営大江戸線・丸ノ内線）です"
@@ -191,15 +202,15 @@ export default async function SpeakerGuidePage({ params }: Props) {
               </tr>
               <tr className="border-t border-[var(--line)]">
                 <th scope="row" className="w-28 px-2 py-2 text-left font-semibold">
-                  {isJa ? "設備" : "Equipment"}
-                </th>
-                <td className="px-2 py-2">{isJa ? "プロジェクター（HDMI）、電源あり。" : "Projector (HDMI), power available."}</td>
-              </tr>
-              <tr className="border-y border-[var(--line)]">
-                <th scope="row" className="w-28 px-2 py-2 text-left font-semibold">
                   {isJa ? "収容人数" : "Capacity"}
                 </th>
                 <td className="px-2 py-2">{isJa ? "最大15席。トークに参加できるのは8名程度です。" : "Maximum 15 seats. Approximately 8 people can participate in the talk."}</td>
+              </tr>
+              <tr className="border-y border-[var(--line)]">
+                <th scope="row" className="w-28 px-2 py-2 text-left font-semibold">
+                  {isJa ? "設備" : "Equipment"}
+                </th>
+                <td className="px-2 py-2">{isJa ? <>プロジェクター：<a href="https://www.ankerjapan.com/products/d2425" target="_blank" rel="noopener noreferrer" className="text-link-subtle">Nebula Capsule 3</a>（HDMI 接続／無線接続, 16:9）<br />Wi-Fi あり（店舗端末テザリング）<br />電源あり</> : <>Projector: <a href="https://www.ankerjapan.com/products/d2425" target="_blank" rel="noopener noreferrer" className="text-link-subtle">Nebula Capsule 3</a> (HDMI / Wireless, 16:9)<br />Wi-Fi available (tethered from store device)<br />Power available</>}</td>
               </tr>
             </tbody>
           </table>
@@ -242,7 +253,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
           {isJa ? "世話人" : "Organizer"}
         </h2>
         <p className="mb-4 text-sm leading-relaxed text-[var(--muted)]">
-                  {isJa ? <>上杉佑人（東京大学 理学系研究科 博士課程2年, <a href="https://yuesugi.com" className="underline" target="_blank" rel="noopener noreferrer">HP</a>）が店長に協力してもらいながら運営しています。</> : <>Yuto Uesugi (PhD student, The University of Tokyo) [<a href="https://yuesugi.com" target="_blank" rel="noopener noreferrer">HP</a>] runs the event with the cooperation of the taproom manager.</>}
+                  {isJa ? <>上杉佑人（東京大学 理学系研究科 博士課程2年, <a href="https://yuesugi.com" className="text-link-subtle" target="_blank" rel="noopener noreferrer">HP</a>）が店長に協力してもらいながら運営しています。</> : <>Yuto Uesugi (PhD student, The University of Tokyo) [<a href="https://yuesugi.com" className="text-link-subtle" target="_blank" rel="noopener noreferrer">HP</a>] runs the event with the cooperation of the taproom manager.</>}
         </p>
         <ul className="space-y-2 text-sm leading-relaxed text-[var(--muted)]">
           <li className="flex items-start gap-2">
