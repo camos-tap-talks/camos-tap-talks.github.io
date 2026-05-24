@@ -64,7 +64,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
         </h2>
         <p className="mb-2 text-sm leading-relaxed text-[var(--muted)]">
           {isJa
-            ? <>はじめに、<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">15分程度で自己紹介・研究紹介</span>をお願いします。その後 Q&A（1時間以上想定）に移り、聴衆の聴衆の関心に合わせてカジュアルにお話しください。</> : <>First, please <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">introduce yourself and your research for about 15 minutes</span>. After that, we will move on to a casual Q&A session based on the audience's interests.</>}
+            ? <>はじめに、<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">15分程度で自己紹介・研究紹介</span>をお願いします。その後 Q&A（1時間以上想定）に移り、聴衆の聴衆の関心に合わせてカジュアルにお話しください。</> : <>First, please <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">introduce yourself and your research for about 15 minutes</span>. After that, we will move on to a casual Q&amp;A session based on the audience&apos;s interests.</>}
         </p>
         <p className="mb-4 text-sm leading-relaxed text-[var(--muted)]">
           {isJa

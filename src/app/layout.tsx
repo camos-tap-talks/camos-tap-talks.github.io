@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Zen_Maru_Gothic } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
 
@@ -41,6 +42,7 @@ export default function RootLayout({
       >
         {children}
       </body>
+      <GoogleAnalytics gaId="G-LQ1R5SM1T8" />
     </html>
   );
 }

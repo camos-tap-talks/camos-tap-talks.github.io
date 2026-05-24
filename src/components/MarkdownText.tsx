@@ -105,6 +105,7 @@ export default function MarkdownText({ content, variant = "block", className }: 
               : "";
             const alignClass = align === "center" ? "mx-auto" : align === "right" ? "ml-auto" : "";
             return (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={src ?? ""}
                 alt={alt ?? ""}

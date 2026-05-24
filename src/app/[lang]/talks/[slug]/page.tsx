@@ -59,7 +59,6 @@ export default async function TalkPage({ params }: Props) {
   const abstract = displayLanguage === "ja" ? talk.abstractJa : talk.abstractEn;
   const bio = displayLanguage === "ja" ? talk.speakerBioJa : talk.speakerBioEn;
   const title = displayLanguage === "ja" ? talk.titleJa : talk.titleEn;
-  const isLanguageLimited = talk.language && talk.language !== "both";
 
   return (
     <div>
