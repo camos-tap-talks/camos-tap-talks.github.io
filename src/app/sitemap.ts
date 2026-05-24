@@ -4,7 +4,7 @@ import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
-const localizedStaticRoutes = ["", "/talks"] as const;
+const localizedStaticRoutes = ["", "/talks", "/contact"] as const;
 
 function withLang(path: string, lang: "ja" | "en") {
   return `${SITE_URL}/${lang}${path}`;

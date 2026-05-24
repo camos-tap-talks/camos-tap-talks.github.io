@@ -9,6 +9,7 @@ export const translations = {
     nav: {
       home: "Home",
       talks: "Talks",
+      contact: "Contact",
     },
     home: {
       title: "Camos Tap Talks",
@@ -81,6 +82,7 @@ export const translations = {
     nav: {
       home: "Home",
       talks: "Talks",
+      contact: "Contact",
     },
     home: {
       title: "Camos Tap Talks",

@@ -44,6 +44,7 @@ export default function Header({ locale }: Props) {
   const navLinks = [
     { href: `/${locale}`, label: t.nav.home },
     { href: `/${locale}/talks`, label: t.nav.talks },
+    { href: `/${locale}/contact`, label: t.nav.contact },
   ];
 
   return (
