@@ -196,7 +196,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
                   {isJa ? "営業時間" : "Hours"}
                 </th>
                 <td className="px-2 py-2">
-                  <p>{t.camos.hours}</p>
+                  <p className="whitespace-pre-line">{t.camos.hours}</p>
                   <p className="mt-0.5 text-xs opacity-80">{t.camos.hoursNote}</p>
                 </td>
               </tr>
@@ -210,7 +210,14 @@ export default async function SpeakerGuidePage({ params }: Props) {
                 <th scope="row" className="w-28 px-2 py-2 text-left font-semibold">
                   {isJa ? "設備" : "Equipment"}
                 </th>
-                <td className="px-2 py-2">{isJa ? <>プロジェクター：<a href="https://www.ankerjapan.com/products/d2425" target="_blank" rel="noopener noreferrer" className="text-link-subtle">Nebula Capsule 3</a>（HDMI 接続／無線接続, 16:9）<br />Wi-Fi あり（店舗端末テザリング）<br />電源あり</> : <>Projector: <a href="https://www.ankerjapan.com/products/d2425" target="_blank" rel="noopener noreferrer" className="text-link-subtle">Nebula Capsule 3</a> (HDMI / Wireless, 16:9)<br />Wi-Fi available (tethered from store device)<br />Power available</>}</td>
+                <td className="px-2 py-2">{isJa ? <>
+                プロジェクター：<a href="https://www.ankerjapan.com/products/d2425" target="_blank" rel="noopener noreferrer" className="text-link-subtle">Nebula Capsule 3</a>（HDMI 接続, 16:9）<br />
+                スクリーン：小さめで、24インチディスプレイ程度の大きさ<br />
+                Wi-Fi （店舗端末テザリング）ありますが、最近不調<br />
+                電源あり</> : <>
+                Projector: <a href="https://www.ankerjapan.com/products/d2425" target="_blank" rel="noopener noreferrer" className="text-link-subtle">Nebula Capsule 3</a> (HDMI / Wireless, 16:9)<br />
+                Wi-Fi available (tethered from store device)<br />
+                Power available</>}</td>
               </tr>
             </tbody>
           </table>
