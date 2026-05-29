@@ -286,12 +286,12 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       englishLabel: isJa ? "英語" : "English",
       workflowSteps: isJa
         ? [
-            "Talk Card（基本情報）と Abstract・Speaker Profile（詳細情報）を入力し、プレビューで内容を確認してください。",
+            "Talk Card（基本情報）と Abstract・Speaker Bio（詳細情報）を入力し、プレビューで内容を確認してください。",
             "画像は、下の方にある「画像アップロード」セクションでアップロードし、生成された URL を用いてください。Abstract・Speaker Profile 内で画像を使用する場合は、Markdown 形式か HTML 形式で記述できます。",
           ]
         : [
-            "Fill in the Talk Card (basic information) and Abstract/Speaker Profile (detailed information), and check the content in the preview.",
-            "Upload images in the \"Image Upload\" section below and use the generated URL. You can use images in Abstract/Speaker Profile using Markdown or HTML format.",
+            "Fill in the Talk Card (basic information) and Abstract/Speaker Bio (detailed information), and check the content in the preview.",
+            "Upload images in the \"Image Upload\" section below and use the generated URL. You can use images in Abstract/Speaker Bio using Markdown or HTML format.",
           ],
       submissionItemsTitle: isJa ? "提出内容" : "What to Submit",
       submissionItems: isJa
@@ -330,8 +330,8 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       speakerHint: isJa ? "デスクトップ版表示で1行以内に収まるように入力してください。" : "Keep to one line on the desktop preview.",
       abstractJaLabel: isJa ? "Abstract（日本語）" : "Abstract (Japanese)",
       abstractEnLabel: isJa ? "Abstract（英語）" : "Abstract (English)",
-      bioJaLabel: isJa ? "Speaker Profile（日本語）" : "Speaker Profile (Japanese)",
-      bioEnLabel: isJa ? "Speaker Profile（英語）" : "Speaker Profile (English)",
+      bioJaLabel: isJa ? "Speaker Bio（日本語）" : "Speaker Bio (Japanese)",
+      bioEnLabel: isJa ? "Speaker Bio（英語）" : "Speaker Bio (English)",
       uploadScrollHint: isJa ? "画像アップロードはこちら↓" : "Upload image below ↓",
       speakerImageLabel: isJa ? "スピーカー画像 URL*" : "Speaker image URL*",
       speakerImageAspectHint: isJa
@@ -414,6 +414,8 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       abstractEnHeading: isJa ? "Abstract（英語）" : "Abstract (English)",
       bioJaHeading: isJa ? "Speaker Bio（日本語）" : "Speaker Bio (Japanese)",
       bioEnHeading: isJa ? "Speaker Bio（英語）" : "Speaker Bio (English)",
+      abstractLengthGuide: isJa ? "文字数目安: 100〜300字程度" : "Length guide: about 100-300 chars",
+      bioLengthGuide: isJa ? "文字数目安: 約100〜300字程度" : "Length guide: about 100-300 chars",
     }),
     [isJa],
   );
@@ -979,11 +981,14 @@ export default function SpeakerSubmitClient({ locale }: Props) {
               <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
                 <div className="pr-0 xl:pr-6">
                   <label className="block">
-                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractJaLabel}</span>
+                    <div className="mb-1 flex items-start justify-between gap-3">
+                      <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractJaLabel}</span>
+                      <span className="text-[0.62rem] text-[var(--muted)]">{text.abstractLengthGuide}</span>
+                    </div>
                     <textarea
                       value={abstractJa}
                       onChange={(event) => setAbstractJa(event.target.value)}
-                      rows={8}
+                      rows={16}
                       placeholder={`例:
 ポケモンの世界には、さまざまな環境に適応した多様な「種」が登場します。水辺に特化したもの、火山地帯に棲むもの、他の個体と共生するもの──これらは現実の生物多様性とどこまで似ているのでしょうか？
 
@@ -1016,17 +1021,16 @@ export default function SpeakerSubmitClient({ locale }: Props) {
               <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
                 <div className="pr-0 xl:pr-6">
                   <label className="block border-t border-[var(--line)] pt-4 xl:border-t-0 xl:pt-0">
-                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioJaLabel}</span>
+                    <div className="mb-1 flex items-start justify-between gap-3">
+                      <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioJaLabel}</span>
+                      <span className="text-[0.62rem] text-[var(--muted)]">{text.bioLengthGuide}</span>
+                    </div>
                     <textarea
                       value={bioJa}
                       onChange={(event) => setBioJa(event.target.value)}
-                      rows={5}
+                      rows={10}
                       placeholder={`例: 
-生物多様性と生態系の成り立ちを専門とする。大学および研究機関に所属し、森林・湿地・沿岸域などさまざまな環境でフィールド調査を行っている。種の多様性がどのように生まれ、維持され、失われていくのかを、進化・生態・環境変動の観点から研究している。
-
-これまでに、動植物の種分布や個体群動態、種間相互作用（捕食・共生など）をテーマに研究を進めてきた。近年は、気候変動や人間活動が生物多様性に与える影響の評価にも取り組んでいる。
-
-専門外の人にも生物多様性の面白さを伝えることに関心があり、身近な題材やポップカルチャーを入口にしたアウトリーチ活動にも積極的に関わっている。`}
+泡沫大学大学院で生態学の博士号を取得後、発酵総合研究所の研究員を経て現職。麦酒大学准教授として、森林・湿地を対象に生物多様性の維持機構と環境変動の影響を研究している。生きものと人の関わりや、日常の題材から自然を理解する方法に関心がある。趣味はクラフトビール。`}
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
@@ -1246,11 +1250,14 @@ export default function SpeakerSubmitClient({ locale }: Props) {
               <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
                 <div className="pr-0 xl:pr-6">
                   <label className="block">
-                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractEnLabel}</span>
+                    <div className="mb-1 flex items-start justify-between gap-3">
+                      <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.abstractEnLabel}</span>
+                      <span className="text-[0.62rem] text-[var(--muted)]">{text.abstractLengthGuide}</span>
+                    </div>
                     <textarea
                       value={abstractEn}
                       onChange={(event) => setAbstractEn(event.target.value)}
-                      rows={8}
+                      rows={16}
                       placeholder={`e.g.
 The world of Pokémon is filled with diverse “species” adapted to different environments—some live in water, others thrive in volcanic regions, and some form complex relationships with other creatures. But how similar is this fictional diversity to real-world biodiversity?
 
@@ -1283,17 +1290,16 @@ Over a pint, we will move back and forth between fiction and reality, and explor
               <div className="flex flex-col xl:grid xl:grid-cols-2 xl:gap-0">
                 <div className="pr-0 xl:pr-6">
                   <label className="block border-t border-[var(--line)] pt-4 xl:border-t-0 xl:pt-0">
-                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioEnLabel}</span>
+                    <div className="mb-1 flex items-start justify-between gap-3">
+                      <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{text.bioEnLabel}</span>
+                      <span className="text-[0.62rem] text-[var(--muted)]">{text.bioLengthGuide}</span>
+                    </div>
                     <textarea
                       value={bioEn}
                       onChange={(event) => setBioEn(event.target.value)}
-                      rows={5}
+                      rows={10}
                       placeholder={`e.g.        
-Researcher specializing in biodiversity and ecosystem dynamics, affiliated with a university or research institute. Their work involves field studies across a range of environments, including forests, wetlands, and coastal systems, to understand how biodiversity emerges, is maintained, and is lost over time.
-
-Their research covers topics such as species distributions, population dynamics, and species interactions (e.g., predation and symbiosis). More recently, they have been focusing on the impacts of climate change and human activities on biodiversity.
-
-They are also interested in science communication and actively engage in outreach activities, using familiar topics and elements of popular culture to make biodiversity more accessible to a broad audience.`}
+After earning a PhD in Ecology from Utakata University, they worked as a researcher at the Fermentation Research Institute and now serve as an Associate Professor at Beer University. Their research examines the mechanisms that maintain biodiversity and the impacts of environmental change in forest and wetland ecosystems. They are interested in relationships between people and living organisms, and in ways to understand nature through everyday topics. Hobby: craft beer.`}
                       className="w-full rounded-none border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--foreground)]"
                     />
                     <p className="mt-1 text-xs text-[var(--muted)]">
