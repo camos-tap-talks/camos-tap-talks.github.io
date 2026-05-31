@@ -277,7 +277,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       slugHint: isJa
         ? "URL に使われます。基本は 1 単語、長くても 3 単語まで。通常は family name / first name か研究に関する単語を小文字で入力してください。"
         : "Used in the URL. Prefer 1 word, at most 3. Usually use a family name, first name, or a research-related word in lowercase.",
-      titleLabel: isJa ? "タイトル（共通）" : "Title (Shared)",
+      titleLabel: isJa ? "タイトル" : "Title",
       titleTwoLineHint: isJa
         ? "改行する場合は、デスクトップ版表示で2行までに収まるように入力してください。"
         : "If you use line breaks, keep the title within 2 lines on the desktop preview.",
@@ -287,10 +287,10 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       startTimeLabel: isJa ? "開始時間*" : "Start time*",
       endTimeLabel: isJa ? "終了時間*" : "End time*",
       undecidedLabel: isJa ? "未定" : "TBD",
-      speakerLabel: isJa ? "スピーカー名（共通）" : "Speaker (Shared)",
+      speakerLabel: isJa ? "スピーカー名" : "Speaker",
       speakerHint: isJa ? "デスクトップ版表示で1行以内に収まるように入力してください。" : "Keep to one line on the desktop preview.",
-      abstractLabel: isJa ? "Abstract（共通）" : "Abstract (Shared)",
-      bioLabel: isJa ? "Speaker Bio（共通）" : "Speaker Bio (Shared)",
+      abstractLabel: isJa ? "Abstract" : "Abstract",
+      bioLabel: isJa ? "Speaker Bio" : "Speaker Bio",
       uploadScrollHint: isJa ? "画像アップロードはこちら↓" : "Upload image below ↓",
       speakerImageLabel: isJa ? "スピーカー画像 URL*" : "Speaker image URL*",
       speakerImageAspectHint: isJa
