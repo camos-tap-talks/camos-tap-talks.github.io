@@ -19,7 +19,6 @@ export type Talk = {
   talkImage?: string;
   reportEn?: string;
   reportJa?: string;
-  reportImages?: string[]; // paths under /public/, e.g. "/report/1-first/photo1.jpg"
   reportPublished?: boolean; // set to true to show the report section publicly
 };
 
@@ -40,8 +39,8 @@ export const talks: Talk[] = [
     //   abstractEn: "Details to be announced.",
     //   abstractJa: "詳細は後日公開予定です。",
     //   language: "both", // or "ja" / "en" for language-specific content
-    //   reportEn: "Report to be announced.",
-    //   reportJa: "レポートは後日公開予定です。",
+    //   reportEn: "Report to be announced.\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"event photo 1\" width=\"320\" align=\"center\" />\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"event photo 1\" align=\"inline\" /><img src=\"/0-example/rep-2.jpg\" alt=\"event photo 2\" align=\"inline\" />",
+    //   reportJa: "レポートは後日公開予定です。\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"当日の写真1\" width=\"320\" align=\"center\" />\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"当日の写真1\" align=\"inline\" /><img src=\"/0-example/rep-2.jpg\" alt=\"当日の写真2\" align=\"inline\" />",
     //   reportPublished: false,
     // },
   {
@@ -61,10 +60,10 @@ export const talks: Talk[] = [
     abstractJa: "みなさんも大好きなビールにはイースト菌という微生物のはたらきが欠かせません。ビールはこのイースト菌がはたらく場所によってエールとラガーに分類されます。エールでは液の上面にイースト菌が集合し、ラガーでは液の下部にイースト菌が沈んでいます。同じイースト菌でも住む場所がまったく違うというのは不思議ですよね？\n\n今回私が紹介するのは、このように住む場所が違うような微生物が「もともとは全く同じ」個体から「自ずと」生じるお話しです。微生物はどんどん自己複製し、ネズミ算的に数を増やしていきます。そんな状況では、仲間内で場所と栄養の奪い合いが自然と起こり、住み分けに繋がっていくのです。\n\nみなさんが飲んでいるビールにちょっとした彩りを添えるようなお話しができれば幸いです。かもすタップトークの第一回、ぜひ一緒に盛り上げましょう！\n",
     speakerBioEn: "",
     speakerBioJa: "生物物理学と微生物の進化・生態を専門とする実験研究者。要素が増えたり自己複製する集団でなにが起こるかに興味をもつ。髪の毛ほどの細さの容器で微生物を育てたり、その様子を数学・物理学を使って解析したりしている。最近は農学方面への応用を見据え、土壌を模した実験にも取り組んでいる。\n\n日本で物理学の学士をとったのち、アメリカで生物物理学の博士号を取得。その後ドイツで微生物学を研究し、日本に帰国した。海外での学位留学を目指す学生の支援を積極的に行っている。\n\n留学時代はピルスナービールを好んでいたが、アルコールには弱く量を飲むことはできない。はじめの一杯を味わうことに全力を注いでいる。",
-    speakerImage: "/speakers/1-karita-speaker.jpg",
-    reportEn: "Report to be announced.",
-    reportJa: "レポートは後日公開予定です。",
-    reportPublished: false,
+    speakerImage: "/1-karita/speaker.jpg",
+    reportEn: "The talk on beer fermentation and microbes was a great success, and around 15 people joined from the beginning. Thank you very much for coming!\n\n<img src=\"/1-karita/rep-1.jpg\" alt=\"Talk scene 1\" align=\"inline\" /><img src=\"/1-karita/rep-2.jpg\" alt=\"Talk scene 2\" align=\"inline\" />",
+    reportJa: "ビール発酵と微生物を絡めて話していただき、大盛況でした！開始時には15人程度の方にお聞きいただきました。お越しいただいた皆さま、ありがとうございました。\n\n<img src=\"/1-karita/rep-1.jpg\" alt=\"当日の様子1\" align=\"inline\" /><img src=\"/1-karita/rep-2.jpg\" alt=\"当日の様子2\" align=\"inline\" />",
+    reportPublished: true,
   },
 ];
 

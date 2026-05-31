@@ -3,6 +3,7 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import { Children, isValidElement } from "react";
 
 type Props = {
   content: string;
@@ -70,7 +71,33 @@ export default function MarkdownText({ content, variant = "block", className }: 
         remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
         components={{
-          p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
+          p: ({ children }) => {
+            const isInlineAlignedImageNode = (node: unknown) => {
+              if (!isValidElement(node)) return false;
+              if (typeof node.props !== "object" || node.props === null) return false;
+
+              const props = node.props as { align?: unknown; "data-inline-align"?: unknown };
+              const align = typeof props.align === "string" ? props.align : "";
+              const dataInline = props["data-inline-align"];
+              return align === "inline" || dataInline === "true";
+            };
+
+            const isIgnorableNode = (node: unknown) => {
+              if (typeof node === "string") return node.trim().length === 0;
+              if (!isValidElement(node)) return false;
+              return node.type === "br";
+            };
+
+            const nodes = Children.toArray(children);
+            const hasInlineImage = nodes.some((node) => isInlineAlignedImageNode(node));
+            const hasNonInlineContent = nodes.some((node) => !isIgnorableNode(node) && !isInlineAlignedImageNode(node));
+
+            return (
+              <p className={`mb-3 last:mb-0 ${hasInlineImage && !hasNonInlineContent ? "text-center" : ""}`.trim()}>
+                {children}
+              </p>
+            );
+          },
           ul: ({ children }) => <ul className="mb-3 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>,
           ol: ({ children }) => <ol className="mb-3 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>,
           li: ({ children }) => <li>{children}</li>,
@@ -103,15 +130,24 @@ export default function MarkdownText({ content, variant = "block", className }: 
             const align = typeof (props as { align?: unknown }).align === "string"
               ? ((props as { align?: string }).align ?? "")
               : "";
-            const alignClass = align === "center" ? "mx-auto" : align === "right" ? "ml-auto" : "";
+            const isInline = align === "inline";
+            const alignClass = isInline
+              ? "inline-block w-[48%] max-w-[360px] align-top"
+              : align === "center"
+                ? "mx-auto block"
+                : align === "right"
+                  ? "ml-auto block"
+                  : "block";
+            const spacingClass = isInline ? "my-2 mr-2" : "my-4";
             return (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={src ?? ""}
                 alt={alt ?? ""}
-                width={typeof width === "string" || typeof width === "number" ? width : undefined}
+                width={isInline ? undefined : (typeof width === "string" || typeof width === "number" ? width : undefined)}
                 height={typeof height === "string" || typeof height === "number" ? height : undefined}
-                className={`my-4 block h-auto max-w-full ${alignClass}`.trim()}
+                data-inline-align={isInline ? "true" : undefined}
+                className={`${spacingClass} h-auto max-w-full ${alignClass}`.trim()}
               />
             );
           },

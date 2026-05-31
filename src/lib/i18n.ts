@@ -125,7 +125,7 @@ export const translations = {
         }
       ],
       upcomingTitle: "次回のトーク",
-      noUpcoming: "現在調整中です。",
+      noUpcoming: "準備中です！",
       recentTitle: "最近のトーク",
       viewAll: "すべてのトークを見る →",
     },

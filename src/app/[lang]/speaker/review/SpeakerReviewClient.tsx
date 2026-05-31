@@ -186,11 +186,10 @@ function buildUploadedImageMappings(draft: ParsedDraft): UploadedImageMapping[] 
       const sourceUrl = image.url.trim();
       const usages = Array.from(usageMap.get(sourceUrl) ?? []);
       const ext = inferImageExtension(sourceUrl);
-      const fileStem = usages.includes("speakerImage")
-        ? `${slugCore}-speaker`
-        : `${slugCore}-image-${++contentImageIndex}`;
-      const downloadFileName = `${fileStem}.${ext}`;
-      const replacementUrl = `/speakers/${downloadFileName}`;
+      const downloadFileName = usages.includes("speakerImage")
+        ? `speaker.${ext}`
+        : `image-${++contentImageIndex}.${ext}`;
+      const replacementUrl = `/${slugCore}/${downloadFileName}`;
 
       return {
         sourceUrl,

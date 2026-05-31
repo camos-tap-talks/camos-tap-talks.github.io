@@ -59,6 +59,7 @@ export default async function TalkPage({ params }: Props) {
   const abstract = displayLanguage === "ja" ? talk.abstractJa : talk.abstractEn;
   const bio = displayLanguage === "ja" ? talk.speakerBioJa : talk.speakerBioEn;
   const title = displayLanguage === "ja" ? talk.titleJa : talk.titleEn;
+  const report = locale === "ja" ? talk.reportJa : talk.reportEn;
 
   return (
     <div>
@@ -90,7 +91,7 @@ export default async function TalkPage({ params }: Props) {
 
       <div className="mt-6 space-y-6 px-1">
         <section>
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)] sm:text-base">
             Abstract
           </h2>
           <MarkdownText content={abstract} className="leading-relaxed text-[var(--muted)]" />
@@ -98,58 +99,29 @@ export default async function TalkPage({ params }: Props) {
 
         {bio && (
           <section>
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)] sm:text-base">
               Speaker Bio
             </h2>
             <MarkdownText content={bio} className="leading-relaxed text-[var(--muted)]" />
           </section>
         )}
 
-        {talk.reportPublished && (talk.reportJa || talk.reportEn || (talk.reportImages && talk.reportImages.length > 0)) && (
-          <section>
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--accent-deep)]">
-              Report
-            </h2>
-
-            {(locale === "ja" ? talk.reportJa : talk.reportEn) && (
-              <MarkdownText
-                content={(locale === "ja" ? talk.reportJa : talk.reportEn) ?? ""}
-                className="leading-relaxed text-[var(--muted)]"
+        {talk.reportPublished && report && (
+          <section className="border border-[color-mix(in_srgb,var(--line)_85%,var(--accent))] bg-[var(--surface)] px-4 py-4 sm:px-5">
+            <div className="mb-2 text-center">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)] sm:text-base">
+                Report
+              </h2>
+              <span
+                aria-hidden="true"
+                className="mx-auto mt-1 block h-px w-24 bg-[color-mix(in_srgb,var(--accent)_55%,var(--line))]"
               />
-            )}
+            </div>
 
-            {talk.reportImages && talk.reportImages.length > 0 && (
-              <div
-                className={`mx-auto mt-7 grid gap-6 sm:gap-12 ${
-                  talk.reportImages.length === 1
-                    ? "max-w-[280px] grid-cols-1 justify-items-center"
-                    : "max-w-[560px] grid-cols-2"
-                }`}
-              >
-                {talk.reportImages.map((src, i) => (
-                  <figure
-                    key={src}
-                    className={`relative w-full ${i % 2 === 0 ? "rotate-[-2deg]" : "mt-2 rotate-[2deg] sm:mt-4"}`}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className={`pointer-events-none absolute left-1/2 top-0 z-10 h-6 w-24 -translate-x-1/2 -translate-y-1/2 bg-[var(--accent)] opacity-60 ${
-                        i % 2 === 0 ? "rotate-[-4deg]" : "rotate-[7deg]"
-                      }`}
-                    />
-                    <div className="relative aspect-[4/3] overflow-hidden shadow-[0_0px_10px_rgba(54,32,20,0.2)]">
-                      <Image
-                        src={src}
-                        alt={`${title} — photo ${i + 1}`}
-                        fill
-                        sizes="(min-width: 1024px) 220px, (min-width: 640px) 33vw, 40vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  </figure>
-                ))}
-              </div>
-            )}
+            <MarkdownText
+              content={report}
+              className="leading-relaxed text-[var(--muted)]"
+            />
           </section>
         )}
       </div>
