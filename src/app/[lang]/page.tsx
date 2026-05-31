@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { locales, type Locale, getTranslations } from "@/lib/i18n";
-import { getUpcomingTalks, getPastTalks } from "@/lib/talks";
+import { getUpcomingTalks } from "@/lib/talks";
 import TalkCard from "@/components/TalkCard";
 import IconInitialHeading from "@/components/IconInitialHeading";
-import Link from "next/link";
 import Image from "next/image";
 import { SITE_URL } from "@/lib/site";
 
@@ -36,56 +35,93 @@ export default async function HomePage({ params }: Props) {
   const isJa = locale === "ja";
   const t = getTranslations(locale);
   const upcoming = getUpcomingTalks();
-  const past = getPastTalks().slice(0, 3);
+  const tocItems = isJa
+    ? [
+        { id: "format", label: "何をするの？" },
+        { id: "participation", label: "参加方法" },
+        { id: "faq", label: "よくある質問" },
+        { id: "taproom", label: "アクセス" },
+      ]
+    : [
+        { id: "format", label: "What do we do?" },
+        { id: "participation", label: "How to Join" },
+        { id: "faq", label: "FAQ" },
+        { id: "taproom", label: "Taproom" },
+      ];
 
   return (
-    <div>
-      <section className="mb-6">
-        <div className="grid items-center gap-5 sm:grid-cols-[1fr_auto] sm:gap-8">
-          <div className="order-2 sm:order-1">
-            <div className="mb-4">
-              <h1 className="sr-only sm:not-sr-only text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-[2.8rem]">
-                {t.home.title}
-              </h1>
+    <>
+      <div>
+        <section className="mb-6">
+          <div className="grid items-center gap-5 sm:grid-cols-[1fr_auto] sm:gap-8">
+            <div className="order-2 sm:order-1">
+              <div className="mb-4">
+                <h1 className="sr-only sm:not-sr-only text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-[2.8rem]">
+                  {t.home.title}
+                </h1>
+              </div>
+              <p className="max-w-xl leading-relaxed text-[var(--muted)]">
+                {t.home.description}
+              </p>
             </div>
-            <p className="max-w-xl leading-relaxed text-[var(--muted)]">
-              {t.home.description}
+
+            <div className="order-1 flex justify-center sm:order-2 sm:justify-end">
+              <Image
+                src="/logo.svg"
+                alt={t.home.title}
+                width={190}
+                height={190}
+                priority
+                className="h-auto w-[190px] sm:w-[190px]"
+              />
+            </div>
+          </div>
+        </section>
+
+        <div>
+          <aside
+            className="fixed top-24 hidden xl:block"
+            style={{ right: "max(-2rem, calc((100vw - 48rem) / 2 - 20rem))", width: "15rem" }}
+          >
+            <nav
+              aria-label={isJa ? "目次" : "Table of contents"}
+              className="rounded-none bg-[color-mix(in_srgb,var(--surface)_80%,#d7d7d7)] px-4 py-4 backdrop-blur"
+            >
+              <ol className="space-y-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                {tocItems.map((item) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      className="block border-l-2 border-transparent pl-2 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-deep)]"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </aside>
+
+          <section id="next-talk" className="mb-8 scroll-mt-24">
+            <p className="mb-4 text-center text-[0.7rem] font-semibold tracking-[0.32em] text-[var(--muted)]">
+              — NEXT TALK —
             </p>
-          </div>
+            {upcoming.length === 0 ? (
+              <p className="text-center text-sm text-[var(--muted)]">{t.home.noUpcoming}</p>
+            ) : (
+              upcoming.map((talk) => (
+                <TalkCard
+                  key={talk.id}
+                  talk={talk}
+                  locale={locale}
+                  variant="upcomingTap"
+                  tapNumber={parseInt(talk.id, 10)}
+                />
+              ))
+            )}
+          </section>
 
-          <div className="order-1 flex justify-center sm:order-2 sm:justify-end">
-            <Image
-              src="/logo.svg"
-              alt={t.home.title}
-              width={190}
-              height={190}
-              priority
-              className="h-auto w-[190px] sm:w-[190px]"
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className="mb-8">
-        <p className="mb-4 text-center text-[0.7rem] font-semibold tracking-[0.32em] text-[var(--muted)]">
-          — NEXT TALK —
-        </p>
-        {upcoming.length === 0 ? (
-          <p className="text-center text-sm text-[var(--muted)]">{t.home.noUpcoming}</p>
-        ) : (
-          upcoming.map((talk) => (
-            <TalkCard
-              key={talk.id}
-              talk={talk}
-              locale={locale}
-              variant="upcomingTap"
-              tapNumber={parseInt(talk.id, 10)}
-            />
-          ))
-        )}
-      </section>
-
-      <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
+          <section id="format" className="mb-8 scroll-mt-24 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
         <IconInitialHeading
           text={t.home.formatTitle}
           className="mb-3 text-lg font-semibold text-[var(--foreground)] tracking-tight"
@@ -98,9 +134,9 @@ export default async function HomePage({ params }: Props) {
             </li>
           ))}
         </ul>
-      </section>
+          </section>
 
-      <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
+          <section id="participation" className="mb-8 scroll-mt-24 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
         <IconInitialHeading
           text={t.home.participationTitle}
           className="mb-3 text-lg font-semibold text-[var(--foreground)] tracking-tight"
@@ -124,9 +160,9 @@ export default async function HomePage({ params }: Props) {
             </span>
           </p>
         </div>
-      </section>
+          </section>
 
-      <section className="mb-8">
+          <section className="mb-8">
         <div className="mx-auto grid max-w-[560px] grid-cols-2 gap-6 sm:gap-12">
           <figure className="relative rotate-[-2deg]">
             <span
@@ -160,9 +196,9 @@ export default async function HomePage({ params }: Props) {
             </div>
           </figure>
         </div>
-      </section>
+          </section>
 
-      <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
+          <section id="faq" className="mb-8 scroll-mt-24 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
         <IconInitialHeading
           text={t.home.faqTitle}
           className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight"
@@ -175,27 +211,9 @@ export default async function HomePage({ params }: Props) {
             </div>
           ))}
         </dl>
-      </section>
+          </section>
 
-      {past.length > 0 && (
-        <section className="mb-8 rounded-xl bg-[var(--surface)] px-6 py-6 shadow-sm">
-          <IconInitialHeading
-            text={t.home.recentTitle}
-            className="mb-4 text-lg font-semibold text-[var(--foreground)] tracking-tight"
-          />
-          {past.map((talk) => (
-            <TalkCard key={talk.id} talk={talk} locale={locale} />
-          ))}
-          <Link
-            href={`/${locale}/talks`}
-            className="mt-4 inline-block text-sm font-medium text-[var(--accent-deep)] transition-colors hover:text-[var(--foreground)]"
-          >
-            {t.home.viewAll}
-          </Link>
-        </section>
-      )}
-
-      <section className="overflow-hidden shadow-sm">
+          <section id="taproom" className="scroll-mt-24 overflow-hidden shadow-sm">
         <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)]">
           <div className="bg-[var(--accent)] px-6 py-7 text-white md:px-7 md:py-8">
             <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-white/85">{t.camos.label}</p>
@@ -257,7 +275,10 @@ export default async function HomePage({ params }: Props) {
             </div>
           </div>
         </div>
-      </section>
-    </div>
+          </section>
+        </div>
+      </div>
+
+    </>
   );
 }

@@ -132,13 +132,13 @@ export default function MarkdownText({ content, variant = "block", className }: 
               : "";
             const isInline = align === "inline";
             const alignClass = isInline
-              ? "inline-block w-[48%] max-w-[360px] align-top"
+              ? "block w-full sm:inline-block sm:w-[48%] sm:max-w-[360px] align-top"
               : align === "center"
                 ? "mx-auto block"
                 : align === "right"
                   ? "ml-auto block"
                   : "block";
-            const spacingClass = isInline ? "my-2 mr-2" : "my-4";
+            const spacingClass = isInline ? "my-2 sm:mr-2" : "my-4";
             return (
               // eslint-disable-next-line @next/next/no-img-element
               <img

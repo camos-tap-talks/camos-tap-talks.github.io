@@ -28,9 +28,29 @@ export default async function SpeakerGuidePage({ params }: Props) {
   const locale = lang as Locale;
   const isJa = locale === "ja";
   const t = getTranslations(locale);
+  const tocItems = isJa
+    ? [
+        { id: "purpose", label: "目的" },
+        { id: "event-flow", label: "当日の流れ" },
+        { id: "language", label: "言語" },
+        { id: "venue", label: "会場" },
+        { id: "schedule", label: "開催日時" },
+        { id: "organizer", label: "世話人" },
+        { id: "preparation", label: "準備いただくもの" },
+      ]
+    : [
+        { id: "purpose", label: "Purpose" },
+        { id: "event-flow", label: "Event Flow" },
+        { id: "language", label: "Language" },
+        { id: "venue", label: "Venue" },
+        { id: "schedule", label: "About Date and Time" },
+        { id: "organizer", label: "Organizer" },
+        { id: "preparation", label: "What to Prepare" },
+      ];
 
   return (
-    <article className="space-y-8">
+    <>
+      <article className="space-y-8">
       <header className="text-center">
         {isJa && (
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)]">SPEAKER GUIDE</p>
@@ -46,7 +66,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
       </header>
 
       {/* 目的 */}
-      <section className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="purpose" className="scroll-mt-24 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-3 text-base font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
           {isJa ? "目的" : "Purpose"}
         </h2>
@@ -58,7 +78,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
       </section>
 
       {/* 当日の流れ */}
-      <section className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="event-flow" className="scroll-mt-24 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-3 text-base font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
           {isJa ? "当日の流れ" : "Event Flow"}
         </h2>
@@ -111,7 +131,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
       </section>
 
       {/* 言語 */}
-      <section className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="language" className="scroll-mt-24 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-3 text-base font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
           {isJa ? "言語" : "Language"}
         </h2>
@@ -137,7 +157,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
       </section>
 
       {/* 会場 */}
-      <section className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="venue" className="scroll-mt-24 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-3 text-base font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
           {isJa ? "会場" : "Venue"}
         </h2>
@@ -225,7 +245,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
       </section>
 
       {/* 開催日時について */}
-      <section className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="schedule" className="scroll-mt-24 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-3 text-base font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
           {isJa ? "開催日時" : "About Date and Time"}
         </h2>
@@ -255,7 +275,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
       </section>
 
       {/* 世話人 */}
-      <section className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="organizer" className="scroll-mt-24 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-3 text-base font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
           {isJa ? "世話人" : "Organizer"}
         </h2>
@@ -283,7 +303,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
       </section>
 
       {/* 準備いただくもの */}
-      <section className="rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="preparation" className="scroll-mt-24 rounded-xl bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-3 text-base font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
           {isJa ? "準備いただくもの" : "What to Prepare"}
         </h2>
@@ -310,6 +330,30 @@ export default async function SpeakerGuidePage({ params }: Props) {
           </Link>
         </div>
       </section>
-    </article>
+      </article>
+
+      <aside
+        className="fixed top-24 hidden xl:block"
+        style={{ right: "max(-2rem, calc((100vw - 48rem) / 2 - 20rem))", width: "15rem" }}
+      >
+        <nav
+          aria-label={isJa ? "目次" : "Table of contents"}
+          className="rounded-none bg-[color-mix(in_srgb,var(--surface)_80%,#d7d7d7)] px-4 py-4 backdrop-blur"
+        >
+          <ol className="space-y-1.5 text-sm leading-relaxed text-[var(--muted)]">
+            {tocItems.map((item) => (
+              <li key={item.id}>
+                <a
+                  href={`#${item.id}`}
+                  className="block border-l-2 border-transparent pl-2 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-deep)]"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </aside>
+    </>
   );
 }

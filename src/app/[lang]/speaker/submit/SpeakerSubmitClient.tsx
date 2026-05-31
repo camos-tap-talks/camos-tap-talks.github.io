@@ -266,13 +266,13 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       talkCardSectionTitle: "TALK CARD",
       sectionInputHeading: isJa ? "入力" : "Input",
       sectionPreviewHeading: isJa ? "プレビュー" : "Preview",
-      inputSectionTitle: isJa ? "入力セクション" : "Input Section",
+      inputSectionTitle: isJa ? "入力" : "Input",
       desktopPreviewLabel: isJa ? "TALK CARD プレビュー（デスクトップ版）" : "TALK CARD Preview (Desktop)",
       mobilePreviewLabel: isJa ? "TALK CARD プレビュー（モバイル版）" : "TALK CARD Preview (Mobile)",
       urlPreviewLabel: isJa ? "URL プレビュー" : "URL Preview",
       markdownTitle: isJa ? "対応している Markdown / HTML" : "Supported Markdown / HTML",
       markdownScrollHint: isJa ? "対応している Markdown / HTML はこちら↑" : "Supported Markdown / HTML is above ↑",
-      submitTitle: isJa ? "提出用 URL（一時保存用 URL）" : "Submission URL (temporary save URL)",
+      submitTitle: isJa ? "保存・提出" : "Save & Submit",
       slugLabel: isJa ? "Slug*" : "Slug*",
       slugHint: isJa
         ? "URL に使われます。基本は 1 単語、長くても 3 単語まで。通常は family name / first name か研究に関する単語を小文字で入力してください。"
@@ -374,6 +374,25 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       abstractLengthGuide: isJa ? "文字数目安: 100〜300字程度" : "Length guide: about 100-300 chars",
       bioLengthGuide: isJa ? "文字数目安: 約100〜300字程度" : "Length guide: about 100-300 chars",
     }),
+    [isJa],
+  );
+
+  const tocItems = useMemo(
+    () => (isJa
+      ? [
+          { id: "submit-workflow", label: "手順" },
+          { id: "supported-markdown", label: "Markdown / HTML" },
+          { id: "submit-input", label: "入力" },
+          { id: "image-upload", label: "画像アップロード" },
+          { id: "submit-url", label: "保存・提出" },
+        ]
+      : [
+          { id: "submit-workflow", label: "Submission Steps" },
+          { id: "supported-markdown", label: "Markdown / HTML" },
+          { id: "submit-input", label: "Input" },
+          { id: "image-upload", label: "Image Upload" },
+          { id: "submit-url", label: "Save & Submit" },
+        ]),
     [isJa],
   );
 
@@ -651,7 +670,11 @@ export default function SpeakerSubmitClient({ locale }: Props) {
   };
 
   return (
-    <div onClickCapture={openExternalLinksInNewTab}>
+    <>
+      <div
+        onClickCapture={openExternalLinksInNewTab}
+        className="relative left-1/2 right-1/2 w-[min(1120px,calc(100vw-2rem))] -translate-x-1/2"
+      >
       <p className="mb-2 text-center text-[0.7rem] font-semibold tracking-[0.32em] text-[var(--muted)]">{text.pageLabel}</p>
       <h1 className="mb-2 text-center text-xl font-semibold text-[var(--foreground)]">{text.pageTitle}</h1>
       <p className="mb-8 text-center text-sm text-[var(--muted)]">{text.pageNote}</p>
@@ -667,7 +690,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
         </a>
       </div>
 
-      <section className="mb-8 rounded-none bg-[#e5e5e5] px-6 py-6 text-[#444] shadow-sm">
+      <section id="submit-workflow" className="mb-8 scroll-mt-24 rounded-none bg-[#e5e5e5] px-6 py-6 text-[#444] shadow-sm">
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#3f3f3f]">{text.workflowTitle}</h2>
         <h3 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#3f3f3f]">{text.inputStepsTitle}</h3>
         <ul className="space-y-2 text-sm text-[#444]">
@@ -711,7 +734,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
         </details>
       </section>
 
-      <section className="mb-8 rounded-none bg-[var(--surface)] px-5 py-5 shadow-sm">
+      <section id="submit-input" className="mb-8 scroll-mt-24 rounded-none bg-[var(--surface)] px-5 py-5 shadow-sm">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">{text.inputSectionTitle}</h2>
 
         <div className="space-y-4">
@@ -1084,9 +1107,9 @@ After earning a PhD in Ecology from Utakata University, they worked as a researc
         </div>
       </section>
 
-      <section className="mb-8 rounded-none bg-[var(--accent)] px-5 py-5 shadow-sm">
+      <section id="submit-url" className="mb-8 scroll-mt-24 rounded-none bg-[var(--accent)] px-5 py-5 shadow-sm">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-white">{text.submitTitle}</h2>
-        <p className="mb-3 text-sm text-white/90">{text.submitHelp}</p>
+        <p className="mb-3 text-sm font-medium text-white/90">{text.submitHelp}</p>
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
@@ -1119,7 +1142,31 @@ After earning a PhD in Ecology from Utakata University, they worked as a researc
           </div>
         )}
       </section>
-    </div>
+      </div>
+
+      <aside
+        className="fixed top-24 z-30 hidden xl:block"
+        style={{ right: "max(-10rem, calc((100vw - 48rem) / 2 - 28rem))", width: "15rem" }}
+      >
+        <nav
+          aria-label={isJa ? "目次" : "Table of contents"}
+          className="rounded-none bg-[color-mix(in_srgb,var(--surface)_80%,#d7d7d7)] px-4 py-4 backdrop-blur"
+        >
+          <ol className="space-y-1.5 text-sm leading-relaxed text-[var(--muted)]">
+            {tocItems.map((item) => (
+              <li key={item.id}>
+                <a
+                  href={`#${item.id}`}
+                  className="block border-l-2 border-transparent pl-2 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-deep)]"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </aside>
+    </>
   );
 }
 
