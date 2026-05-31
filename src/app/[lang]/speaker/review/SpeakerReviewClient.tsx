@@ -94,22 +94,27 @@ function parseDraftFromSearchParams(params: URLSearchParams): ParsedDraft {
     });
   }
 
+  const sharedTitle = params.get("title") ?? params.get("titleJa") ?? params.get("titleEn") ?? "";
+  const sharedSpeaker = params.get("speaker") ?? params.get("speakerJa") ?? params.get("speakerEn") ?? "";
+  const sharedAbstract = params.get("abstract") ?? params.get("abstractJa") ?? params.get("abstractEn") ?? "";
+  const sharedBio = params.get("bio") ?? params.get("bioJa") ?? params.get("bioEn") ?? "";
+
   return {
     slug: params.get("slug") ?? "",
-    titleJa: params.get("titleJa") ?? params.get("title") ?? "",
-    titleEn: params.get("titleEn") ?? params.get("title") ?? "",
+    titleJa: sharedTitle,
+    titleEn: sharedTitle,
     tapNumber: params.get("tap") ?? params.get("tapNumber") ?? "",
     date: normalizeDateFormat(params.get("date") ?? ""),
     startTime: params.get("startTime") ?? "",
     endTime: params.get("endTime") ?? "",
     dateTbd: params.get("dateTbd") === "1" || params.get("dateTbd") === "true",
     timeTbd: params.get("timeTbd") === "1" || params.get("timeTbd") === "true",
-    speakerJa: params.get("speakerJa") ?? params.get("speaker") ?? "",
-    speakerEn: params.get("speakerEn") ?? params.get("speaker") ?? "",
-    abstractJa: params.get("abstractJa") ?? params.get("abstract") ?? "",
-    abstractEn: params.get("abstractEn") ?? params.get("abstract") ?? "",
-    bioJa: params.get("bioJa") ?? params.get("bio") ?? "",
-    bioEn: params.get("bioEn") ?? params.get("bio") ?? "",
+    speakerJa: sharedSpeaker,
+    speakerEn: sharedSpeaker,
+    abstractJa: sharedAbstract,
+    abstractEn: sharedAbstract,
+    bioJa: sharedBio,
+    bioEn: sharedBio,
     speakerImage: params.get("speakerImage") ?? "",
     uploadedImages: Array.from(mergedByUrl.values()),
   };
@@ -265,22 +270,22 @@ export default function SpeakerReviewClient({ locale }: Props) {
       copyFailed: isJa ? "コピーに失敗しました。" : "Copy failed.",
       emptyHint: isJa ? "提出 URL を読み込むとここに結果が表示されます。" : "Loaded results will appear here.",
       fields: {
-        titleJa: isJa ? "タイトル（日本語）" : "Title (Japanese)",
-        titleEn: isJa ? "タイトル（英語）" : "Title (English)",
+        titleJa: isJa ? "タイトル（共通）" : "Title (Shared)",
+        titleEn: isJa ? "タイトル（共通）" : "Title (Shared)",
         tap: "Tap #",
         date: isJa ? "日付" : "Date",
         time: isJa ? "時間" : "Time",
-        speakerJa: isJa ? "スピーカー（日本語）" : "Speaker (Japanese)",
-        speakerEn: isJa ? "スピーカー（英語）" : "Speaker (English)",
+        speakerJa: isJa ? "スピーカー（共通）" : "Speaker (Shared)",
+        speakerEn: isJa ? "スピーカー（共通）" : "Speaker (Shared)",
         speakerImage: isJa ? "スピーカー画像" : "Speaker image",
         uploadedImages: isJa ? "アップロード画像" : "Uploaded images",
       },
       usageLabels: {
         speakerImage: isJa ? "スピーカー画像" : "Speaker image",
-        abstractJa: isJa ? "Abstract（日本語）" : "Abstract (Japanese)",
-        abstractEn: isJa ? "Abstract（英語）" : "Abstract (English)",
-        bioJa: isJa ? "Speaker Profile（日本語）" : "Speaker Profile (Japanese)",
-        bioEn: isJa ? "Speaker Profile（英語）" : "Speaker Profile (English)",
+        abstractJa: isJa ? "Abstract（共通）" : "Abstract (Shared)",
+        abstractEn: isJa ? "Abstract（共通）" : "Abstract (Shared)",
+        bioJa: isJa ? "Speaker Profile（共通）" : "Speaker Profile (Shared)",
+        bioEn: isJa ? "Speaker Profile（共通）" : "Speaker Profile (Shared)",
       },
     }),
     [isJa],

@@ -44,10 +44,6 @@ export default function TalkCard({
   const displayLanguage = getLanguageForLocale(locale, talk.language);
   const title = displayLanguage === "ja" ? talk.titleJa : talk.titleEn;
   const speaker = displayLanguage === "ja" ? talk.speakerJa : talk.speakerEn;
-  // Show badge only when the page locale differs from the talk's language
-  const isLanguageLimited =
-    (talk.language === "ja" && locale !== "ja") ||
-    (talk.language === "en" && locale !== "en");
   const normalizedTapNumber = Number.isFinite(tapNumber) ? tapNumber : null;
   const tapLabel = `${showTapHash ? "#" : ""}${normalizedTapNumber ?? talk.id}`;
   const titleLineClampClass =
@@ -101,11 +97,6 @@ export default function TalkCard({
             >
               {formatDate(talk.date, locale, talk.dateTbd, talk.startTime, talk.endTime, talk.timeTbd)}
             </p>
-            {isLanguageLimited && (
-              <span className="inline-flex shrink-0 items-center rounded bg-[#3f3f3f] px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-[#ddd4bf]">
-                {displayLanguage === "ja" ? "in Japanese" : "in English"}
-              </span>
-            )}
           </div>
           <div className="flex min-w-0 flex-1 items-center">
             <h3
