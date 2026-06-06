@@ -25,6 +25,7 @@ export default function TalksClient({ locale }: Props) {
             locale={locale}
             variant="upcomingTap"
             tapNumber={parseInt(talk.id, 10)}
+            titleMaxLines={2}
           />
         ))
       )}

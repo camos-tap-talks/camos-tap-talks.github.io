@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const enPath = `/en/talks/${slug}`;
 
   return {
-    title: lang === "ja" ? talk.titleJa : talk.titleEn,
+    title: talk.title,
     alternates: {
       canonical: lang === "ja" ? jaPath : enPath,
       languages: {
@@ -48,18 +48,10 @@ export default async function TalkPage({ params }: Props) {
   const talk = talks.find((tk) => tk.slug === slug);
   if (!talk) notFound();
 
-  // Determine which language to use based on talk.language setting
-  const getLanguageForLocale = (locale: Locale, talkLanguage?: "ja" | "en" | "both"): "ja" | "en" => {
-    if (talkLanguage === "ja") return "ja";
-    if (talkLanguage === "en") return "en";
-    return locale === "ja" ? "ja" : "en";
-  };
-  
-  const displayLanguage = getLanguageForLocale(locale, talk.language);
-  const abstract = displayLanguage === "ja" ? talk.abstractJa : talk.abstractEn;
-  const bio = displayLanguage === "ja" ? talk.speakerBioJa : talk.speakerBioEn;
-  const title = displayLanguage === "ja" ? talk.titleJa : talk.titleEn;
-  const report = locale === "ja" ? talk.reportJa : talk.reportEn;
+  const abstract = talk.abstract;
+  const bio = talk.speakerBio;
+  const title = talk.title;
+  const report = talk.report;
 
   return (
     <div>
@@ -76,6 +68,7 @@ export default async function TalkPage({ params }: Props) {
         variant="upcomingTap"
         tapNumber={parseInt(talk.id, 10)}
         disableLink
+        titleMaxLines={2}
       />
 
       {talk.talkImage && (

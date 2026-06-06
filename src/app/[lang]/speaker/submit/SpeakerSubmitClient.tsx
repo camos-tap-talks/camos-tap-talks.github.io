@@ -412,14 +412,10 @@ export default function SpeakerSubmitClient({ locale }: Props) {
     endTime: endTimeTbd ? undefined : endTime.trim() || undefined,
     dateTbd,
     timeTbd,
-    titleEn: title || "Title preview",
-    titleJa: title || "タイトルプレビュー",
-    speakerEn: speaker || "Speaker name",
-    speakerJa: speaker || "スピーカー名",
-    abstractEn: abstract,
-    abstractJa: abstract,
-    speakerBioEn: bio,
-    speakerBioJa: bio,
+    title: title || "タイトルプレビュー",
+    speaker: speaker || "スピーカー名",
+    abstract,
+    speakerBio: bio,
     speakerImage: speakerImage || undefined,
   };
 

@@ -81,7 +81,7 @@ export default async function HomePage({ params }: Props) {
         <div>
           <aside
             className="fixed top-24 hidden xl:block"
-            style={{ right: "max(-2rem, calc((100vw - 48rem) / 2 - 20rem))", width: "15rem" }}
+            style={{ right: "max(-2rem, calc((100vw - 48rem) / 2 - 18rem))", width: "15rem" }}
           >
             <nav
               aria-label={isJa ? "目次" : "Table of contents"}
@@ -116,6 +116,7 @@ export default async function HomePage({ params }: Props) {
                   locale={locale}
                   variant="upcomingTap"
                   tapNumber={parseInt(talk.id, 10)}
+                  titleMaxLines={2}
                 />
               ))
             )}

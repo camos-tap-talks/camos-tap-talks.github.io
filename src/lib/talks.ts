@@ -6,19 +6,13 @@ export type Talk = {
   endTime?: string; // 24h time string HH:mm
   dateTbd?: boolean;
   timeTbd?: boolean;
-  language?: "ja" | "en" | "both"; // "ja" = Japanese only, "en" = English only, "both" = bilingual (default)
-  titleEn: string;
-  titleJa: string;
-  speakerEn: string;
-  speakerJa: string;
-  abstractEn: string;
-  abstractJa: string;
-  speakerBioEn?: string;
-  speakerBioJa?: string;
+  title: string;
+  speaker: string;
+  abstract: string;
+  speakerBio?: string;
   speakerImage?: string;
   talkImage?: string;
-  reportEn?: string;
-  reportJa?: string;
+  report?: string;
   reportPublished?: boolean; // set to true to show the report section publicly
 };
 
@@ -32,18 +26,29 @@ export const talks: Talk[] = [
     //   endTime: "21:00",
     //   dateTbd: true,
     //   timeTbd: false,
-    //   titleEn: "TBD",
-    //   titleJa: "Coming soon ...", （55文字以内、\n で改行）
-    //   speakerEn: "TBD",
-    //   speakerJa: "Coming soon ...",
-    //   abstractEn: "Details to be announced.",
-    //   abstractJa: "詳細は後日公開予定です。",
-    //   language: "both", // or "ja" / "en" for language-specific content
-    //   reportEn: "Report to be announced.\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"event photo 1\" width=\"320\" align=\"center\" />\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"event photo 1\" align=\"inline\" /><img src=\"/0-example/rep-2.jpg\" alt=\"event photo 2\" align=\"inline\" />",
-    //   reportJa: "レポートは後日公開予定です。\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"当日の写真1\" width=\"320\" align=\"center\" />\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"当日の写真1\" align=\"inline\" /><img src=\"/0-example/rep-2.jpg\" alt=\"当日の写真2\" align=\"inline\" />",
+    //   title: "Coming soon ...", // （55文字以内、\n で改行）
+    //   speaker: "Coming soon ...",
+    //   abstract: "詳細は後日公開予定です。",
+    //   report: "レポートは後日公開予定です。\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"当日の写真1\" width=\"320\" align=\"center\" />\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"当日の写真1\" align=\"inline\" /><img src=\"/0-example/rep-2.jpg\" alt=\"当日の写真2\" align=\"inline\" />",
     //   reportPublished: false,
     // },
   {
+    id: "2",
+    slug: "2-umemura",
+    date: "2026-06-19",
+    dateTbd: false,
+    timeTbd: false,
+    startTime: "19:00",
+    endTime: "22:00",
+    title: "遺伝子に\n名前をつけるということ",
+    speaker: "梅村 悠介（東京大学）",
+    abstract: "生き物はたくさんの遺伝子のはたらきによって成り立っています。私たちヒトも、私が研究に使うハエも、どんな生き物も同じです。これまで数々の重要な遺伝子が発見されてきましたが、詳しいはたらきが未解明なものも、まだまだたくさん残されています。\n\n私は大学院での研究を通じて、ハエのある遺伝子のはたらきを世界で初めて発見しました。遺伝子のはたらきを明らかにすると、その遺伝子に名前をつけることができます。私が選んだ名前は「Mulberry（桑）」です。\n\nなぜこの名前を選んだのか？という問いを入り口に、遺伝子が命名されるまでの裏側をお話しいたします。\n",
+    speakerBio: "東京大学定量生命科学研究所でハエを使った研究をしている。博士課程3年。\n研究に用いているハエの正式名称は「ショウジョウバエ」といい、大きな赤い目を持つ。顔が赤く酒飲みの伝説上の生き物「猩々（しょうじょう）」に由来して名前がついたらしい。私もビールを飲むとすぐ顔が赤くなる。\n",
+    speakerImage: "/2-umemura/speaker.jpg",
+    report: "レポートは後日公開予定です。",
+    reportPublished: false,
+  },
+    {
     id: "1",
     slug: "1-karita",
     date: "2026-05-29",
@@ -51,18 +56,12 @@ export const talks: Talk[] = [
     timeTbd: false,
     startTime: "18:30",
     endTime: "20:30",
-    language: "ja",
-    titleEn: "TBD",
-    titleJa: "ふえる微生物の陣取り合戦",
-    speakerEn: "TBD",
-    speakerJa: "苅田 裕也（東京大学）",
-    abstractEn: "Details to be announced.",
-    abstractJa: "みなさんも大好きなビールにはイースト菌という微生物のはたらきが欠かせません。ビールはこのイースト菌がはたらく場所によってエールとラガーに分類されます。エールでは液の上面にイースト菌が集合し、ラガーでは液の下部にイースト菌が沈んでいます。同じイースト菌でも住む場所がまったく違うというのは不思議ですよね？\n\n今回私が紹介するのは、このように住む場所が違うような微生物が「もともとは全く同じ」個体から「自ずと」生じるお話しです。微生物はどんどん自己複製し、ネズミ算的に数を増やしていきます。そんな状況では、仲間内で場所と栄養の奪い合いが自然と起こり、住み分けに繋がっていくのです。\n\nみなさんが飲んでいるビールにちょっとした彩りを添えるようなお話しができれば幸いです。かもすタップトークの第一回、ぜひ一緒に盛り上げましょう！\n",
-    speakerBioEn: "",
-    speakerBioJa: "生物物理学と微生物の進化・生態を専門とする実験研究者。要素が増えたり自己複製する集団でなにが起こるかに興味をもつ。髪の毛ほどの細さの容器で微生物を育てたり、その様子を数学・物理学を使って解析したりしている。最近は農学方面への応用を見据え、土壌を模した実験にも取り組んでいる。\n\n日本で物理学の学士をとったのち、アメリカで生物物理学の博士号を取得。その後ドイツで微生物学を研究し、日本に帰国した。海外での学位留学を目指す学生の支援を積極的に行っている。\n\n留学時代はピルスナービールを好んでいたが、アルコールには弱く量を飲むことはできない。はじめの一杯を味わうことに全力を注いでいる。",
+    title: "ふえる微生物の陣取り合戦",
+    speaker: "苅田 裕也（東京大学）",
+    abstract: "みなさんも大好きなビールにはイースト菌という微生物のはたらきが欠かせません。ビールはこのイースト菌がはたらく場所によってエールとラガーに分類されます。エールでは液の上面にイースト菌が集合し、ラガーでは液の下部にイースト菌が沈んでいます。同じイースト菌でも住む場所がまったく違うというのは不思議ですよね？\n\n今回私が紹介するのは、このように住む場所が違うような微生物が「もともとは全く同じ」個体から「自ずと」生じるお話しです。微生物はどんどん自己複製し、ネズミ算的に数を増やしていきます。そんな状況では、仲間内で場所と栄養の奪い合いが自然と起こり、住み分けに繋がっていくのです。\n\nみなさんが飲んでいるビールにちょっとした彩りを添えるようなお話しができれば幸いです。かもすタップトークの第一回、ぜひ一緒に盛り上げましょう！\n",
+    speakerBio: "生物物理学と微生物の進化・生態を専門とする実験研究者。要素が増えたり自己複製する集団でなにが起こるかに興味をもつ。髪の毛ほどの細さの容器で微生物を育てたり、その様子を数学・物理学を使って解析したりしている。最近は農学方面への応用を見据え、土壌を模した実験にも取り組んでいる。\n\n日本で物理学の学士をとったのち、アメリカで生物物理学の博士号を取得。その後ドイツで微生物学を研究し、日本に帰国した。海外での学位留学を目指す学生の支援を積極的に行っている。\n\n留学時代はピルスナービールを好んでいたが、アルコールには弱く量を飲むことはできない。はじめの一杯を味わうことに全力を注いでいる。",
     speakerImage: "/1-karita/speaker.jpg",
-    reportEn: "The talk on beer fermentation and microbes was a great success, and around 15 people joined from the beginning. Thank you very much for coming!\n\n<img src=\"/1-karita/rep-1.jpg\" alt=\"Talk scene 1\" align=\"inline\" /><img src=\"/1-karita/rep-2.jpg\" alt=\"Talk scene 2\" align=\"inline\" />",
-    reportJa: "ビール発酵と微生物を絡めて話していただき、大盛況でした！開始時には15人程度の方にお聞きいただきました。お越しいただいた皆さま、ありがとうございました。\n\n<img src=\"/1-karita/rep-1.jpg\" alt=\"当日の様子1\" align=\"inline\" /><img src=\"/1-karita/rep-2.jpg\" alt=\"当日の様子2\" align=\"inline\" />",
+    report: "ビール発酵と微生物を絡めて話していただき、大盛況でした！開始時には15人程度の方にお聞きいただきました。お越しいただいた皆さま、ありがとうございました。\n\n<img src=\"/1-karita/rep-1.jpg\" alt=\"当日の様子1\" align=\"inline\" /><img src=\"/1-karita/rep-2.jpg\" alt=\"当日の様子2\" align=\"inline\" />",
     reportPublished: true,
   },
 ];

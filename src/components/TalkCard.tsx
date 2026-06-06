@@ -34,16 +34,8 @@ export default function TalkCard({
   titleDataField,
   speakerDataField,
 }: Props) {
-  // Determine which language to use based on talk.language setting
-  const getLanguageForLocale = (locale: Locale, talkLanguage?: "ja" | "en" | "both"): "ja" | "en" => {
-    if (talkLanguage === "ja") return "ja";
-    if (talkLanguage === "en") return "en";
-    return locale === "ja" ? "ja" : "en";
-  };
-  
-  const displayLanguage = getLanguageForLocale(locale, talk.language);
-  const title = displayLanguage === "ja" ? talk.titleJa : talk.titleEn;
-  const speaker = displayLanguage === "ja" ? talk.speakerJa : talk.speakerEn;
+  const title = talk.title;
+  const speaker = talk.speaker;
   const normalizedTapNumber = Number.isFinite(tapNumber) ? tapNumber : null;
   const tapLabel = `${showTapHash ? "#" : ""}${normalizedTapNumber ?? talk.id}`;
   const titleLineClampClass =
