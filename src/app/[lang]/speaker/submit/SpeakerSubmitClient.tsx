@@ -243,6 +243,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
       pageNote: isJa
         ? "案内ページを確認後、このページで提出内容を作成してください。"
         : "After reading the guide page, prepare your submission on this page.",
+      tocTitle: isJa ? "目次" : "Table of Contents",
       guideLinkLabel: isJa ? "← スピーカー向けご案内（新規タブで開く）" : "← Speaker Guide (opens in new tab)",
       workflowTitle: isJa ? "手順" : "Submission Steps",
       inputStepsTitle: isJa ? "(1) 入力" : "Input Steps",
@@ -686,7 +687,26 @@ export default function SpeakerSubmitClient({ locale }: Props) {
         </a>
       </div>
 
-      <section id="submit-workflow" className="mb-8 scroll-mt-24 rounded-none bg-[#e5e5e5] px-6 py-6 text-[#444] shadow-sm">
+      <section
+        aria-label={isJa ? "目次" : "Table of contents"}
+        className="mb-8 rounded-none bg-[color-mix(in_srgb,var(--surface)_80%,#d7d7d7)] px-5 py-5 text-[#444]"
+      >
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[#3f3f3f]">{text.tocTitle}</h2>
+        <ol className="space-y-1.5 text-sm leading-relaxed text-[#444]">
+          {tocItems.map((item) => (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                className="block border-l-2 border-transparent pl-2 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-deep)]"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section id="submit-workflow" className="mb-8 scroll-mt-24 rounded-none bg-[color-mix(in_srgb,var(--surface)_80%,#d7d7d7)] px-5 py-5 text-[#444]">
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#3f3f3f]">{text.workflowTitle}</h2>
         <h3 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#3f3f3f]">{text.inputStepsTitle}</h3>
         <ul className="space-y-2 text-sm text-[#444]">
@@ -711,7 +731,7 @@ export default function SpeakerSubmitClient({ locale }: Props) {
 
       <section
         id="supported-markdown"
-        className="mb-8 rounded-none bg-[#e5e5e5] px-5 py-5 text-[#444] shadow-sm [&_code]:bg-[#d0d0d0] [&_code]:text-[#3f3f3f] [&_pre]:border-[#bfbfbf] [&_pre]:bg-[#d7d7d7] [&_pre_code]:bg-transparent"
+        className="mb-8 rounded-none bg-[color-mix(in_srgb,var(--surface)_80%,#d7d7d7)] px-5 py-5 text-[#444] [&_code]:bg-[#d0d0d0] [&_code]:text-[#3f3f3f] [&_pre]:border-[#bfbfbf] [&_pre]:bg-[#d7d7d7] [&_pre_code]:bg-transparent"
       >
         <details
           open={openMarkdownSection}
@@ -1140,28 +1160,6 @@ After earning a PhD in Ecology from Utakata University, they worked as a researc
       </section>
       </div>
 
-      <aside
-        className="fixed top-24 z-30 hidden xl:block"
-        style={{ right: "max(-10rem, calc((100vw - 48rem) / 2 - 28rem))", width: "15rem" }}
-      >
-        <nav
-          aria-label={isJa ? "目次" : "Table of contents"}
-          className="rounded-none bg-[color-mix(in_srgb,var(--surface)_80%,#d7d7d7)] px-4 py-4 backdrop-blur"
-        >
-          <ol className="space-y-1.5 text-sm leading-relaxed text-[var(--muted)]">
-            {tocItems.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  className="block border-l-2 border-transparent pl-2 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-deep)]"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      </aside>
     </>
   );
 }
