@@ -135,7 +135,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
         <h2 className="mb-3 text-base font-semibold uppercase tracking-[0.18em] text-[var(--accent-deep)]">
           {isJa ? "言語" : "Language"}
         </h2>
-        <p className="mb-4 text-sm leading-relaxed text-[var(--muted)]">
+        <p className="mb-2 text-sm leading-relaxed text-[var(--muted)]">
           {isJa
             ? <>トークは<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">日本語・英語のいずれでも</span>問題ありません。話しやすい言語でご発表ください。</>
             : <>Talks can be given in either <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">Japanese or English</span>. Please present in the language you are most comfortable with.</>}
