@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isJa = lang === "ja";
 
   return {
-    title: lang === "ja" ? "トーク一覧" : "Talks",
+    title: "Talks",
     alternates: {
       canonical: isJa ? "/ja/talks" : "/en/talks",
       languages: {

@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isJa = lang === "ja";
 
   return {
-    title: isJa ? "お問い合わせ" : "Contact",
+    title: "Contact",
     description: isJa
       ? "Camos Tap Talks へのお問い合わせ先です。トークに興味のある研究者の方もお気軽にご連絡ください。"
       : "Contact information for Camos Tap Talks. Researchers interested in giving a talk are also welcome to get in touch.",
