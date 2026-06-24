@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { locales, type Locale, getTranslations } from "@/lib/i18n";
-import { getUpcomingTalks } from "@/lib/talks";
-import TalkCard from "@/components/TalkCard";
 import IconInitialHeading from "@/components/IconInitialHeading";
+import NextTalkSection from "@/components/NextTalkSection";
 import Image from "next/image";
 import { SITE_URL } from "@/lib/site";
 
@@ -34,7 +33,6 @@ export default async function HomePage({ params }: Props) {
   const locale = lang as Locale;
   const isJa = locale === "ja";
   const t = getTranslations(locale);
-  const upcoming = getUpcomingTalks();
   const tocItems = isJa
     ? [
         { id: "format", label: "何をするの？" },
@@ -102,25 +100,7 @@ export default async function HomePage({ params }: Props) {
             </nav>
           </aside>
 
-          <section id="next-talk" className="mb-8 scroll-mt-24">
-            <p className="mb-4 text-center text-[0.7rem] font-semibold tracking-[0.32em] text-[var(--muted)]">
-              — NEXT TALK —
-            </p>
-            {upcoming.length === 0 ? (
-              <p className="text-center text-sm text-[var(--muted)]">{t.home.noUpcoming}</p>
-            ) : (
-              upcoming.map((talk) => (
-                <TalkCard
-                  key={talk.id}
-                  talk={talk}
-                  locale={locale}
-                  variant="upcomingTap"
-                  tapNumber={parseInt(talk.id, 10)}
-                  titleMaxLines={2}
-                />
-              ))
-            )}
-          </section>
+          <NextTalkSection locale={locale} noUpcomingText={t.home.noUpcoming} />
 
           <section id="format" className="mb-8 scroll-mt-24 rounded-xl bg-[var(--surface)] px-6 py-7 shadow-sm">
         <IconInitialHeading

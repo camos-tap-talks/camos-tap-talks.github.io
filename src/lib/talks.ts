@@ -45,8 +45,8 @@ export const talks: Talk[] = [
   abstract: "博士課程の大学院生として高分子材料の研究をしています。\n\n研究者というと特別な人たちの世界をイメージしてしまいますが、実際には論文を読み、実験に失敗し、締切に追われながら少しずつ研究を進めています。今回のトークでは、高分子材料の研究を例に、研究テーマがどのように生まれ、1本の論文になるのかをお話しします。\n\n「研究って何をしているの？」「論文はどうやって書くの？」「博士課程ってどんな生活？」といった話題から、研究の面白さや苦労まで、大学院生の目線で皆さんとお話しできればと思います。\n\nビールを飲みながら気軽に聞いていただければうれしいです！",
   speakerBio: "東京大学工学系研究科マテリアル工学専攻、博士課程3年(東大9年目)。\n水中で強力にくっつく高分子材料の研究をしている。研究室のあるあるを4コマ漫画に描くのが趣味。苦めのクラフトビールが好き。\n",
   speakerImage: "/3-eriko-yamada/speaker.jpg",
-  report: "レポートは後日公開予定です。",
-  reportPublished: false,
+  report: "盛況でした！トーク後もたくさん交流いただき、ありがとうございました！\n\n<img src=\"/3-eriko-yamada/report1.jpg\" alt=\"当日の様子1\" align=\"inline\" /><img src=\"/3-eriko-yamada/report2.jpg\" alt=\"当日の様子2\" align=\"inline\" />",
+    reportPublished: true,
 },
   {
     id: "2",
@@ -61,8 +61,8 @@ export const talks: Talk[] = [
     abstract: "生き物はたくさんの遺伝子のはたらきによって成り立っています。私たちヒトも、私が研究に使うハエも、どんな生き物も同じです。これまで数々の重要な遺伝子が発見されてきましたが、詳しいはたらきが未解明なものも、まだまだたくさん残されています。\n\n私は大学院での研究を通じて、ハエのある遺伝子のはたらきを世界で初めて発見しました。遺伝子のはたらきを明らかにすると、その遺伝子に名前をつけることができます。私が選んだ名前は「Mulberry（桑）」です。\n\nなぜこの名前を選んだのか？という問いを入り口に、遺伝子が命名されるまでの裏側をお話しいたします。\n",
     speakerBio: "東京大学定量生命科学研究所でハエを使った研究をしている。博士課程3年。\n研究に用いているハエの正式名称は「ショウジョウバエ」といい、大きな赤い目を持つ。顔が赤く酒飲みの伝説上の生き物「猩々（しょうじょう）」に由来して名前がついたらしい。私もビールを飲むとすぐ顔が赤くなる。\n",
     speakerImage: "/2-umemura/speaker.jpg",
-    report: "レポートは後日公開予定です。",
-    reportPublished: false,
+    report: "盛況でした！トーク後もたくさん交流いただき、ありがとうございました！\n\n<img src=\"/2-umemura/report1.jpg\" alt=\"当日の様子1\" align=\"inline\" /><img src=\"/2-umemura/report2.jpg\" alt=\"当日の様子2\" align=\"inline\" />",
+    reportPublished: true,
   },
     {
     id: "1",
@@ -83,7 +83,22 @@ export const talks: Talk[] = [
 ];
 
 function getTodayDateString(): string {
-  return new Date().toISOString().split("T")[0];
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const parts = formatter.formatToParts(new Date());
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+
+  if (!year || !month || !day) {
+    return new Date().toISOString().split("T")[0];
+  }
+
+  return `${year}-${month}-${day}`;
 }
 
 export function getUpcomingTalks(): Talk[] {
