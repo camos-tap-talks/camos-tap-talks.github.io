@@ -140,7 +140,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
             ? <>トークは<span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">日本語・英語のいずれでも</span>問題ありません。話しやすい言語でご発表ください。</>
             : <>Talks can be given in either <span className="font-semibold underline decoration-[0.14em] underline-offset-[0.16em] decoration-[var(--accent)]">Japanese or English</span>. Please present in the language you are most comfortable with.</>}
         </p>
-        <ul className="space-y-2 text-sm leading-relaxed text-[var(--muted)]">
+        {/* <ul className="space-y-2 text-sm leading-relaxed text-[var(--muted)]">
           <li className="flex items-start gap-2">
             <span className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
             <span>{isJa ? "日本語で話す場合：聴衆の多くは日本語話者ですが、英語話者も一定数いらっしゃいます。日本語で発表される場合も、適宜簡単な英語での説明を加えていただけますと幸いです。" : "If presenting in Japanese: Most of the audience are Japanese speakers, but there will also be some English-speaking attendees. Even if you present in Japanese, it would be appreciated if you could provide a brief explanation in English for the English-speaking attendees."}</span>
@@ -153,7 +153,7 @@ export default async function SpeakerGuidePage({ params }: Props) {
                 : "If presenting in English: Many attendees can understand English, so talks in English are also welcome. Please speak clearly and at a moderate pace."}
             </span>
           </li>
-        </ul>
+        </ul> */}
       </section>
 
       {/* 会場 */}
