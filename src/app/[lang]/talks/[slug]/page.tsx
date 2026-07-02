@@ -48,7 +48,7 @@ export default async function TalkPage({ params }: Props) {
   const talk = talks.find((tk) => tk.slug === slug);
   if (!talk) notFound();
 
-  const abstract = talk.abstract;
+  const abstract = talk.abstract?.trim();
   const bio = talk.speakerBio;
   const title = talk.title;
   const report = talk.report;
@@ -83,12 +83,14 @@ export default async function TalkPage({ params }: Props) {
       )}
 
       <div className="mt-6 space-y-6 px-1">
-        <section>
-          <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)] sm:text-base">
-            Abstract
-          </h2>
-          <MarkdownText content={abstract} className="leading-relaxed text-[var(--muted)]" />
-        </section>
+        {abstract && (
+          <section>
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent-deep)] sm:text-base">
+              Abstract
+            </h2>
+            <MarkdownText content={abstract} className="leading-relaxed text-[var(--muted)]" />
+          </section>
+        )}
 
         {bio && (
           <section>

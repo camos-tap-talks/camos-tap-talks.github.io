@@ -8,7 +8,7 @@ export type Talk = {
   timeTbd?: boolean;
   title: string;
   speaker: string;
-  abstract: string;
+  abstract?: string;
   speakerBio?: string;
   speakerImage?: string;
   talkImage?: string;
@@ -32,6 +32,22 @@ export const talks: Talk[] = [
     //   report: "レポートは後日公開予定です。\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"当日の写真1\" width=\"320\" align=\"center\" />\n\n<img src=\"/0-example/rep-1.jpg\" alt=\"当日の写真1\" align=\"inline\" /><img src=\"/0-example/rep-2.jpg\" alt=\"当日の写真2\" align=\"inline\" />",
     //   reportPublished: false,
     // },
+  {
+    id: "4",
+    slug: "4-ishii",
+    date: "2026-07-10",
+    dateTbd: false,
+    timeTbd: false,
+    startTime: "19:00",
+    endTime: "21:00",
+    title: "複雑な世界を数理モデルで理解したい",
+    speaker: "石井 秀昌（中央大学）",
+    // abstract: "詳細は後日公開予定です。",
+    speakerBio: "中央大学理工学術院・情報工学科 助教。\n専門は非線形物理・数理モデリングで、大学ではプログラミングの授業も担当している。数理モデルを使って、複数のものや人の関わりの中で集団の状態が変化する様子を理解することを目指している。サッカーや社会的格差など、一見物理から遠そうな現象にも、微分方程式などを使って向き合っている。\nカフェイベントにも縁が深い。お酒に強くはないが、ドイツ滞在中は不思議とたくさん（自分比）ビールを飲めて嬉しかった。",
+    speakerImage: "/4-ishii/speaker.jpg",
+    report: "レポートは後日公開予定です。",
+    reportPublished: false,
+  },
   {
   id: "3",
   slug: "3-eriko-yamada",
